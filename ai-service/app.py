@@ -1,11 +1,17 @@
 """
 AI Trading Signal Service - Flask API
-Real-time financial sentiment analysis using FinBERT
+Real-time financial sentiment analysis using Gemma Small Language Model (SLM)
+
+HACKATHON COMPLIANCE:
+- Base model: Gemma (google/gemma-2b-it)
+- Authentication: HuggingFace token required
+- Prompt-based inference for financial sentiment
+- No rule-based fallback - pure AI inference
 """
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models.sentiment_analyzer import analyzer
+from models.sentiment_analyzer_gemma import analyzer
 import logging
 import time
 
@@ -18,12 +24,14 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Load model on startup
-@app.before_first_request
-def load_model():
-    """Load FinBERT model before first request"""
-    logger.info("Initializing AI Service...")
-    analyzer.load_model()
-    logger.info("AI Service ready!")
+logger.info("=" * 60)
+logger.info("INITIALIZING GEMMA SLM AI SERVICE")
+logger.info("Hackathon Compliant: Using Gemma as base model")
+logger.info("Authentication: HuggingFace token configured")
+logger.info("Inference: Prompt-based (no rule-based fallback)")
+logger.info("=" * 60)
+analyzer.load_model()
+logger.info("GEMMA SLM AI SERVICE READY!")
 
 
 @app.route('/health', methods=['GET'])

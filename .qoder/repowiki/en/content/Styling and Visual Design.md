@@ -2,10 +2,22 @@
 
 <cite>
 **Referenced Files in This Document**
-- [styles.css](file://styles.css)
-- [index.html](file://index.html)
-- [script.js](file://script.js)
+- [styles.css](file://frontend/styles.css)
+- [index.html](file://frontend/index.html)
+- [script.js](file://frontend/script.js)
+- [app.py](file://ai-service/app.py)
+- [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Enhanced CSS architecture with advanced glassmorphism effects and neon color system
+- Added premium loading overlay with gradient progress bars and animated dots
+- Implemented sophisticated particle animation system with grid background effects
+- Expanded responsive design with improved mobile-first breakpoints
+- Integrated multi-service architecture with real-time backend integration
+- Added advanced micro-interactions including button ripple effects and glow animations
+- Enhanced result card with mini charts and interactive visualizations
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -13,373 +25,410 @@
 3. [Core Components](#core-components)
 4. [Architecture Overview](#architecture-overview)
 5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+6. [Multi-Service Integration](#multi-service-integration)
+7. [Advanced CSS Features](#advanced-css-features)
+8. [Performance Considerations](#performance-considerations)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
+11. [Appendices](#appendices)
 
 ## Introduction
-This document describes the styling and visual design system of the AI Trading Signal Engine. It covers the CSS architecture, custom properties for theming, responsive design patterns, animation systems, neon theme implementation, typography, grid system for result cards, color schemes, spacing systems, and component styling patterns. It also addresses performance optimization, browser compatibility, accessibility, and customization guidelines.
+This document describes the advanced styling and visual design system of the AI Trading Signal Engine. The system features sophisticated glassmorphism effects, neon color accents, and responsive layouts designed for a multi-service architecture. The design system centers on a dark neon theme with gradient effects, glow animations, and modern typography using Google Fonts (Orbitron, Inter, Poppins). It includes advanced particle animations, premium loading states, interactive element effects, and comprehensive responsive design patterns.
 
 ## Project Structure
-The project follows a minimal, component-driven CSS architecture with a single stylesheet and two HTML/JS entry points. The design system centers on a dark neon theme with glassmorphism, gradients, and subtle animations.
+The project follows a sophisticated, multi-service architecture with a premium frontend, Spring Boot backend, and Python AI service. The styling system is built around advanced CSS techniques including glassmorphism, neon accents, and responsive design patterns.
 
 ```mermaid
 graph TB
-HTML["index.html<br/>Structure and content"] --> Styles["styles.css<br/>Variables, layout, components, animations, responsive"]
-JS["script.js<br/>Particle engine, UI interactions, state updates"] --> HTML
-JS --> Styles
-Styles --> HTML
+Frontend["frontend/<br/>Premium HTML/CSS/JS Interface"] --> Styles["styles.css<br/>Advanced Glassmorphism, Neon Effects"]
+Frontend --> Scripts["script.js<br/>Enhanced Animations, Backend Integration"]
+Backend["backend/<br/>Spring Boot REST API"] --> Controller["TradingController.java<br/>Multi-service Coordination"]
+AI["ai-service/<br/>Python Flask AI Service"] --> Models["sentiment_analyzer.py<br/>FinBERT Model Integration"]
+Styles --> Frontend
+Scripts --> Backend
+Scripts --> AI
+Backend --> Frontend
 ```
 
 **Diagram sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [styles.css:1-816](file://styles.css#L1-L816)
-- [script.js:1-404](file://script.js#L1-L404)
+- [index.html:1-235](file://frontend/index.html#L1-L235)
+- [styles.css:1-1415](file://frontend/styles.css#L1-L1415)
+- [script.js:1-1068](file://frontend/script.js#L1-L1068)
+- [TradingController.java:1-168](file://backend/src/main/java/com/trading/controller/TradingController.java#L1-L168)
+- [app.py:1-155](file://ai-service/app.py#L1-L155)
 
 **Section sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [styles.css:1-816](file://styles.css#L1-L816)
-- [script.js:1-404](file://script.js#L1-L404)
+- [index.html:1-235](file://frontend/index.html#L1-L235)
+- [styles.css:1-1415](file://frontend/styles.css#L1-L1415)
+- [script.js:1-1068](file://frontend/script.js#L1-L1068)
+- [TradingController.java:1-168](file://backend/src/main/java/com/trading/controller/TradingController.java#L1-L168)
+- [app.py:1-155](file://ai-service/app.py#L1-L155)
 
 ## Core Components
-- CSS Variables and Root Config: Centralized theming via custom properties for colors, gradients, spacing, radius, shadows, and transitions.
-- Base Reset and Typography: Normalize margins/paddings, set body font stack, and define smooth scrolling.
-- Animated Background: Canvas-based particle system with connections and responsive sizing.
-- Layout Container: Centered container with animated entrance and flexible column layout.
-- Header: Glass-like header with logo, subtitle, and live status indicator.
-- Input Section: Glass-styled textarea with character count, glow focus effect, and dynamic color feedback.
-- Analyze Button: Gradient-filled button with ripple press effect, hover lift, and glow on interaction.
-- Loading State: Multi-ring loader with pulsing core and animated dots.
-- Result Card: Signal badge with color-coded glow, results grid, confidence bar, explanation box, and disclaimer.
-- Footer Stats: Glass stats panel with divider separators and responsive wrapping.
-- Utility Classes: Hidden visibility toggle.
-- Animations: Fade, slide, pulse, spin, and dot animations.
-- Responsive Breakpoints: Mobile-first design with media queries at 768px and 480px.
+- **Advanced CSS Variables**: Comprehensive color palette with neon accents, gradients, spacing tokens, and shadow effects
+- **Glassmorphism System**: Backdrop blur effects, semi-transparent overlays, and border enhancements
+- **Neon Color System**: Multi-color neon accents with glow effects for buy/sell/hold states
+- **Premium Loading Overlay**: Advanced loading animation with gradient rings, pulsing core, and progress bars
+- **Particle Animation System**: Canvas-based particle system with connections, grid background, and floating orbs
+- **Enhanced Input System**: Glass-styled inputs with glow effects, character counters, and dynamic feedback
+- **Interactive Button System**: Gradient buttons with ripple effects, glow animations, and hover states
+- **Result Card System**: Comprehensive analysis cards with mini charts, confidence indicators, and risk meters
+- **Live News Integration**: Dynamic news fetching with animated lists and click-to-analyze functionality
+- **Responsive Design**: Mobile-first approach with advanced breakpoints and adaptive layouts
 
 **Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
-- [styles.css:65-84](file://styles.css#L65-L84)
-- [styles.css:89-109](file://styles.css#L89-L109)
-- [styles.css:114-125](file://styles.css#L114-L125)
-- [styles.css:130-204](file://styles.css#L130-L204)
-- [styles.css:222-294](file://styles.css#L222-L294)
-- [styles.css:299-360](file://styles.css#L299-L360)
-- [styles.css:376-456](file://styles.css#L376-L456)
-- [styles.css:461-571](file://styles.css#L461-L571)
-- [styles.css:624-661](file://styles.css#L624-L661)
-- [styles.css:666-668](file://styles.css#L666-L668)
-- [styles.css:673-734](file://styles.css#L673-L734)
-- [styles.css:739-795](file://styles.css#L739-L795)
+- [styles.css:4-73](file://frontend/styles.css#L4-L73)
+- [styles.css:102-157](file://frontend/styles.css#L102-L157)
+- [styles.css:162-287](file://frontend/styles.css#L162-L287)
+- [styles.css:308-403](file://frontend/styles.css#L308-L403)
+- [styles.css:506-580](file://frontend/styles.css#L506-L580)
+- [styles.css:583-685](file://frontend/styles.css#L583-L685)
+- [styles.css:697-880](file://frontend/styles.css#L697-L880)
 
 ## Architecture Overview
-The visual system is built around a cohesive design language:
-- Theming: CSS custom properties define a dark neon palette with glassmorphism and glow effects.
-- Typography: Google Fonts Orbitron (display), Inter (body), and Poppins (fallback) are used for a modern tech aesthetic.
-- Motion: Micro-interactions and animations enhance usability and perceived performance.
-- Layout: Flexbox and CSS Grid create a responsive, mobile-first structure.
-- Performance: Canvas-based particle animation with visibility-aware lifecycle and optimized scrollbar styling.
+The visual system is built around a sophisticated design language featuring advanced glassmorphism, neon color accents, and responsive layouts adapted for multi-service architecture.
 
 ```mermaid
 graph TB
-subgraph "Theme Layer"
-Vars["CSS Variables<br/>Colors, Gradients, Spacing, Radius, Shadows, Transitions"]
-Glass["Glassmorphism<br/>Backdrops, Borders, Opacity"]
-Glow["Glow Effects<br/>Shadows, Filters"]
+subgraph "Advanced Theme Layer"
+Vars["CSS Variables<br/>Comprehensive Color Palette, Gradients, Spacing"]
+Glass["Glassmorphism<br/>Backdrop Blur, Semi-transparent Overlays"]
+Neon["Neon System<br/>Multi-color Accents with Glow Effects"]
+Gradients["Advanced Gradients<br/>Multi-stop Color Transitions"]
 end
-subgraph "Typography Layer"
-Fonts["Google Fonts<br/>Orbitron, Inter, Poppins"]
-Scale["Typography Scale<br/>Headings, Body, Labels"]
+subgraph "Premium Animation Layer"
+Particles["Particle System<br/>Canvas-based with Connections"]
+Grid["Background Grid<br/>Animated Grid Movement"]
+Orb["Gradient Orb<br/>Floating Radial Gradient"]
+Loader["Premium Loader<br/>Multi-ring with Progress"]
 end
-subgraph "Motion Layer"
-Anim["Keyframe Animations<br/>Fade, Slide, Pulse, Spin, Dots"]
-Trans["Transitions<br/>Hover, Focus, Active"]
+subgraph "Interactive Component Layer"
+Inputs["Glass Inputs<br/>Dynamic Glow Effects"]
+Buttons["Interactive Buttons<br/>Ripple Effects, Hover States"]
+Results["Result Cards<br/>Mini Charts, Confidence Bars"]
+News["Live News<br/>Animated Lists, Click-to-Analyze"]
 end
-subgraph "Layout Layer"
-Container["Container<br/>Centered, Gap, Flex Direction"]
-Grid["Results Grid<br/>Auto-fit Columns"]
-Responsive["Responsive Breakpoints<br/>768px, 480px"]
+subgraph "Responsive Framework"
+Mobile["Mobile-first<br/>Progressive Enhancement"]
+Breakpoints["Advanced Breakpoints<br/>768px, 480px, 320px"]
+Adaptive["Adaptive Layouts<br/>Flexible Grid Systems"]
 end
 Vars --> Glass
-Vars --> Glow
-Fonts --> Scale
-Anim --> Trans
-Container --> Grid
-Grid --> Responsive
+Glass --> Neon
+Neon --> Gradients
+Particles --> Grid
+Grid --> Orb
+Loader --> Inputs
+Buttons --> Results
+News --> Adaptive
 ```
 
 **Diagram sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
-- [styles.css:77-84](file://styles.css#L77-L84)
-- [styles.css:673-734](file://styles.css#L673-L734)
-- [styles.css:114-125](file://styles.css#L114-L125)
-- [styles.css:521-526](file://styles.css#L521-L526)
-- [styles.css:739-795](file://styles.css#L739-L795)
+- [styles.css:4-73](file://frontend/styles.css#L4-L73)
+- [styles.css:102-157](file://frontend/styles.css#L102-L157)
+- [styles.css:162-287](file://frontend/styles.css#L162-L287)
+- [styles.css:308-403](file://frontend/styles.css#L308-L403)
+- [styles.css:506-580](file://frontend/styles.css#L506-L580)
+- [styles.css:583-685](file://frontend/styles.css#L583-L685)
+- [styles.css:697-880](file://frontend/styles.css#L697-L880)
 
 ## Detailed Component Analysis
 
-### CSS Variables and Root Config
-- Purpose: Centralize design tokens for consistent theming across components.
-- Scope: Colors (primary, secondary, card, glass), neon accents, gradients, spacing, radius, shadows, and transitions.
-- Usage: Consumed via var(--token-name) across selectors for colors, backgrounds, borders, and shadows.
+### Advanced CSS Variables and Root Configuration
+The system uses a comprehensive CSS custom property system defining a complete design token library:
+
+- **Dark Theme Palette**: Deep blues (#0a0e27, #111638) with semi-transparent overlays (rgba(17, 22, 56, 0.6))
+- **Neon Color System**: Complete spectrum including green (#00ff88), red (#ff4757), yellow (#ffa502), blue (#00d4ff), and purple (#a855f7)
+- **Advanced Gradients**: Multi-stop gradients for buttons, backgrounds, and interactive elements
+- **Glass Effects**: Transparent overlays with backdrop-filter blur (20px) and border enhancements
+- **Shadow System**: Sophisticated shadow tokens with glow effects for different neon colors
+- **Animation Timing**: Custom cubic-bezier curves for smooth, premium-feeling animations
 
 **Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
+- [styles.css:4-73](file://frontend/styles.css#L4-L73)
 
-### Base Reset and Typography
-- Reset: Normalize margins/padding and set box-sizing globally.
-- Body: Set font family stack with Inter and Poppins fallbacks, dark background, and smooth scroll behavior.
-- Headings: Use Orbitron for emphasis and gradient text effects.
+### Premium Animated Background System
+Features a multi-layered animated background with advanced visual effects:
 
-**Section sources**
-- [styles.css:65-84](file://styles.css#L65-L84)
-- [styles.css:162-172](file://styles.css#L162-L172)
-
-### Animated Background
-- Canvas: Fixed-position canvas fills the viewport and renders animated particles.
-- Particles: Dynamically generated with random sizes, speeds, and opacities; wrap at edges.
-- Connections: Lines drawn between nearby particles with opacity based on distance.
-- Lifecycle: Initializes on load, resizes with window, and pauses when tab is not visible.
+- **Canvas Particle System**: Dynamic particle generation with physics-based movement and edge wrapping
+- **Grid Background**: Animated grid overlay with smooth translation animations
+- **Gradient Orb**: Large floating radial gradient with blur effects and floating animation
+- **Connection Lines**: Particle-to-particle connections with opacity-based distance calculations
+- **Performance Optimization**: Automatic particle count adjustment based on viewport size
 
 ```mermaid
 sequenceDiagram
-participant Doc as "Document"
 participant Canvas as "Canvas Element"
-participant Ctx as "2D Context"
 participant Particles as "Particle System"
-Doc->>Canvas : Initialize canvas
-Doc->>Ctx : getContext("2d")
-Doc->>Particles : initParticles()
-loop Animate
-Doc->>Ctx : clearRect()
-Particles->>Particles : update()
-Particles->>Particles : draw()
-Particles->>Ctx : stroke connections
-Doc->>Doc : requestAnimationFrame()
+participant Grid as "Grid Background"
+participant Orb as "Gradient Orb"
+Canvas->>Particles : Initialize Particles
+Canvas->>Grid : Start Animation
+Canvas->>Orb : Start Float Animation
+loop Frame Loop
+Particles->>Particles : Update Position
+Particles->>Particles : Check Edges
+Particles->>Canvas : Draw Particle
+Canvas->>Canvas : Draw Connections
+Grid->>Grid : Update Position
+Orb->>Orb : Float & Scale
 end
-Doc->>Doc : handle resize()
-Doc->>Particles : re-init particles
-Doc->>Doc : visibilitychange pause/resume
 ```
 
 **Diagram sources**
-- [script.js:25-120](file://script.js#L25-L120)
-- [script.js:388-395](file://script.js#L388-L395)
+- [script.js:41-136](file://frontend/script.js#L41-L136)
+- [styles.css:112-157](file://frontend/styles.css#L112-L157)
 
 **Section sources**
-- [styles.css:89-109](file://styles.css#L89-L109)
-- [script.js:25-120](file://script.js#L25-L120)
-- [script.js:388-395](file://script.js#L388-L395)
+- [styles.css:102-157](file://frontend/styles.css#L102-L157)
+- [script.js:41-136](file://frontend/script.js#L41-L136)
 
-### Layout Container
-- Purpose: Center content, apply max-width, and manage vertical rhythm with gaps.
-- Behavior: Animated fade-in and slide-up entrances for child components.
+### Premium Loading Overlay System
+A sophisticated loading experience featuring:
 
-**Section sources**
-- [styles.css:114-125](file://styles.css#L114-L125)
-
-### Header and Status
-- Header: Glass-like backdrop, blur, border, rounded corners, shadow, sticky positioning, and slide-down animation.
-- Logo: Icon with neon green drop-shadow and continuous pulse animation.
-- Status Badge: Live indicator with neon green dot and pulse animation.
+- **Glassmorphism Overlay**: Semi-transparent backdrop with blur effects and pointer event management
+- **Multi-Ring Loader**: Three concentric rings with different neon colors and staggered animations
+- **Pulsing Core**: Central gradient element with continuous pulse animation and glow effects
+- **Animated Dots**: Three-dot ellipsis effect with staggered keyframe animations
+- **Progress Bar**: Gradient progress indicator with smooth width transitions
+- **Status Messaging**: Dynamic loading messages with gradient text effects
 
 **Section sources**
-- [styles.css:130-141](file://styles.css#L130-L141)
-- [styles.css:156-160](file://styles.css#L156-L160)
-- [styles.css:180-204](file://styles.css#L180-L204)
+- [styles.css:162-287](file://frontend/styles.css#L162-L287)
+- [index.html:24-41](file://frontend/index.html#L24-L41)
 
-### Input Section
-- Textarea: Dark glass background, low-contrast border, rounded corners, and Inter font.
-- Focus Effects: Blue border glow with inset glow and transition timing.
-- Character Counter: Positioned absolutely with dynamic color change based on input length.
+### Enhanced Input and Form System
+Advanced form elements with premium styling:
 
-**Section sources**
-- [styles.css:248-294](file://styles.css#L248-L294)
-- [styles.css:266-269](file://styles.css#L266-L269)
-
-### Analyze Button
-- Gradient Fill: Multi-stop gradient using primary and accent colors.
-- Interaction States: Hover lift, glow on hover, pressed state with ripple effect.
-- Ripple: Absolute pseudo-element scaled on click to simulate water ripples.
+- **Glass Input Fields**: Dark semi-transparent backgrounds with low-contrast borders
+- **Dynamic Glow Effects**: Real-time glow animations on focus with inset shadows
+- **Character Count System**: Dynamic color-changing counters with threshold-based feedback
+- **Live News Integration**: Dedicated news fetching button with animated loading states
+- **News List Display**: Animated news items with hover effects and click-to-analyze functionality
 
 **Section sources**
-- [styles.css:299-360](file://styles.css#L299-L360)
-- [styles.css:336-354](file://styles.css#L336-L354)
+- [styles.css:506-580](file://frontend/styles.css#L506-L580)
+- [styles.css:408-502](file://frontend/styles.css#L408-L502)
+- [index.html:73-92](file://frontend/index.html#L73-L92)
 
-### Loading State
-- Loader Rings: Three concentric rings with distinct neon colors and staggered animation delays.
-- Core: Pulsing central element with gradient background.
-- Dots: Animated ellipsis effect using staggered keyframes.
+### Interactive Button System with Advanced Effects
+Premium button components featuring:
 
-**Section sources**
-- [styles.css:376-456](file://styles.css#L376-L456)
-- [styles.css:362-371](file://styles.css#L362-L371)
-
-### Result Card
-- Signal Badge: Color-coded glow and text color per signal type (buy/sell/hold).
-- Results Grid: CSS Grid with auto-fit columns and consistent spacing.
-- Confidence Bar: Animated width transition with gradient fill and glow.
-- Explanation Box: Glass background with label and descriptive text.
-- Disclaimer: Yellow-accented notice with icon and small text.
+- **Multi-Gradient Backgrounds**: Complex gradient compositions with multiple color stops
+- **Ripple Effect System**: Water ripple animations with dynamic sizing and positioning
+- **Glow Animations**: Continuous glow effects with blur filters and opacity transitions
+- **Micro-Interaction Enhancements**: Scale transforms, shadow depth changes, and icon animations
+- **State Management**: Disabled states, hover effects, and active press animations
 
 **Section sources**
-- [styles.css:461-571](file://styles.css#L461-L571)
-- [styles.css:521-526](file://styles.css#L521-L526)
-- [styles.css:555-570](file://styles.css#L555-L570)
+- [styles.css:583-685](file://frontend/styles.css#L583-L685)
+- [script.js:684-698](file://frontend/script.js#L684-L698)
 
-### Footer Stats
-- Panel: Glass-like stats container with blur and border.
-- Items: Centered stat values and labels with responsive wrapping.
-- Dividers: Vertical separators with reduced visibility on smaller screens.
+### Comprehensive Result Card System
+Advanced analysis display with multiple visualization components:
 
-**Section sources**
-- [styles.css:624-661](file://styles.css#L624-L661)
-- [styles.css:657-661](file://styles.css#L657-L661)
-
-### Animations
-- Fade In: Subtle opacity transition for container and child elements.
-- Slide Down/Up: Entrance animations for header and cards.
-- Pulse: Continuous scale and opacity variation for icons and badges.
-- Spin: Infinite rotation for loader rings.
-- Dots: Staggered opacity for animated ellipsis.
+- **Signal Badge System**: Color-coded badges with glow effects and gradient backgrounds
+- **Mini Chart Visualization**: Canvas-based chart rendering with quadratic curves and gradient fills
+- **Results Grid**: Responsive grid layout with sentiment indicators, confidence bars, and risk meters
+- **Explanation System**: AI-powered explanations with key factor highlighting
+- **Action Buttons**: Secondary and primary action buttons with hover effects
 
 **Section sources**
-- [styles.css:673-734](file://styles.css#L673-L734)
+- [styles.css:697-880](file://frontend/styles.css#L697-L880)
+- [script.js:142-263](file://frontend/script.js#L142-L263)
+- [index.html:121-208](file://frontend/index.html#L121-L208)
 
-### Responsive Design
-- 768px Breakpoint: Adjusts container padding, header layout, main card padding, signal text size, grid to single column, footer gap, and hides dividers.
-- 480px Breakpoint: Reduces logo icon and text sizes, button font and padding, and signal icon/text sizes.
+### Advanced Responsive Design System
+Sophisticated responsive architecture:
+
+- **Mobile-First Approach**: Progressive enhancement from 320px to desktop widths
+- **Advanced Breakpoints**: Strategic breakpoints at 768px, 480px, and 320px
+- **Flexible Grid System**: CSS Grid with auto-fit columns and responsive spacing
+- **Adaptive Typography**: Fluid font sizing with clamp functions and responsive units
+- **Touch-Friendly Interactions**: Optimized touch targets and gesture-friendly layouts
 
 **Section sources**
-- [styles.css:739-795](file://styles.css#L739-L795)
+- [styles.css:739-795](file://frontend/styles.css#L739-L795)
+- [styles.css:798-816](file://frontend/styles.css#L798-L816)
 
-### Scrollbar Styling
-- WebKit scrollbar: Custom width, track background, thumb radius, and hover color using neon variables.
-
-**Section sources**
-- [styles.css:798-816](file://styles.css#L798-L816)
-
-## Dependency Analysis
-The visual system relies on coordinated interactions between HTML structure, CSS variables, animations, and JavaScript-driven state changes.
+## Multi-Service Integration
+The styling system seamlessly integrates with the multi-service architecture:
 
 ```mermaid
 graph TB
-HTML["index.html<br/>Elements and IDs"] --> JS["script.js<br/>UI state, DOM updates"]
-JS --> Styles["styles.css<br/>Classes and variables"]
-Styles --> HTML
-JS --> Canvas["Canvas<br/>Particle rendering"]
-Styles --> Canvas
+subgraph "Frontend Layer"
+HTML["index.html<br/>Premium Structure"]
+CSS["styles.css<br/>Advanced Styling"]
+JS["script.js<br/>Enhanced Interactions"]
+end
+subgraph "Backend Layer"
+Spring["Spring Boot<br/>REST API"]
+Controller["TradingController<br/>Service Coordination"]
+Service["Business Logic<br/>Signal Processing"]
+end
+subgraph "AI Layer"
+Flask["Flask API<br/>Sentiment Analysis"]
+Model["FinBERT Model<br/>NLP Processing"]
+end
+HTML --> CSS
+HTML --> JS
+JS --> Spring
+Spring --> Controller
+Controller --> Service
+Service --> Flask
+Flask --> Model
+CSS --> HTML
+JS --> HTML
 ```
 
 **Diagram sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [index.html:1-235](file://frontend/index.html#L1-L235)
+- [styles.css:1-1415](file://frontend/styles.css#L1-L1415)
+- [script.js:1-1068](file://frontend/script.js#L1-L1068)
+- [TradingController.java:1-168](file://backend/src/main/java/com/trading/controller/TradingController.java#L1-L168)
+- [app.py:1-155](file://ai-service/app.py#L1-L155)
 
 **Section sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [script.js:15-16](file://frontend/script.js#L15-L16)
+- [TradingController.java:37-80](file://backend/src/main/java/com/trading/controller/TradingController.java#L37-L80)
+- [app.py:39-96](file://ai-service/app.py#L39-L96)
+
+## Advanced CSS Features
+The system implements cutting-edge CSS techniques:
+
+### Glassmorphism Implementation
+- **Backdrop Filter**: Advanced blur effects with `backdrop-filter: blur(20px)`
+- **Semi-Transparent Overlays**: Strategic use of rgba values for depth perception
+- **Border Enhancements**: Subtle borders with transparency for depth definition
+- **Layered Effects**: Multiple shadow layers creating realistic depth
+
+### Neon Color System
+- **Multi-Color Accents**: Complete spectrum of neon colors with appropriate dim variants
+- **Glow Effects**: Sophisticated shadow-based glow effects with varying intensities
+- **Dynamic Color Application**: Color transitions based on signal strength and confidence levels
+- **Accessibility Considerations**: Proper contrast ratios and readable text on neon backgrounds
+
+### Advanced Animation System
+- **Custom Timing Functions**: Cubic-bezier curves for premium feel
+- **Hardware Acceleration**: Transform and opacity animations for smooth performance
+- **Complex Keyframe Sequences**: Multi-step animations with precise timing control
+- **Performance Optimization**: Animation frame management and visibility-aware lifecycle
+
+**Section sources**
+- [styles.css:308-403](file://frontend/styles.css#L308-L403)
+- [styles.css:750-800](file://frontend/styles.css#L750-L800)
+- [styles.css:641-650](file://frontend/styles.css#L641-L650)
 
 ## Performance Considerations
-- Canvas Optimization: Particles dynamically adjust count based on viewport area and pause when the tab is not visible to reduce CPU/GPU usage.
-- CSS Hardware Acceleration: Use transforms and opacity for animations; avoid layout-affecting properties where possible.
-- Efficient Transitions: Keep transition durations short and limit property counts in keyframes.
-- Font Loading: Preconnect and pre-render Google Fonts to minimize render-blocking.
-- Scrollbar Styling: Minimal custom scrollbar reduces layout thrashing.
+The system implements comprehensive performance optimizations:
+
+### Canvas Optimization
+- **Dynamic Particle Count**: Automatic adjustment based on viewport area (max 80 particles)
+- **Visibility-Aware Lifecycle**: Pauses animation when tab is not visible
+- **Efficient Drawing**: Optimized canvas drawing with minimal reflows
+- **Memory Management**: Proper cleanup of animation frames and event listeners
+
+### CSS Performance
+- **Hardware Acceleration**: Transform and opacity for smooth animations
+- **Reduced Paint Areas**: Strategic use of shadows and gradients
+- **Optimized Transitions**: Carefully tuned duration and easing functions
+- **Font Loading**: Preconnect and crossorigin attributes for fast font delivery
+
+### Backend Integration Performance
+- **API Caching**: Strategic caching of frequently accessed data
+- **Error Handling**: Graceful degradation when services are unavailable
+- **Timeout Management**: Appropriate timeout configurations for service calls
+- **Resource Cleanup**: Proper cleanup of intervals and timeouts
 
 **Section sources**
-- [script.js:68-75](file://script.js#L68-L75)
-- [script.js:388-395](file://script.js#L388-L395)
-- [index.html:8-11](file://index.html#L8-L11)
-- [styles.css:798-816](file://styles.css#L798-L816)
+- [script.js:84-91](file://frontend/script.js#L84-L91)
+- [script.js:1051-1058](file://frontend/script.js#L1051-L1058)
+- [index.html:8-11](file://frontend/index.html#L8-L11)
 
 ## Troubleshooting Guide
-- Fonts Not Loading:
-  - Ensure Google Fonts links are present and reachable.
-  - Verify preconnect and crossorigin attributes are included.
-- Canvas Not Rendering:
-  - Confirm canvas element exists and is appended to the DOM.
-  - Check for errors in the particle initialization and animation loop.
-- Animations Jank:
-  - Reduce particle count on small screens.
-  - Limit simultaneous animations and use transform/opacity.
-- Button Ripple Not Triggering:
-  - Ensure the button is not disabled and the active state class is toggled.
-- Responsive Issues:
-  - Validate media queries and ensure viewport meta tag is present.
+Common issues and solutions for the advanced styling system:
+
+### CSS and Styling Issues
+- **Fonts Not Loading**: Verify Google Fonts preconnect and crossorigin attributes are present
+- **Glass Effects Not Working**: Check browser support for `backdrop-filter` property
+- **Animations Jank**: Reduce particle count on mobile devices, optimize keyframe complexity
+- **Neon Colors Not Appearing**: Ensure CSS variables are properly defined and accessible
+
+### JavaScript and Animation Issues
+- **Canvas Not Rendering**: Confirm canvas element exists and dimensions are set
+- **Particle System Errors**: Check for proper canvas context initialization
+- **Button Ripple Not Triggering**: Verify event listener attachment and CSS class manipulation
+- **Loading Overlay Issues**: Ensure proper class toggling and z-index stacking
+
+### Multi-Service Integration Issues
+- **Backend API Not Responding**: Check Spring Boot service health endpoints
+- **AI Service Unavailable**: Verify Flask service is running on port 5000
+- **CORS Issues**: Confirm CORS configuration allows frontend requests
+- **API Key Problems**: Validate NewsAPI and Finnhub credentials in backend configuration
 
 **Section sources**
-- [index.html:8-11](file://index.html#L8-L11)
-- [script.js:25-120](file://script.js#L25-L120)
-- [styles.css:739-795](file://styles.css#L739-L795)
+- [index.html:8-11](file://frontend/index.html#L8-L11)
+- [script.js:757-798](file://frontend/script.js#L757-L798)
+- [TradingController.java:67-73](file://backend/src/main/java/com/trading/controller/TradingController.java#L67-L73)
 
 ## Conclusion
-The visual design system employs a cohesive dark neon theme with glassmorphism, gradients, and micro-interactions. It balances aesthetics with performance through a particle animation engine, CSS variables, and responsive breakpoints. The modular structure enables easy customization and extension while maintaining accessibility and cross-browser compatibility.
+The AI Trading Signal Engine's styling system represents a sophisticated implementation of modern web design principles. The advanced glassmorphism effects, neon color system, and responsive layouts create a premium user experience while maintaining excellent performance. The multi-service architecture integration ensures seamless communication between frontend, backend, and AI services, delivering a comprehensive trading analysis platform with professional-grade visual design.
 
 ## Appendices
 
-### Color Scheme Reference
-- Primary Background: Dark blue/black tone.
-- Secondary Background: Deeper blue tint.
-- Card Background: Semi-transparent glass with backdrop blur.
-- Glass Background: Low-opacity overlay for UI panels.
-- Neon Accents: Green, red, yellow, blue, and purple with dim variants for glows.
-- Text Colors: High contrast white, muted gray, and secondary light gray.
-- Gradients: Multi-stop gradients for buttons and confidence bars.
+### Advanced Color Scheme Reference
+- **Primary Background**: Deep space blue (#0a0e27) with gradient variations
+- **Secondary Background**: Deeper blue (#111638) for elevated elements
+- **Glass Background**: Semi-transparent overlays (rgba(17, 22, 56, 0.6)) with blur effects
+- **Neon Accents**: Complete spectrum with glow variants (green, red, yellow, blue, purple)
+- **Text Colors**: High contrast white, muted grays, and neon-accented text
+- **Gradient System**: Multi-stop gradients for buttons, backgrounds, and interactive elements
 
 **Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
+- [styles.css:4-73](file://frontend/styles.css#L4-L73)
 
-### Typography Scale Reference
-- Display: Orbitron for headings and signal text.
-- Body: Inter for form controls and paragraphs.
-- Fallback: System fonts for broader compatibility.
-
-**Section sources**
-- [styles.css:77-84](file://styles.css#L77-L84)
-- [styles.css:162-172](file://styles.css#L162-L172)
-
-### Spacing System Reference
-- Tokens: Extra-small, small, medium, large, extra-large.
-- Consistent use across paddings, margins, gaps, and radii.
+### Advanced Typography Scale Reference
+- **Display Fonts**: Orbitron for headings and signal text with gradient effects
+- **Body Fonts**: Inter for form controls and general content
+- **Fallback Fonts**: Poppins and system fonts for broad compatibility
+- **Font Weights**: Comprehensive weight scaling from 300 to 900
+- **Responsive Typography**: Fluid sizing with clamp functions for optimal readability
 
 **Section sources**
-- [styles.css:34-46](file://styles.css#L34-L46)
+- [styles.css:89-97](file://frontend/styles.css#L89-L97)
+- [styles.css:340-350](file://frontend/styles.css#L340-L350)
 
-### Component Styling Patterns
-- Glass Panels: Backdrop blur, thin borders, rounded corners, and soft shadows.
-- Glowing Borders: Use shadow-glow variables for buy/sell/hold states.
-- Interactive Feedback: Hover lifts, glow on hover, and ripple press effects.
-- Animated Entrances: Fade and slide animations for page and component transitions.
-
-**Section sources**
-- [styles.css:130-141](file://styles.css#L130-L141)
-- [styles.css:299-360](file://styles.css#L299-L360)
-- [styles.css:475-491](file://styles.css#L475-L491)
-- [styles.css:673-702](file://styles.css#L673-L702)
-
-### Customization Guidelines
-- Theming:
-  - Modify CSS variables in :root to change palettes, gradients, and shadows.
-  - Replace gradient values to match brand identity.
-- Typography:
-  - Swap Google Fonts by updating the font stack and ensuring availability.
-  - Adjust font weights and sizes to fit content hierarchy.
-- Animations:
-  - Tune keyframe durations and easing curves for desired feel.
-  - Add or remove micro-interactions to balance performance and polish.
-- Layout:
-  - Adjust container max-width and grid column rules for different content densities.
-  - Extend responsive breakpoints as needed for target devices.
-- Accessibility:
-  - Maintain sufficient color contrast against glass backgrounds.
-  - Provide focus-visible styles and keyboard navigation support.
-  - Avoid motion-sensitive animations for users who prefer reduced motion.
+### Advanced Spacing System Reference
+- **Extra Small**: 0.5rem for tight spacing and small elements
+- **Small**: 1rem for standard gaps and padding
+- **Medium**: 1.5rem for comfortable spacing
+- **Large**: 2rem for section separation
+- **Extra Large**: 3rem for major layout divisions
+- **Double Extra Large**: 4rem for prominent spacing
 
 **Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
-- [styles.css:77-84](file://styles.css#L77-L84)
-- [styles.css:673-734](file://styles.css#L673-L734)
-- [styles.css:521-526](file://styles.css#L521-L526)
+- [styles.css:42-49](file://frontend/styles.css#L42-L49)
+
+### Premium Component Styling Patterns
+- **Glass Panels**: Backdrop blur with 20px blur, 1px borders, and 24px radius
+- **Neon Borders**: Glow effects with shadow-glow variables for different signal states
+- **Interactive Feedback**: Hover lifts, continuous glow animations, and ripple press effects
+- **Advanced Animations**: Custom cubic-bezier timing functions for premium feel
+- **Responsive Grids**: Flexible CSS Grid with auto-fit columns and strategic gaps
+
+**Section sources**
+- [styles.css:308-403](file://frontend/styles.css#L308-L403)
+- [styles.css:583-685](file://frontend/styles.css#L583-L685)
+- [styles.css:697-880](file://frontend/styles.css#L697-L880)
+
+### Multi-Service Integration Guidelines
+- **Backend Configuration**: Spring Boot REST API with CORS enabled and health checks
+- **AI Service Setup**: Python Flask service with FinBERT model loading and batch processing
+- **Frontend Integration**: API endpoints for analysis, news fetching, and health monitoring
+- **Error Handling**: Graceful degradation with informative error messages
+- **Performance Monitoring**: Health check endpoints for service availability
+
+**Section sources**
+- [TradingController.java:18-31](file://backend/src/main/java/com/trading/controller/TradingController.java#L18-L31)
+- [app.py:16-26](file://ai-service/app.py#L16-L26)
+- [script.js:15-16](file://frontend/script.js#L15-L16)

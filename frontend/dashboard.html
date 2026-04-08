@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trading Signal Engine - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">AI Trading Signal Engine</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html" class="btn-primary">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Trading Dashboard</h1>
+                <p style="color: var(--text-secondary);">Real-time AI-powered trading signals</p>
+            </div>
+
+            <!-- Signal Card -->
+            <div class="signal-card" id="signalCard">
+                <div class="signal-header">
+                    <div>
+                        <h2 id="headline" style="margin-bottom: 10px;">Loading latest news...</h2>
+                        <p id="company" style="color: var(--text-muted);">Analyzing...</p>
+                    </div>
+                    <div id="signalBadge" class="signal-badge hold">HOLD</div>
+                </div>
+
+                <div class="signal-metrics">
+                    <div class="metric">
+                        <div class="metric-label">Sentiment</div>
+                        <div class="metric-value" id="sentiment">Neutral</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Confidence</div>
+                        <div class="metric-value" id="confidence">0%</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Risk Level</div>
+                        <div class="metric-value" id="riskLevel">Low</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Signal Strength</div>
+                        <div class="metric-value" id="strength">MODERATE</div>
+                    </div>
+                </div>
+
+                <div class="explanation-box">
+                    <h3>AI Analysis</h3>
+                    <p id="explanation">Waiting for analysis...</p>
+                </div>
+
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button class="btn-refresh" id="refreshBtn" onclick="refreshSignal()">
+                        <span>🔄</span> Refresh Signal
+                    </button>
+                    <button class="btn-secondary" id="fetchNewsBtn" onclick="fetchLatestNews()">
+                        <span>📰</span> Fetch Latest News
+                    </button>
+                    <p id="timestamp" style="color: var(--text-muted); margin-left: auto;"></p>
+                </div>
+            </div>
+
+            <!-- News List -->
+            <div id="newsList" style="margin-top: 40px;"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>AI Trading Signal Engine</h3>
+                    <p>Transforming financial news into actionable AI-powered trading signals for smarter investment decisions.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">📘</a>
+                        <a href="#" class="social-icon">🐦</a>
+                        <a href="#" class="social-icon">💼</a>
+                        <a href="#" class="social-icon">🐙</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AI Trading Signal Engine. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="dashboard.js"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+            }
+        }
+    </style>
+</body>
+</html>

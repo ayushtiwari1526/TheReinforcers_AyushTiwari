@@ -2,364 +2,609 @@
 
 <cite>
 **Referenced Files in This Document**
-- [index.html](file://index.html)
-- [script.js](file://script.js)
-- [styles.css](file://styles.css)
+- [README.md](file://README.md)
+- [QUICKSTART.md](file://QUICKSTART.md)
+- [index.html](file://frontend/index.html)
+- [script.js](file://frontend/script.js)
+- [styles.css](file://frontend/styles.css)
+- [TradingSignalApplication.java](file://backend/src/main/java/com/trading/TradingSignalApplication.java)
+- [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
+- [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
+- [NewsService.java](file://backend/src/main/java/com/trading/service/NewsService.java)
+- [SignalService.java](file://backend/src/main/java/com/trading/service/SignalService.java)
+- [app.py](file://ai-service/app.py)
+- [sentiment_analyzer.py](file://ai-service/models/sentiment_analyzer.py)
+- [requirements.txt](file://ai-service/requirements.txt)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Added comprehensive documentation for multi-service deployment architecture
+- Documented new AI service integration points and backend API customization
+- Added detailed coverage of Flask AI service configuration and extension points
+- Updated integration guides for external financial APIs and real-time data streams
+- Enhanced extension mechanisms for adding new signal types and AI model integration
+- Added performance considerations for distributed microservices architecture
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Core Components](#core-components)
-4. [Architecture Overview](#architecture-overview)
-5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+2. [Multi-Service Architecture Overview](#multi-service-architecture-overview)
+3. [Project Structure](#project-structure)
+4. [Core Components](#core-components)
+5. [AI Service Integration](#ai-service-integration)
+6. [Backend API Customization](#backend-api-customization)
+7. [Extension Points](#extension-points)
+8. [Integration Guides](#integration-guides)
+9. [Performance Considerations](#performance-considerations)
+10. [Troubleshooting Guide](#troubleshooting-guide)
+11. [Conclusion](#conclusion)
+12. [Appendices](#appendices)
 
 ## Introduction
-This guide explains how to customize and extend the AI Trading Signal Engine. It focuses on:
-- Adding new sentiment analysis keywords and modifying the sentiment detection algorithm
-- Theming customization via CSS custom properties and visual effects
-- Extending the particle animation system
-- Integration points for external financial APIs, WebSocket connections, and machine learning models
-- Extending signal types, explanation generation, and persistence for user preferences
-- Best practices for maintaining compatibility and performance
+This guide explains how to customize and extend the AI Trading Signal Engine, a production-grade, real-time financial news sentiment analysis platform. The system now features a sophisticated multi-service architecture with separate frontend, backend, and AI service components, enabling advanced customization and extension capabilities.
+
+**Updated** Added comprehensive coverage of the new multi-service deployment configuration and AI service integration points.
+
+## Multi-Service Architecture Overview
+The AI Trading Signal Engine operates as a distributed microservices architecture with three distinct components:
+
+```mermaid
+graph TB
+subgraph "Client Layer"
+FRONTEND["Frontend UI<br/>HTML/CSS/JavaScript"]
+end
+subgraph "Backend Layer"
+SPRINGBOOT["Spring Boot Backend<br/>REST API Server"]
+end
+subgraph "AI Layer"
+FLASK["Flask AI Service<br/>FinBERT Model"]
+end
+subgraph "External Services"
+NEWSAPI["NewsAPI.org<br/>Primary News Source"]
+FINNHUB["Finnhub.io<br/>Fallback News Source"]
+FINBERT["FinBERT Model<br/>HuggingFace AI"]
+end
+FRONTEND --> SPRINGBOOT
+SPRINGBOOT --> FLASK
+FLASK --> FINBERT
+SPRINGBOOT --> NEWSAPI
+SPRINGBOOT --> FINNHUB
+```
+
+**Diagram sources**
+- [TradingSignalApplication.java:13-28](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L13-L28)
+- [app.py:152-155](file://ai-service/app.py#L152-L155)
+
+**Section sources**
+- [README.md:27-61](file://README.md#L27-L61)
+- [TradingSignalApplication.java:8-29](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L8-L29)
 
 ## Project Structure
-The project consists of a single-page application with HTML for markup, CSS for styling and theming, and JavaScript for logic, animations, and UI interactions.
+The project follows a modular architecture with clear separation of concerns:
 
-```mermaid
-graph TB
-HTML["index.html<br/>Markup and UI"] --> JS["script.js<br/>Logic, animations, UI handlers"]
-CSS["styles.css<br/>Styling, themes, animations"] --> HTML
-JS --> HTML
-JS --> CSS
+```
+KalpathonHackathon/
+├── frontend/                 # Premium UI (HTML/CSS/JS)
+│   ├── index.html           # Main HTML structure
+│   ├── styles.css           # Premium styling (1200+ lines)
+│   └── script.js            # Interactive logic + backend integration
+├── backend/                  # Spring Boot Backend (Port 8080)
+│   ├── pom.xml              # Maven dependencies
+│   └── src/main/
+│       ├── java/com/trading/
+│       │   ├── TradingSignalApplication.java
+│       │   ├── controller/
+│       │   │   └── TradingController.java
+│       │   ├── service/
+│       │   │   ├── AIService.java
+│       │   │   ├── NewsService.java
+│       │   │   └── SignalService.java
+│       │   ├── model/
+│       │   │   ├── AnalysisRequest.java
+│       │   │   ├── AnalysisResponse.java
+│       │   │   ├── NewsArticle.java
+│       │   │   └── SignalStrength.java
+│       │   └── config/
+│       │       └── WebConfig.java
+│       └── resources/
+│           └── application.properties
+├── ai-service/               # Python Flask AI Service (Port 5000)
+│   ├── requirements.txt     # Python dependencies
+│   ├── app.py               # Flask API server
+│   └── models/
+│       └── sentiment_analyzer.py  # FinBERT integration
+├── setup.bat                # One-click setup script
+├── start.bat                # One-click start script
+└── README.md                # Comprehensive documentation
 ```
 
-**Diagram sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
-
 **Section sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [README.md:65-104](file://README.md#L65-L104)
 
 ## Core Components
-- Particle animation system: Canvas-based animated background with connection lines and responsive sizing
-- Input handling: Real-time character count, enable/disable behavior, keyboard shortcuts
-- Sentiment analysis engine: Keyword-based scoring with dynamic explanations and confidence/risk computation
-- UI result rendering: Dynamic updates for sentiment, confidence, risk, and explanation text
-- Theming and animations: CSS custom properties, gradients, and keyframe animations
+
+### Frontend Component
+The premium frontend provides a Bloomberg-level user interface with:
+- Real-time AI analysis integration
+- Animated particle background system
+- Glassmorphism design with neon accents
+- Responsive layout for desktop and mobile
+- Interactive news fetching and analysis
+
+### Backend Component (Spring Boot)
+The Java backend serves as the orchestration layer:
+- RESTful API endpoints for analysis and news fetching
+- Service layer for AI integration and news aggregation
+- Error handling and health monitoring
+- Configuration management for external services
+
+### AI Service Component (Flask)
+The Python AI service provides FinBERT-powered sentiment analysis:
+- Real-time financial sentiment analysis
+- Company detection and entity recognition
+- Multi-factor explanation generation
+- Batch processing capabilities
 
 **Section sources**
-- [script.js:23-121](file://script.js#L23-L121)
-- [script.js:126-139](file://script.js#L126-L139)
-- [script.js:145-227](file://script.js#L145-L227)
-- [script.js:288-327](file://script.js#L288-L327)
-- [styles.css:4-60](file://styles.css#L4-L60)
+- [frontend/index.html:1-235](file://frontend/index.html#L1-L235)
+- [backend/src/main/java/com/trading/TradingSignalApplication.java:1-30](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L1-L30)
+- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
 
-## Architecture Overview
-The runtime architecture is client-side with a clear separation of concerns:
-- UI layer (HTML/CSS) renders the interface and applies themes
-- Logic layer (JavaScript) orchestrates input handling, sentiment analysis, and result presentation
-- Animation layer (Canvas) provides a lightweight, responsive background effect
+## AI Service Integration
+
+### Flask AI Service Architecture
+The AI service implements a production-ready Flask application with comprehensive error handling and health monitoring:
 
 ```mermaid
-graph TB
-subgraph "UI Layer"
-UI_HTML["index.html"]
-UI_CSS["styles.css"]
-end
-subgraph "Logic Layer"
-LOGIC_JS["script.js"]
-end
-subgraph "Animation Layer"
-CANVAS["Canvas (particles)"]
-end
-UI_HTML --> LOGIC_JS
-UI_CSS --> LOGIC_JS
-LOGIC_JS --> CANVAS
-LOGIC_JS --> UI_HTML
-LOGIC_JS --> UI_CSS
+sequenceDiagram
+participant CLIENT as "Client Request"
+participant FLASK as "Flask AI Service"
+participant ANALYZER as "Sentiment Analyzer"
+participant MODEL as "FinBERT Model"
+CLIENT->>FLASK : POST /predict {text}
+FLASK->>ANALYZER : analyze_sentiment(text)
+ANALYZER->>MODEL : tokenize & predict
+MODEL-->>ANALYZER : sentiment probabilities
+ANALYZER-->>FLASK : {sentiment, confidence, signal}
+FLASK-->>CLIENT : JSON response with processing time
 ```
 
 **Diagram sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [app.py:39-96](file://ai-service/app.py#L39-L96)
+- [sentiment_analyzer.py:58-104](file://ai-service/models/sentiment_analyzer.py#L58-L104)
 
-## Detailed Component Analysis
+### AI Service Configuration
+The AI service supports multiple deployment configurations:
 
-### Particle Animation System
-The particle system creates a responsive animated background:
-- Canvas initialization and resize handling
-- Particle class with position, speed, size, and opacity
-- Connection drawing between nearby particles
-- Animation loop with requestAnimationFrame
+**Environment Variables:**
+- `AI_SERVICE_URL`: Base URL for AI service integration
+- `NEWSAPI_KEY`: Primary news API authentication
+- `FINNHUB_KEY`: Fallback news API authentication
+
+**Service Endpoints:**
+- `/health` - Health check endpoint
+- `/predict` - Single text sentiment analysis
+- `/batch` - Batch processing for multiple texts
+
+**Section sources**
+- [AIService.java:19-26](file://backend/src/main/java/com/trading/service/AIService.java#L19-L26)
+- [app.py:29-96](file://ai-service/app.py#L29-L96)
+
+## Backend API Customization
+
+### Spring Boot Controller Architecture
+The backend implements a comprehensive REST API with multiple endpoints:
 
 ```mermaid
 classDiagram
-class Particle {
-+number x
-+number y
-+number size
-+number speedX
-+number speedY
-+number opacity
-+update() void
-+draw() void
+class TradingController {
++analyze(request) ResponseEntity
++getLatestNews() ResponseEntity
++getNews() ResponseEntity
++healthCheck() ResponseEntity
 }
-class ParticleSystem {
-+Particle[] particles
-+CanvasRenderingContext2D ctx
-+resizeCanvas() void
-+initParticles() void
-+drawConnections() void
-+animateParticles() void
+class SignalService {
++analyzeHeadline(headline) AnalysisResponse
+-calculateSignalStrength(confidence) SignalStrength
+-calculateRiskLevel(confidence) String
 }
-ParticleSystem --> Particle : "manages"
+class AIService {
++analyzeSentiment(text) Map~String,Object~
++isHealthy() boolean
+}
+class NewsService {
++fetchLatestNews() NewsArticle[]
+-fetchFromNewsAPI() NewsArticle[]
+-fetchFromFinnhub() NewsArticle[]
+}
+TradingController --> SignalService
+TradingController --> NewsService
+SignalService --> AIService
 ```
 
 **Diagram sources**
-- [script.js:38-65](file://script.js#L38-L65)
-- [script.js:68-114](file://script.js#L68-L114)
+- [TradingController.java:18-167](file://backend/src/main/java/com/trading/controller/TradingController.java#L18-L167)
+- [SignalService.java:13-100](file://backend/src/main/java/com/trading/service/SignalService.java#L13-L100)
+- [AIService.java:14-86](file://backend/src/main/java/com/trading/service/AIService.java#L14-L86)
+
+### API Endpoint Documentation
+The backend exposes three primary endpoints:
+
+**1. Analyze Headline (`POST /api/analyze`)**
+- Accepts financial news headlines for sentiment analysis
+- Integrates with Flask AI service for real-time processing
+- Returns comprehensive analysis with confidence scores and risk assessment
+
+**2. Fetch Latest News (`GET /api/news/latest`)**
+- Retrieves real-time financial news from multiple sources
+- Implements automatic fallback between NewsAPI and Finnhub
+- Returns structured news articles with metadata
+
+**3. Health Check (`GET /api/health`)**
+- Monitors service availability and dependencies
+- Validates AI service connectivity
+- Provides system status information
 
 **Section sources**
-- [script.js:23-121](file://script.js#L23-L121)
+- [TradingController.java:37-166](file://backend/src/main/java/com/trading/controller/TradingController.java#L37-L166)
+- [README.md:178-241](file://README.md#L178-L241)
 
-### Input Handling and Keyboard Shortcuts
-- Real-time character counting and button enable/disable logic
-- Keyboard shortcut to trigger analysis (Ctrl/Cmd + Enter)
-- Loading state management and result display
+## Extension Points
 
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant HTML as "index.html"
-participant JS as "script.js"
-U->>HTML : Type in textarea
-HTML->>JS : input event
-JS->>JS : updateCharCount(), enable/disable analyzeBtn
-U->>HTML : Click Analyze or press Ctrl/Cmd+Enter
-HTML->>JS : click event
-JS->>JS : showLoading()
-JS->>JS : delay(1500)
-JS->>JS : analyzeSentiment(text)
-JS->>JS : displayResults(result)
-JS->>HTML : update DOM elements
-```
+### Adding New AI Models
+The system supports integration of multiple AI models beyond FinBERT:
 
-**Diagram sources**
-- [script.js:126-139](file://script.js#L126-L139)
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:278-327](file://script.js#L278-L327)
+**Model Integration Process:**
+1. Create new analyzer class in `ai-service/models/`
+2. Implement standardized interface methods
+3. Update Flask routes to support new model
+4. Add model-specific configuration options
 
-**Section sources**
-- [script.js:126-139](file://script.js#L126-L139)
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:375-382](file://script.js#L375-L382)
+**Supported Model Types:**
+- Transformer-based models (BERT, RoBERTa, GPT)
+- Specialized financial NLP models
+- Ensemble models combining multiple approaches
 
-### Sentiment Analysis Engine (Keyword-Based)
-The sentiment analyzer:
-- Normalizes input text to lowercase
-- Scans for predefined positive and negative keywords
-- Computes sentiment, signal type, confidence, and risk level
-- Generates dynamic explanations based on detected signal and keyword counts
+### Extending Signal Types
+The signal generation system can accommodate new trading signals:
 
-```mermaid
-flowchart TD
-Start(["analyzeSentiment(text)"]) --> Normalize["Normalize text to lowercase"]
-Normalize --> Init["Initialize positive/negative counters"]
-Init --> ScanPos["Scan for positive keywords"]
-ScanPos --> ScanNeg["Scan for negative keywords"]
-ScanNeg --> Compare{"Compare scores"}
-Compare --> |Positive > Negative| Buy["Set sentiment=Positive, signal=BUY"]
-Compare --> |Negative > Positive| Sell["Set sentiment=Negative, signal=SELL"]
-Compare --> |Equal| Hold["Set sentiment=Neutral, signal=HOLD"]
-Buy --> Confidence["Compute confidence score"]
-Sell --> Confidence
-Hold --> Confidence
-Confidence --> Risk["Compute risk level"]
-Risk --> Explain["Generate explanation"]
-Explain --> Return["Return result object"]
-```
+**Signal Categories:**
+- **Strong Signals**: `STRONG_BUY`, `STRONG_SELL`
+- **Moderate Signals**: `BUY`, `SELL` 
+- **Weak Signals**: `WEAK_BUY`, `WEAK_SELL`
+- **Conditional Signals**: `WAIT`, `HOLD`
 
-**Diagram sources**
-- [script.js:145-227](file://script.js#L145-L227)
-- [script.js:229-253](file://script.js#L229-L253)
+**Implementation Steps:**
+1. Update `SignalStrength` enum in backend models
+2. Modify confidence thresholds in `SignalService`
+3. Extend frontend UI to display new signal types
+4. Update risk calculation logic
+
+### Customizing News Sources
+The news aggregation system supports multiple financial data providers:
+
+**Current Providers:**
+- NewsAPI.org (primary)
+- Finnhub.io (fallback)
+
+**Adding New Providers:**
+1. Create new service class in backend
+2. Implement standardized interface
+3. Add API key configuration
+4. Update fallback logic
 
 **Section sources**
-- [script.js:145-227](file://script.js#L145-L227)
-- [script.js:229-253](file://script.js#L229-L253)
+- [SignalService.java:77-98](file://backend/src/main/java/com/trading/service/SignalService.java#L77-L98)
+- [NewsService.java:38-183](file://backend/src/main/java/com/trading/service/NewsService.java#L38-L183)
 
-### UI Result Rendering and Theming
-- Updates signal badge, sentiment, confidence bar, risk level, and explanation text
-- Applies theme-aware colors and gradients using CSS custom properties
-- Animates confidence bar and scrolls to results
+## Integration Guides
 
-```mermaid
-sequenceDiagram
-participant JS as "script.js"
-participant DOM as "DOM Elements"
-participant CSS as "styles.css"
-JS->>DOM : set signalBadge classes and content
-JS->>DOM : set sentimentValue color via getSentimentColor()
-JS->>DOM : animate confidenceFill width
-JS->>DOM : set riskValue color via getRiskColor()
-JS->>DOM : set explanationText
-JS->>CSS : use gradients and custom properties for colors
-```
+### External Financial API Integration
+The system provides flexible integration points for external financial data:
 
-**Diagram sources**
-- [script.js:288-327](file://script.js#L288-L327)
-- [script.js:329-364](file://script.js#L329-L364)
-- [styles.css:4-60](file://styles.css#L4-L60)
+**API Configuration:**
+- Edit `backend/src/main/resources/application.properties`
+- Add API keys for supported providers
+- Configure endpoint URLs and authentication
+
+**Supported Integration Patterns:**
+- Real-time streaming via WebSockets
+- Scheduled data feeds via cron jobs
+- On-demand API calls for specific requests
+- Hybrid approach combining multiple sources
+
+### WebSocket Real-Time Data Streams
+For real-time financial data integration:
+
+**WebSocket Implementation:**
+1. Create WebSocket endpoint in backend
+2. Implement message broadcasting
+3. Add client-side connection handling
+4. Configure connection pooling and reconnection
+
+**Data Stream Types:**
+- Live market data feeds
+- Breaking news alerts
+- Technical indicator updates
+- Custom user-defined streams
+
+### Machine Learning Model Integration
+The AI service supports various machine learning frameworks:
+
+**Model Framework Support:**
+- HuggingFace Transformers (current implementation)
+- TensorFlow/Keras models
+- PyTorch Lightning modules
+- ONNX runtime models
+
+**Integration Requirements:**
+- Standardized input/output formats
+- Model versioning and compatibility
+- Performance optimization and caching
+- Error handling and fallback mechanisms
 
 **Section sources**
-- [script.js:288-327](file://script.js#L288-L327)
-- [script.js:329-364](file://script.js#L329-L364)
-- [styles.css:4-60](file://styles.css#L4-L60)
-
-## Dependency Analysis
-- HTML depends on CSS for styling and JavaScript for interactivity
-- JavaScript depends on DOM APIs and Canvas for rendering
-- Theming relies on CSS custom properties defined in the root scope
-
-```mermaid
-graph LR
-HTML["index.html"] --> CSS["styles.css"]
-HTML --> JS["script.js"]
-JS --> CSS
-JS --> HTML
-```
-
-**Diagram sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
-
-**Section sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [requirements.txt:1-6](file://ai-service/requirements.txt#L1-L6)
+- [app.py:100-139](file://ai-service/app.py#L100-L139)
 
 ## Performance Considerations
-- Particle animation pauses when the tab is not visible to conserve resources
-- Confidence bar animation uses CSS transitions for smoothness
-- Canvas particle count scales with viewport area to balance quality and performance
-- Debounce or throttle heavy operations if integrating external APIs or ML models
+
+### Multi-Service Performance Optimization
+The distributed architecture introduces several performance considerations:
+
+**Service Communication:**
+- Implement connection pooling for AI service calls
+- Add circuit breaker patterns for fault tolerance
+- Use asynchronous processing for non-critical operations
+- Cache frequently accessed data across services
+
+**Resource Management:**
+- Monitor memory usage for FinBERT model (~2GB)
+- Optimize particle system based on device capabilities
+- Implement request throttling for external APIs
+- Use connection keep-alive for persistent connections
+
+**Scalability Patterns:**
+- Horizontal scaling for Flask AI service
+- Load balancing for high-traffic scenarios
+- Database connection pooling for user preferences
+- CDN caching for static assets
+
+### Deployment Configuration
+Configure service ports and resource allocation:
+
+**Default Ports:**
+- Frontend: Static file serving (browser default)
+- Backend: `localhost:8080`
+- AI Service: `localhost:5000`
+
+**Resource Requirements:**
+- Minimum 4GB RAM for optimal performance
+- SSD storage for model caching
+- Dedicated GPU for accelerated inference (optional)
+- Network bandwidth for real-time data feeds
 
 **Section sources**
-- [script.js:388-395](file://script.js#L388-L395)
-- [script.js:68-75](file://script.js#L68-L75)
+- [README.md:322-330](file://README.md#L322-L330)
+- [README.md:108-168](file://README.md#L108-L168)
 
 ## Troubleshooting Guide
-- If the particle animation stops, ensure the visibility change handler restarts the animation loop
-- If sentiment analysis does not trigger, verify the input field is not empty and the button is enabled
-- If colors appear incorrect, confirm CSS custom properties are defined in the root scope
-- If animations stutter, reduce particle count or disable animations on low-power devices
+
+### Multi-Service Architecture Issues
+Common problems in the distributed system:
+
+**Service Connectivity Problems:**
+- Verify Flask AI service is running on port 5000
+- Check Spring Boot backend can reach AI service
+- Validate network firewall settings
+- Monitor service health endpoints
+
+**API Key Configuration:**
+- Ensure NewsAPI.org and Finnhub.io keys are valid
+- Check API quota limits and expiration dates
+- Verify application.properties contains correct keys
+- Test individual API endpoints separately
+
+**Performance Issues:**
+- Monitor FinBERT model loading time (first run ~400MB download)
+- Check memory usage for AI service
+- Verify particle system performance on different devices
+- Optimize network requests and caching strategies
+
+**Deployment Problems:**
+- Ensure all prerequisites are installed (Java 17+, Python 3.8+)
+- Check Maven and pip dependency installations
+- Verify port availability (8080, 5000)
+- Review log files for detailed error messages
 
 **Section sources**
-- [script.js:388-395](file://script.js#L388-L395)
-- [script.js:126-139](file://script.js#L126-L139)
-- [styles.css:4-60](file://styles.css#L4-L60)
+- [README.md:286-320](file://README.md#L286-L320)
+- [QUICKSTART.md:88-105](file://QUICKSTART.md#L88-L105)
 
 ## Conclusion
-The AI Trading Signal Engine provides a robust foundation for customization and extension. By leveraging CSS custom properties, extending the sentiment analyzer, and augmenting the animation system, teams can tailor the platform to diverse trading use cases while maintaining performance and visual coherence.
+The AI Trading Signal Engine provides a robust, production-ready foundation for financial sentiment analysis with its multi-service architecture. The system's modular design enables extensive customization and extension while maintaining high performance and reliability. Teams can leverage the documented extension points to integrate new AI models, customize signal types, and connect to various financial data sources while preserving the premium user experience.
 
 ## Appendices
 
-### A. Customizing Sentiment Keywords and Detection Algorithm
-- Add new keywords to the positive or negative arrays in the sentiment analyzer
-- Adjust scoring logic to weight keywords differently or incorporate phrase matching
-- Modify confidence calculation to reflect keyword density or contextual emphasis
-- Extend explanation generation to include new categories or dynamic factors
+### A. Customizing Sentiment Analysis Keywords and Detection Algorithm
+The system now supports both frontend keyword analysis and backend AI-powered analysis:
 
-Best practices:
-- Keep keyword lists concise and domain-relevant
+**Frontend Keyword Analysis:**
+- Customize positive/negative word lists in `script.js`
+- Modify confidence calculation algorithms
+- Extend explanation generation logic
+- Add new keyword detection patterns
+
+**Backend AI Integration:**
+- Extend `SentimentAnalyzer` class in `sentiment_analyzer.py`
+- Add new company detection patterns
+- Customize explanation generation
+- Implement ensemble models combining multiple approaches
+
+**Best Practices:**
+- Maintain backward compatibility when extending
 - Use weighted scoring for nuanced sentiment
-- Preserve backward compatibility by appending new keywords rather than replacing defaults
+- Implement fallback mechanisms for edge cases
+- Test with real financial news datasets
 
 **Section sources**
-- [script.js:145-227](file://script.js#L145-L227)
-- [script.js:229-253](file://script.js#L229-L253)
+- [script.js:387-479](file://frontend/script.js#L387-L479)
+- [sentiment_analyzer.py:11-175](file://ai-service/models/sentiment_analyzer.py#L11-L175)
 
 ### B. Theming Customization via CSS Custom Properties
-- Override color palette variables in the root scope to change the theme
-- Adjust gradients, shadows, and radii to match brand guidelines
-- Use custom properties consistently across components for maintainability
+The premium UI supports extensive theming customization:
 
-Examples of variables to customize:
-- Backgrounds, text colors, neon accents
-- Gradients for buttons and confidence bars
-- Spacing and radius tokens
+**Root Variables:**
+- Background colors (`--bg-primary`, `--bg-secondary`)
+- Neon accent colors (`--neon-green`, `--neon-red`, `--neon-blue`)
+- Gradient definitions (`--gradient-primary`, `--gradient-btn`)
+- Shadow effects (`--shadow-glow-*`)
+- Typography tokens (`--spacing-*`, `--radius-*`)
+
+**Customization Examples:**
+- Create custom color schemes for different market sectors
+- Implement dark/light mode switching
+- Add brand-specific color palettes
+- Customize animation timing and easing functions
 
 **Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
+- [styles.css:4-73](file://frontend/styles.css#L4-L73)
 
 ### C. Extending Visual Effects and Animations
-- Add new keyframes for additional UI animations
-- Introduce new particle behaviors (e.g., flocking, attraction/repulsion)
-- Increase or decrease particle count based on device capabilities
-- Add WebGL or off-DOM effects for advanced visuals (optional)
+The particle system and UI animations provide multiple extension points:
+
+**Particle System Extensions:**
+- Modify particle physics and collision detection
+- Add new visual effects (flocking, attraction/repulsion)
+- Implement WebGL acceleration for complex animations
+- Add interactive particle manipulation
+
+**UI Animation Enhancements:**
+- Extend keyframe animations for new components
+- Add micro-interactions for enhanced user feedback
+- Implement custom transition effects
+- Create reusable animation utilities
 
 **Section sources**
-- [script.js:38-65](file://script.js#L38-L65)
-- [script.js:68-114](file://script.js#L68-L114)
-- [styles.css:673-734](file://styles.css#L673-L734)
+- [script.js:38-136](file://frontend/script.js#L38-L136)
+- [styles.css:102-158](file://frontend/styles.css#L102-L158)
 
 ### D. Integration Points for External Financial APIs and WebSockets
-- Replace the mock sentiment analyzer with a call to a backend service or public API
-- Use WebSocket connections to stream real-time financial news or tick data
-- Implement caching and rate limiting to handle API quotas and latency
+The system provides flexible integration mechanisms:
 
-Guidelines:
-- Encapsulate API calls behind a dedicated module
-- Add loading states and error handling for network requests
-- Throttle frequent updates to preserve performance
+**API Integration Patterns:**
+- RESTful API consumption with retry logic
+- WebSocket real-time data streaming
+- GraphQL queries for complex data relationships
+- Event-driven architecture for reactive updates
 
-[No sources needed since this section provides general guidance]
+**Webhook Implementation:**
+- Configure webhook endpoints for external notifications
+- Implement secure webhook validation
+- Add retry mechanisms for failed deliveries
+- Monitor webhook delivery status
+
+**Data Transformation:**
+- Implement custom data mapping for different API formats
+- Add data validation and sanitization
+- Create caching layers for improved performance
+- Establish data synchronization strategies
 
 ### E. Machine Learning Model Integration
-- Deploy a lightweight NLP model in a worker or service worker
-- Use serverless inference endpoints for scalable processing
-- Cache predictions for repeated inputs to reduce latency
+Multiple ML framework integration options:
 
-Considerations:
-- Ensure model responses are normalized to the existing result schema
-- Add fallback logic for offline or degraded modes
+**Model Framework Support:**
+- HuggingFace Transformers (current FinBERT implementation)
+- TensorFlow Serving for production deployments
+- ONNX Runtime for cross-platform inference
+- Custom PyTorch models with optimized pipelines
 
-[No sources needed since this section provides general guidance]
+**Model Management:**
+- Implement model versioning and A/B testing
+- Add model performance monitoring and metrics
+- Create automated model retraining pipelines
+- Establish model rollback and recovery procedures
+
+**Inference Optimization:**
+- Implement model quantization for reduced memory usage
+- Add batch processing for improved throughput
+- Create model caching strategies
+- Optimize inference pipeline for real-time requirements
 
 ### F. Extending Signal Types and Explanation Generation
-- Add new signal categories (e.g., “STRONG BUY”, “STRONG SELL”) and corresponding UI badges
-- Enhance explanation generation with domain-specific insights or historical patterns
-- Introduce multi-modal explanations combining sentiment, technical cues, and macro factors
+The signal generation system supports comprehensive customization:
+
+**Signal Enhancement:**
+- Add new signal categories (e.g., `STRONG_BUY`, `WEAK_SELL`)
+- Implement multi-timeframe analysis
+- Add technical indicator integration
+- Create sentiment intensity scoring
+
+**Explanation Generation:**
+- Extend natural language generation for domain-specific insights
+- Add historical pattern matching and comparison
+- Implement multi-modal explanations combining technical and fundamental analysis
+- Create personalized explanation formats based on user preferences
+
+**Risk Assessment:**
+- Implement dynamic risk scoring based on market volatility
+- Add correlation analysis with broader market trends
+- Create scenario-based risk evaluation
+- Integrate with external risk rating services
 
 **Section sources**
-- [script.js:180-198](file://script.js#L180-L198)
-- [script.js:229-253](file://script.js#L229-L253)
+- [SignalService.java:77-98](file://backend/src/main/java/com/trading/service/SignalService.java#L77-L98)
+- [sentiment_analyzer.py:121-170](file://ai-service/models/sentiment_analyzer.py#L121-L170)
 
 ### G. Persistence for User Preferences
-- Store user preferences (theme, language, preferred signals) in localStorage or IndexedDB
-- Sync preferences across sessions and devices via a backend service
-- Respect privacy and minimize stored data
+The system supports user preference storage and synchronization:
+
+**Local Storage Options:**
+- Browser localStorage for simple preference storage
+- IndexedDB for larger datasets and structured data
+- Session storage for temporary preferences
+- Cookie-based preferences for cross-session persistence
+
+**Backend Integration:**
+- User preference database tables
+- Preference synchronization across devices
+- GDPR-compliant data handling and deletion
+- Preference migration and backup strategies
+
+**Preference Categories:**
+- Theme and UI customization preferences
+- Analysis parameter preferences
+- Alert and notification settings
+- Data sharing and privacy preferences
+
+### H. Multi-Service Deployment Configuration
+Production deployment considerations:
+
+**Containerization:**
+- Docker containerization for frontend, backend, and AI services
+- Kubernetes deployment for scalable microservices
+- Environment-specific configuration management
+- Secret management for API keys and credentials
+
+**Monitoring and Logging:**
+- Distributed tracing for multi-service requests
+- Centralized logging for debugging and analytics
+- Health check endpoints for service monitoring
+- Performance metrics collection and alerting
+
+**Security Considerations:**
+- API gateway for request routing and security
+- Cross-origin resource sharing (CORS) configuration
+- Authentication and authorization for protected endpoints
+- Data encryption for sensitive user information
+
+**Scalability Patterns:**
+- Load balancing across service instances
+- Database connection pooling and clustering
+- Message queuing for asynchronous processing
+- CDN caching for static assets and frequently accessed data
 
 **Section sources**
-- [script.js:388-395](file://script.js#L388-L395)
-
-### H. Compatibility and Best Practices
-- Maintain a stable DOM structure to avoid breaking UI updates
-- Use CSS custom properties for all theming to simplify upgrades
-- Keep animation loops decoupled from UI logic for easier testing and maintenance
-- Validate external integrations with feature flags to ensure graceful degradation
-
-**Section sources**
-- [index.html:1-226](file://index.html#L1-L226)
-- [styles.css:4-60](file://styles.css#L4-L60)
-- [script.js:288-327](file://script.js#L288-L327)
+- [TradingSignalApplication.java:13-28](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L13-L28)
+- [app.py:152-155](file://ai-service/app.py#L152-L155)
+- [README.md:108-168](file://README.md#L108-L168)

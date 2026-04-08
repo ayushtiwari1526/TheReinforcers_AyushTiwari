@@ -2,352 +2,448 @@
 
 <cite>
 **Referenced Files in This Document**
-- [index.html](file://index.html)
-- [script.js](file://script.js)
-- [styles.css](file://styles.css)
+- [README.md](file://README.md)
+- [QUICKSTART.md](file://QUICKSTART.md)
+- [setup.bat](file://setup.bat)
+- [start.bat](file://start.bat)
+- [restart-backend.bat](file://restart-backend.bat)
+- [frontend/index.html](file://frontend/index.html)
+- [frontend/script.js](file://frontend/script.js)
+- [frontend/styles.css](file://frontend/styles.css)
+- [backend/src/main/java/com/trading/TradingSignalApplication.java](file://backend/src/main/java/com/trading/TradingSignalApplication.java)
+- [ai-service/app.py](file://ai-service/app.py)
+- [backend/src/main/resources/application.properties](file://backend/src/main/resources/application.properties)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Updated installation procedure to reflect multi-service architecture with Java 17+, Maven, and Python 3.8+
+- Added comprehensive setup and startup procedures using batch scripts
+- Documented API endpoints and service coordination
+- Updated prerequisites and system requirements
+- Added troubleshooting for multi-service environment
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Core Components](#core-components)
-4. [Architecture Overview](#architecture-overview)
-5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Dependency Analysis](#dependency-analysis)
-7. [Performance Considerations](#performance-considerations)
-8. [Troubleshooting Guide](#troubleshooting-guide)
-9. [Conclusion](#conclusion)
-10. [Appendices](#appendices)
+2. [Prerequisites](#prerequisites)
+3. [Installation and Setup](#installation-and-setup)
+4. [Running the Application](#running-the-application)
+5. [Understanding the Architecture](#understanding-the-architecture)
+6. [Accessing the Application](#accessing-the-application)
+7. [First Analysis Workflow](#first-analysis-workflow)
+8. [API Endpoints](#api-endpoints)
+9. [Troubleshooting Guide](#troubleshooting-guide)
+10. [Conclusion](#conclusion)
 
 ## Introduction
-This guide helps you install and run the AI Trading Signal Engine locally in your browser. It covers prerequisites, launching the app, navigating the interface, performing your first analysis, interpreting results, and troubleshooting common issues. The application is a client-side web app that runs entirely in your browser without requiring a backend server.
+This guide helps you install and run the AI Trading Signal Engine locally in a multi-service architecture. The application consists of three coordinated services: a premium frontend UI, a Java Spring Boot backend API, and a Python Flask AI service powered by FinBERT. It covers prerequisites, setup procedures, service coordination, and comprehensive troubleshooting for the multi-service environment.
 
-## Project Structure
-The application consists of three files:
-- index.html: The HTML page that defines the UI layout and includes the stylesheet and script.
-- styles.css: The styling for the dark theme, animations, responsive layout, and interactive elements.
-- script.js: The JavaScript logic for input handling, simulated sentiment analysis, UI updates, keyboard shortcuts, and performance optimizations.
+## Prerequisites
 
-```mermaid
-graph TB
-A["index.html<br/>Defines UI and loads assets"] --> B["styles.css<br/>Styling and animations"]
-A --> C["script.js<br/>Logic and interactions"]
+### System Requirements
+- **Java 17+** - Required for Spring Boot backend
+- **Maven 3.6+** - Required for building Java backend
+- **Python 3.8+** - Required for Flask AI service
+- **Git** (Optional) - For cloning the repository
+- **Windows 10+** - Batch scripts are Windows-specific
+
+### Software Dependencies
+The application requires the following technologies:
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Backend**: Java 17, Spring Boot 3.2.0, Maven
+- **AI Service**: Python 3.8+, Flask 3.0.0, Transformers 4.35.0, PyTorch 2.1.0
+- **External APIs**: NewsAPI.org (primary), Finnhub.io (fallback)
+
+**Section sources**
+- [README.md:110-116](file://README.md#L110-L116)
+- [setup.bat:8-41](file://setup.bat#L8-L41)
+- [backend/pom.xml:21-23](file://backend/pom.xml#L21-L23)
+- [ai-service/requirements.txt:1-6](file://ai-service/requirements.txt#L1-L6)
+
+## Installation and Setup
+
+### Step 1: Download and Extract
+1. Clone or download the repository to your local machine
+2. Navigate to the project root directory
+
+### Step 2: Run Setup Script (Windows)
+The setup script automates the entire installation process:
+
+```batch
+# Run the setup script
+setup.bat
 ```
 
-**Diagram sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [styles.css:1-816](file://styles.css#L1-L816)
-- [script.js:1-404](file://script.js#L1-L404)
+The setup script performs the following automated checks:
+1. **Java 17+ Check**: Verifies Java installation and version
+2. **Maven Check**: Confirms Maven availability
+3. **Python 3.8+ Check**: Validates Python installation
+4. **Python Dependencies**: Installs required packages (Flask, Transformers, PyTorch)
+5. **Backend Build**: Compiles Spring Boot application
+
+### Step 3: Obtain API Keys
+The application requires free API keys from external services:
+
+#### NewsAPI.org (Primary)
+1. Visit: https://newsapi.org/register
+2. Sign up for a free account
+3. Copy your API key from the dashboard
+
+#### Finnhub.io (Fallback)
+1. Visit: https://finnhub.io/register
+2. Sign up for a free account
+3. Copy your API key from the dashboard
+
+### Step 4: Configure API Keys
+Edit the configuration file to add your API keys:
+
+```properties
+# backend/src/main/resources/application.properties
+
+# Replace with your actual keys
+newsapi.key=YOUR_NEWSAPI_KEY_HERE
+finnhub.key=YOUR_FINNHUB_KEY_HERE
+```
 
 **Section sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [script.js:1-404](file://script.js#L1-L404)
-- [styles.css:1-816](file://styles.css#L1-L816)
+- [setup.bat:73-83](file://setup.bat#L73-L83)
+- [README.md:135-156](file://README.md#L135-L156)
+- [backend/src/main/resources/application.properties:7-11](file://backend/src/main/resources/application.properties#L7-L11)
 
-## Core Components
-- HTML container and layout: The page sets up the header, input area, analyze button, loading state, results card, and footer statistics.
-- Input handling: A textarea captures financial news headlines with character counting and enables/disables the analyze button.
-- Simulated sentiment engine: A keyword-based analyzer determines sentiment, generates a trading signal, confidence, risk level, and explanation.
-- UI interactions: Loading animations, result rendering, and keyboard shortcuts.
-- Visual design: Dark theme with neon accents, animated backgrounds, and responsive layout.
+## Running the Application
+
+### Method 1: Using Start Script (Recommended)
+The start script coordinates all services in the correct order:
+
+```batch
+# Start all services
+start.bat
+```
+
+The start script performs the following sequence:
+1. **Start AI Service**: Launches Python Flask service on port 5000
+2. **Wait for Model**: Waits 10 seconds for FinBERT model to load
+3. **Start Backend**: Launches Spring Boot on port 8080
+4. **Wait for Backend**: Waits 15 seconds for backend to initialize
+5. **Open Frontend**: Launches both backend UI and frontend in browser
+
+### Method 2: Manual Service Management
+For development or debugging, you can start services individually:
+
+#### Start AI Service (Python Flask)
+```batch
+cd ai-service
+python app.py
+```
+
+#### Start Backend (Spring Boot)
+```batch
+cd backend
+mvn spring-boot:run
+```
+
+#### Start Frontend
+Open `frontend/index.html` directly in your browser.
+
+### Service Coordination
+The application uses coordinated service startup to ensure proper initialization order:
+- AI Service starts first and loads the heavy FinBERT model
+- Backend waits for AI Service to be ready
+- Frontend opens automatically after both services are available
 
 **Section sources**
-- [index.html:42-150](file://index.html#L42-L150)
-- [script.js:127-139](file://script.js#L127-L139)
-- [script.js:145-227](file://script.js#L145-L227)
-- [script.js:259-327](file://script.js#L259-L327)
-- [styles.css:248-294](file://styles.css#L248-L294)
+- [start.bat:1-50](file://start.bat#L1-L50)
+- [restart-backend.bat:1-24](file://restart-backend.bat#L1-L24)
 
-## Architecture Overview
-The application is a single-page client-side app. The HTML page renders the UI, the CSS applies styling and animations, and the JavaScript handles user interactions, simulates analysis, and updates the UI.
+## Understanding the Architecture
+
+The AI Trading Signal Engine follows a microservices architecture with three distinct components:
 
 ```mermaid
 graph TB
-subgraph "Browser"
-UI["index.html<br/>UI Markup"]
-CSS["styles.css<br/>Styling & Animations"]
-JS["script.js<br/>Logic & Interactions"]
+subgraph "Client Layer"
+FE[Frontend UI<br/>HTML/CSS/JavaScript]
 end
-UI --> CSS
-UI --> JS
-JS --> UI
+subgraph "API Gateway"
+BE[Spring Boot Backend<br/>REST API]
+end
+subgraph "AI Services"
+AI[Flask AI Service<br/>FinBERT Analysis]
+ML[FinBERT Model<br/>HuggingFace]
+end
+subgraph "External APIs"
+NA[NewsAPI.org<br/>Primary News]
+FH[Finnhub.io<br/>Fallback News]
+end
+FE --> BE
+BE --> AI
+AI --> ML
+BE --> NA
+BE --> FH
 ```
 
 **Diagram sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [styles.css:1-816](file://styles.css#L1-L816)
-- [script.js:1-404](file://script.js#L1-L404)
+- [README.md:29-61](file://README.md#L29-L61)
+- [backend/src/main/java/com/trading/TradingSignalApplication.java:8-28](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L8-L28)
 
-## Detailed Component Analysis
-
-### Installation and Running Locally
-Follow these steps to run the application on your machine:
-1. Save the three files (index.html, script.js, styles.css) in the same folder on your computer.
-2. Open index.html in a modern web browser.
-   - The app will load immediately without any build process.
-3. Verify the interface appears with the header, input area, analyze button, and footer stats.
-
-Prerequisites:
-- Modern web browser with JavaScript enabled.
-- No server required; open index.html directly from your file system.
-
-Recommended browsers:
-- Chrome, Firefox, Safari, Edge (latest versions).
-- The app uses standard web APIs and CSS features widely supported by modern browsers.
+### Service Responsibilities
+- **Frontend**: Premium UI with real-time analysis capabilities
+- **Backend**: Orchestrates services, manages API requests, and handles business logic
+- **AI Service**: Performs sentiment analysis using FinBERT model
+- **External APIs**: Provide real financial news data
 
 **Section sources**
-- [index.html:1-175](file://index.html#L1-L175)
-- [script.js:375-382](file://script.js#L375-L382)
-- [styles.css:76-84](file://styles.css#L76-L84)
+- [README.md:27-61](file://README.md#L27-L61)
 
-### Accessing the Application
-- Launch your browser and open index.html from the folder where you saved the files.
-- The page will render the AI Trading Signal Engine interface with animated background effects.
+## Accessing the Application
 
-**Section sources**
-- [index.html:15-40](file://index.html#L15-L40)
-- [styles.css:89-109](file://styles.css#L89-L109)
+### Primary Access Methods
+After successful startup, access the application through multiple entry points:
 
-### Understanding the Interface Layout
-- Header: Logo and subtitle with a live status indicator.
-- Input Section: A textarea labeled “Financial News Input” with a character counter and placeholder text.
-- Analyze Button: Prominent gradient button labeled “Analyze Signal.”
-- Loading State: Animated loader with dots and subtext while processing.
-- Result Card: Displays the trading signal badge, sentiment, confidence, risk level, and AI explanation.
-- Footer Stats: Displays aggregated metrics such as total news analyzed, accuracy rate, and response time.
+#### Frontend Interface
+- **Direct Access**: Open `frontend/index.html` in your browser
+- **Backend Redirect**: Access `http://localhost:8080` in your browser
 
-**Section sources**
-- [index.html:25-40](file://index.html#L25-L40)
-- [index.html:45-63](file://index.html#L45-L63)
-- [index.html:65-70](file://index.html#L65-L70)
-- [index.html:72-87](file://index.html#L72-L87)
-- [index.html:89-148](file://index.html#L89-L148)
-- [index.html:152-168](file://index.html#L152-L168)
+#### Backend API
+- **Main Endpoint**: `http://localhost:8080/api/`
+- **Health Check**: `http://localhost:8080/api/health`
 
-### Performing the First Analysis
-Basic workflow:
-1. Paste a financial news headline into the input area.
-2. Click the “Analyze Signal” button or press Ctrl/Cmd + Enter.
-3. Observe the loading animation.
-4. Review the results card showing the signal, sentiment, confidence, risk level, and explanation.
+#### AI Service
+- **AI Endpoint**: `http://localhost:8080/api/analyze`
+- **Health Check**: `http://localhost:5080/health`
 
-Keyboard shortcut:
-- Ctrl/Cmd + Enter triggers analysis when the input is not empty and the button is enabled.
+### Verification Steps
+Test that all services are running correctly:
 
-Input validation:
-- The button is disabled when the input is empty.
-- The character counter enforces a 500-character limit.
+```bash
+# Test AI Service
+curl http://localhost:5000/health
 
-**Section sources**
-- [script.js:127-139](file://script.js#L127-L139)
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:375-382](file://script.js#L375-L382)
-- [index.html:52-62](file://index.html#L52-L62)
+# Test Backend
+curl http://localhost:8080/api/health
 
-### Interpreting Results
-- Signal Badge: Shows the recommendation (Buy, Sell, or Hold) with a colored glow and emoji.
-- Sentiment: Indicates whether the sentiment is Positive, Negative, or Neutral.
-- Confidence: Numeric percentage with a progress bar and gradient color indicating low, medium, or high confidence.
-- Risk Level: Low, Medium, or High based on confidence.
-- Explanation: A contextual explanation generated from the input text and sentiment.
-
-**Section sources**
-- [index.html:90-148](file://index.html#L90-L148)
-- [script.js:288-327](file://script.js#L288-L327)
-- [script.js:329-364](file://script.js#L329-L364)
-
-### Browser Compatibility and Recommendations
-- The app uses modern CSS (variables, gradients, animations) and vanilla JavaScript.
-- Recommended browsers: Chrome, Firefox, Safari, Edge (latest versions).
-- The design is responsive and adapts to smaller screens.
-
-**Section sources**
-- [styles.css:4-60](file://styles.css#L4-L60)
-- [styles.css:739-795](file://styles.css#L739-L795)
-- [script.js:375-382](file://script.js#L375-L382)
-
-## Architecture Overview
-
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant H as "index.html"
-participant J as "script.js"
-participant C as "DOM Elements"
-U->>H : "Open index.html"
-H-->>U : "Render UI"
-U->>J : "Type in news input"
-J->>C : "Enable/Disable analyze button<br/>Update character count"
-U->>J : "Click Analyze or press Ctrl/Cmd + Enter"
-J->>C : "Show loading state"
-J->>J : "Simulate analysis (delay)"
-J->>C : "Update result card with signal, sentiment,<br/>confidence, risk, explanation"
+# Test Full Flow
+curl -X POST http://localhost:8080/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"headline":"Tesla profits surge to record highs"}'
 ```
 
-**Diagram sources**
-- [index.html:52-70](file://index.html#L52-L70)
-- [script.js:127-139](file://script.js#L127-L139)
-- [script.js:259-327](file://script.js#L259-L327)
+**Section sources**
+- [README.md:170-175](file://README.md#L170-L175)
+- [QUICKSTART.md:54-66](file://QUICKSTART.md#L54-L66)
 
-## Detailed Component Analysis
+## First Analysis Workflow
 
-### Input Handling and Validation
-- The input listener updates the character counter and toggles the analyze button’s enabled state.
-- The button is disabled when the input is empty and re-enabled when text is present.
-- A maximum length of 500 characters is enforced.
+### Basic Analysis Process
+1. **Open Frontend**: Launch the premium UI interface
+2. **Enter Headline**: Type or paste a financial news headline
+3. **Initiate Analysis**: Click "Analyze Signal" or press Ctrl/Cmd + Enter
+4. **View Results**: See comprehensive analysis with signal, confidence, and explanation
 
-```mermaid
-flowchart TD
-Start(["User types in input"]) --> Count["Update character count"]
-Count --> HasText{"Length > 0?"}
-HasText --> |Yes| Enable["Enable Analyze Button<br/>Set counter color"]
-HasText --> |No| Disable["Disable Analyze Button<br/>Reset counter color"]
+### Advanced Workflow with Live News
+1. **Fetch Live News**: Click "Fetch Live News" to retrieve current financial headlines
+2. **Select Article**: Choose an article from the live news feed
+3. **Analyze**: Click "Analyze Signal" to process the selected headline
+4. **Review Details**: Examine signal strength, risk assessment, and key factors
+
+### Result Interpretation
+The analysis provides:
+- **Trading Signal**: BUY, SELL, or HOLD recommendation
+- **Confidence Score**: Percentage with visual confidence indicator
+- **Risk Level**: Low, Medium, or High based on confidence
+- **Company Detection**: Automatic identification of mentioned companies
+- **Key Factors**: Identified positive/negative market drivers
+- **Mini Chart**: Visual representation of signal trend
+
+**Section sources**
+- [frontend/index.html:67-208](file://frontend/index.html#L67-L208)
+- [frontend/script.js:511-636](file://frontend/script.js#L511-L636)
+
+## API Endpoints
+
+### Backend REST API
+The Spring Boot backend exposes the following endpoints:
+
+#### Analyze Headline
+**Endpoint**: `POST /api/analyze`
+**Purpose**: Process financial news headlines for trading signals
+
+**Request Body**:
+```json
+{
+  "headline": "Tesla profits surge to record highs as EV growth accelerates"
+}
 ```
 
-**Diagram sources**
-- [script.js:127-139](file://script.js#L127-L139)
-- [index.html:52-62](file://index.html#L52-L62)
-
-**Section sources**
-- [script.js:127-139](file://script.js#L127-L139)
-- [index.html:52-62](file://index.html#L52-L62)
-
-### Sentiment Analysis Engine (Mock)
-- The analyzer converts input to lowercase and counts occurrences of predefined positive and negative keywords.
-- Determines sentiment and assigns a trading signal (Buy, Sell, Hold).
-- Generates a confidence score and risk level based on keyword counts and randomness.
-- Produces a contextual explanation string.
-
-```mermaid
-flowchart TD
-A["Input text"] --> B["Lowercase conversion"]
-B --> C["Count positive keywords"]
-B --> D["Count negative keywords"]
-C --> E{"Compare counts"}
-D --> E
-E --> |Positive > Negative| F["Sentiment: Positive<br/>Signal: Buy"]
-E --> |Negative > Positive| G["Sentiment: Negative<br/>Signal: Sell"]
-E --> |Equal| H["Sentiment: Neutral<br/>Signal: Hold"]
-F --> I["Compute confidence and risk"]
-G --> I
-H --> I
-I --> J["Generate explanation"]
-J --> K["Return result"]
+**Response**:
+```json
+{
+  "headline": "Tesla profits surge to record highs...",
+  "company": "Tesla",
+  "sentiment": "Positive",
+  "signal": "BUY",
+  "signalSubtitle": "Strong bullish signal detected",
+  "confidence": 89.5,
+  "strength": "STRONG",
+  "riskLevel": "Low",
+  "explanation": "FinBERT AI model detected strong positive sentiment...",
+  "keyFactors": ["Earnings Impact", "Growth Indicators"],
+  "timestamp": "2026-04-08T13:30:00",
+  "processingTime": 1.2
+}
 ```
 
-**Diagram sources**
-- [script.js:145-227](file://script.js#L145-L227)
+#### Fetch Latest News
+**Endpoint**: `GET /api/news/latest`
+**Purpose**: Retrieve current financial news articles
 
-**Section sources**
-- [script.js:145-227](file://script.js#L145-L227)
-
-### UI Interaction Handlers
-- On click or keyboard shortcut, the app shows the loading state, waits briefly, runs the analyzer, and displays results.
-- The result card animates into view and updates all metrics dynamically.
-
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant B as "Analyze Button"
-participant J as "script.js"
-participant R as "Result Card"
-U->>B : "Click or press Ctrl/Cmd + Enter"
-J->>J : "showLoading()"
-J->>J : "delay(1500)"
-J->>J : "analyzeSentiment(input)"
-J->>R : "displayResults(result)"
+**Response**:
+```json
+{
+  "articles": [
+    {
+      "title": "Stock market hits record high...",
+      "source": "Reuters",
+      "url": "https://...",
+      "publishedAt": "2026-04-08T10:00:00"
+    }
+  ],
+  "count": 5
+}
 ```
 
-**Diagram sources**
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:278-327](file://script.js#L278-L327)
+#### Health Check
+**Endpoint**: `GET /api/health`
+**Purpose**: Verify system health and service status
 
-**Section sources**
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:278-327](file://script.js#L278-L327)
-
-### Keyboard Shortcuts
-- Ctrl/Cmd + Enter triggers analysis when the input is not empty and the button is enabled.
-
-**Section sources**
-- [script.js:375-382](file://script.js#L375-L382)
-
-### Performance Optimizations
-- Particle animation pauses when the tab is not visible to save resources.
-- Canvas-based particle system scales particle count based on viewport size.
-
-**Section sources**
-- [script.js:388-395](file://script.js#L388-L395)
-- [script.js:68-75](file://script.js#L68-L75)
-
-## Dependency Analysis
-- index.html depends on styles.css for visuals and script.js for interactivity.
-- script.js depends on DOM elements defined in index.html and uses no external libraries.
-- styles.css defines variables and animations used across the UI.
-
-```mermaid
-graph LR
-HTML["index.html"] --> CSS["styles.css"]
-HTML --> JS["script.js"]
-JS --> HTML
+**Response**:
+```json
+{
+  "status": "UP",
+  "service": "AI Trading Signal Engine",
+  "aiService": "UP",
+  "timestamp": "2026-04-08T13:30:00"
+}
 ```
 
-**Diagram sources**
-- [index.html:13](file://index.html#L13)
-- [index.html:172](file://index.html#L172)
-- [script.js:1-21](file://script.js#L1-L21)
+### AI Service Endpoints
+The Flask AI service provides specialized endpoints:
+
+#### AI Prediction
+**Endpoint**: `POST /predict`
+**Purpose**: Direct sentiment analysis using FinBERT
+
+**Response**: Similar to backend analysis but with AI-specific details
+
+#### Batch Analysis
+**Endpoint**: `POST /batch`
+**Purpose**: Process multiple headlines simultaneously
+
+**Request Body**:
+```json
+{
+  "texts": ["Headline 1", "Headline 2", "Headline 3"]
+}
+```
 
 **Section sources**
-- [index.html:13](file://index.html#L13)
-- [index.html:172](file://index.html#L172)
-- [script.js:1-21](file://script.js#L1-L21)
-
-## Performance Considerations
-- The app is lightweight and runs entirely in the browser.
-- Animations and particle effects are optimized to pause when the tab is inactive.
-- Canvas particle count scales with screen size to balance performance and visual quality.
-
-[No sources needed since this section provides general guidance]
+- [README.md:178-241](file://README.md#L178-L241)
+- [ai-service/app.py:39-149](file://ai-service/app.py#L39-L149)
 
 ## Troubleshooting Guide
-Common issues and fixes:
-- Page does not load or shows blank content:
-  - Ensure all three files (index.html, script.js, styles.css) are in the same folder.
-  - Open index.html directly in your browser (do not drag-and-drop into an existing tab).
-- Analyze button remains disabled:
-  - Type at least one character into the input field.
-  - Confirm the character counter updates and the button becomes enabled.
-- Loading animation does not appear:
-  - Verify the button is enabled and click again.
-  - Check the browser console for errors (press F12 to open developer tools).
-- Unexpected results:
-  - Try rephrasing the headline to include more explicit positive/negative keywords.
-  - Keep the input under 500 characters.
-- Browser compatibility issues:
-  - Use a modern browser (Chrome, Firefox, Safari, Edge).
-  - Disable ad blockers or pop-up blockers that might interfere with local file access.
-- Performance on low-end devices:
-  - Close other tabs to free memory.
-  - The app automatically reduces particle activity when the tab is not visible.
+
+### Common Setup Issues
+
+#### Java Installation Problems
+**Issue**: "Java is not installed or not in PATH"
+**Solution**:
+1. Download Java 17+ from https://adoptium.net/
+2. Install and verify with `java -version`
+3. Ensure JAVA_HOME is set in environment variables
+
+#### Maven Build Failures
+**Issue**: "Failed to build Spring Boot application"
+**Solution**:
+1. Verify Maven installation: `mvn -version`
+2. Clean and rebuild: `mvn clean install -DskipTests`
+3. Check Java version compatibility (must be 17+)
+
+#### Python Dependencies Missing
+**Issue**: "Module not found" errors
+**Solution**:
+1. Run setup script: `setup.bat`
+2. Or manually install: `pip install -r ai-service/requirements.txt`
+3. Verify Python 3.8+: `python --version`
+
+### Runtime Service Issues
+
+#### AI Service Not Available
+**Issue**: "AI Service is not available"
+**Solution**:
+1. Check if Flask service is running on port 5000
+2. Verify FinBERT model loaded successfully
+3. Restart AI service: `cd ai-service && python app.py`
+
+#### Backend Won't Start
+**Issue**: "Port 8080 already in use"
+**Solution**:
+1. Kill existing process: `taskkill /F /FI "WINDOWTITLE eq Backend*"`
+2. Change port in `application.properties`
+3. Ensure Java 17+ is properly installed
+
+#### Slow First Run
+**Issue**: Initial startup takes several minutes
+**Solution**:
+1. This is normal - FinBERT model (~400MB) downloads on first use
+2. Subsequent runs are much faster (model cached)
+3. Ensure adequate disk space and memory
+
+### Network and Connectivity Issues
+
+#### API Key Errors
+**Issue**: "Unable to fetch news" or "Invalid API key"
+**Solution**:
+1. Verify API keys in `application.properties`
+2. Check key validity and account status
+3. Ensure internet connectivity
+
+#### CORS Issues
+**Issue**: "CORS policy blocked" errors
+**Solution**:
+1. Backend allows all origins (`*`) by default
+2. Check browser console for specific CORS errors
+3. Verify both services are running on localhost
+
+### Performance Optimization
+
+#### Memory Usage
+**Issue**: High memory consumption during analysis
+**Solution**:
+1. Ensure at least 4GB RAM available
+2. Close other memory-intensive applications
+3. Monitor memory usage in task manager
+
+#### Response Time Issues
+**Issue**: Slow analysis responses
+**Solution**:
+1. Allow time for FinBERT model to load
+2. Check network connectivity to external APIs
+3. Verify hardware specifications meet requirements
 
 **Section sources**
-- [script.js:127-139](file://script.js#L127-L139)
-- [script.js:259-275](file://script.js#L259-L275)
-- [script.js:375-382](file://script.js#L375-L382)
-- [script.js:388-395](file://script.js#L388-L395)
+- [README.md:286-320](file://README.md#L286-L320)
+- [QUICKSTART.md:88-106](file://QUICKSTART.md#L88-L106)
+- [setup.bat:8-66](file://setup.bat#L8-L66)
 
 ## Conclusion
-You can run the AI Trading Signal Engine locally by opening index.html in a modern browser. Use the input area to paste financial news headlines, click Analyze Signal or press Ctrl/Cmd + Enter, and review the generated signal, sentiment, confidence, risk level, and explanation. The app is designed for simplicity and immediate results without any server or installation steps.
 
-[No sources needed since this section summarizes without analyzing specific files]
+The AI Trading Signal Engine provides a sophisticated multi-service architecture that demonstrates production-ready deployment patterns. The system combines a premium frontend experience with robust backend orchestration and advanced AI capabilities powered by FinBERT.
 
-## Appendices
+Key benefits of this architecture:
+- **Scalable Design**: Each service can be scaled independently
+- **Real AI Models**: Uses actual FinBERT for accurate sentiment analysis
+- **Production-Grade**: Includes proper error handling, logging, and monitoring
+- **Multi-API Support**: Redundant news sources for reliability
+- **Premium UI**: Professional interface with real-time capabilities
 
-### Quick Reference
-- Open index.html in your browser to launch the app.
-- Paste a headline in the input area.
-- Click Analyze Signal or press Ctrl/Cmd + Enter.
-- Review the signal badge, sentiment, confidence, risk level, and explanation.
-- Use the footer stats for context on performance metrics.
-
-[No sources needed since this section provides general guidance]
+The comprehensive setup and troubleshooting documentation ensures smooth deployment across different environments while maintaining the high standards expected for hackathon and production scenarios.

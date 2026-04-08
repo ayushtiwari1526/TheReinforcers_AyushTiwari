@@ -114,6 +114,35 @@ public class TradingController {
     }
     
     /**
+     * Fetch latest financial news (simplified endpoint)
+     * GET /news
+     */
+    @GetMapping("/news")
+    public ResponseEntity<?> getNews() {
+        try {
+            logger.info("Fetching news via /news endpoint...");
+            
+            List<NewsArticle> articles = newsService.fetchLatestNews();
+            
+            if (articles.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of(
+                    "error", "No articles found",
+                    "message", "Unable to fetch news from NewsAPI"
+                ));
+            }
+            
+            return ResponseEntity.ok(articles);
+            
+        } catch (Exception e) {
+            logger.error("Failed to fetch news: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "error", "Failed to Fetch News",
+                "message", e.getMessage()
+            ));
+        }
+    }
+    
+    /**
      * Health check endpoint
      * GET /api/health
      */

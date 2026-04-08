@@ -3,231 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading Signal Engine | Smart Sentiment Analysis</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="styles.css">
+    <title>AI Trading Signal Engine - Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Animated Background Canvas -->
-    <canvas id="particlesCanvas"></canvas>
-    
-    <!-- Background Grid Effect -->
-    <div class="bg-grid"></div>
-    <div class="bg-gradient-orb"></div>
-    
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="loader-container">
-            <div class="loader-ring"></div>
-            <div class="loader-ring"></div>
-            <div class="loader-ring"></div>
-            <div class="loader-core"></div>
-            <div class="loader-text">
-                <p class="loading-title">Analyzing market sentiment</p>
-                <div class="loading-dots">
-                    <span>.</span><span>.</span><span>.</span>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">AI Trading Signal Engine</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html" class="btn-primary">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>AI-Powered Trading Signals</h1>
+                    <p>Transform financial news into actionable trading insights using advanced AI sentiment analysis. Real-time data, smarter decisions.</p>
+                    <div class="hero-buttons">
+                        <a href="dashboard.html" class="btn-primary">View Dashboard</a>
+                        <a href="about.html" class="btn-secondary">Learn More</a>
+                    </div>
                 </div>
-            </div>
-            <p class="loading-subtitle">Processing NLP models & sentiment patterns</p>
-            <div class="loader-progress">
-                <div class="loader-progress-bar" id="loaderProgressBar"></div>
+                <div class="hero-graph">
+                    <div class="chart-placeholder">
+                        <div class="chart-line"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Main Container -->
-    <div class="container">
-        
-        <!-- Floating Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo">
-                    <span class="logo-icon">📈</span>
-                    <div class="logo-text">
-                        <h1>AI Trading Signal Engine</h1>
-                        <p class="subtitle">Real-time sentiment → smart decisions</p>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📊</div>
+                    <h3>Sentiment Analysis</h3>
+                    <p>Advanced AI analyzes financial news sentiment using Gemma SLM technology for accurate market insights.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Confidence Score</h3>
+                    <p>Get precise confidence percentages for every trading signal, helping you make informed decisions.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Risk Detection</h3>
+                    <p>Automatic risk level assessment to protect your investments and minimize potential losses.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💡</div>
+                    <h3>Explainable AI</h3>
+                    <p>Transparent AI explanations for every signal, so you understand the reasoning behind recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Data Collection</h3>
+                    <p>Real-time financial news from trusted APIs and sources worldwide</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>AI Processing</h3>
+                    <p>Gemma SLM analyzes sentiment and generates trading signals instantly</p>
+                </div>
+                <div class="step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Signal Generation</h3>
+                    <p>Clear BUY/SELL/HOLD signals with confidence scores and explanations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Start Trading Smarter Today</h2>
+            <p>Join thousands of traders using AI to make better investment decisions</p>
+            <a href="dashboard.html" class="btn-primary">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>AI Trading Signal Engine</h3>
+                    <p>Transforming financial news into actionable AI-powered trading signals for smarter investment decisions.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon">📘</a>
+                        <a href="#" class="social-icon">🐦</a>
+                        <a href="#" class="social-icon">💼</a>
+                        <a href="#" class="social-icon">🐙</a>
                     </div>
                 </div>
-                <div class="status-badge">
-                    <span class="status-dot"></span>
-                    <span class="status-text">LIVE</span>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
                 </div>
             </div>
-        </header>
-
-        <!-- Main Card -->
-        <main class="main-card">
-            
-            <!-- Input Section -->
-            <section class="input-section">
-                <div class="section-header">
-                    <span class="section-icon">📰</span>
-                    <h2>Financial News Input</h2>
-                </div>
-                
-                <div class="input-wrapper">
-                    <textarea 
-                        id="newsInput" 
-                        class="news-input" 
-                        placeholder="Paste financial news headline here..."
-                        rows="3"
-                        maxlength="500"
-                    ></textarea>
-                    <div class="input-glow"></div>
-                    <span class="char-count">0/500</span>
-                </div>
-                
-                <!-- Live News Section -->
-                <div class="live-news-section">
-                    <button id="fetchNewsBtn" class="fetch-news-btn">
-                        <span class="btn-icon-sm">📡</span>
-                        <span>Fetch Live News</span>
-                    </button>
-                    <div id="newsList" class="news-list hidden"></div>
-                </div>
-            </section>
-
-            <!-- Analyze Button -->
-            <button id="analyzeBtn" class="analyze-btn" disabled>
-                <span class="btn-text">Analyze Signal</span>
-                <span class="btn-icon">⚡</span>
-                <div class="btn-glow"></div>
-                <div class="btn-ripple"></div>
-            </button>
-
-            <!-- Old Loading State (Replaced by Overlay) -->
-            <div id="loadingState" class="loading-state hidden">
-                <div class="loader">
-                    <div class="loader-ring"></div>
-                    <div class="loader-ring"></div>
-                    <div class="loader-ring"></div>
-                    <div class="loader-core"></div>
-                </div>
-                <p class="loading-text">
-                    Analyzing market sentiment
-                    <span class="loading-dots">
-                        <span>.</span><span>.</span><span>.</span>
-                    </span>
-                </p>
-                <p class="loading-subtext">Processing NLP models & sentiment patterns</p>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AI Trading Signal Engine. All rights reserved.</p>
             </div>
-
-            <!-- Result Card -->
-            <div id="resultCard" class="result-card hidden">
-                
-                <!-- Detected Company Badge -->
-                <div id="companyBadge" class="company-badge hidden">
-                    <span class="company-icon">🏢</span>
-                    <span class="company-text">Detected: <strong id="companyName"></strong></span>
-                </div>
-
-                <!-- Signal Badge -->
-                <div class="signal-badge" id="signalBadge">
-                    <span class="signal-icon" id="signalIcon"></span>
-                    <h3 id="signalText" class="signal-text"></h3>
-                    <p class="signal-subtitle" id="signalSubtitle"></p>
-                </div>
-
-                <!-- Mini Chart -->
-                <div class="mini-chart-container">
-                    <canvas id="miniChart" class="mini-chart"></canvas>
-                    <div class="chart-label" id="chartLabel"></div>
-                </div>
-
-                <!-- Results Grid -->
-                <div class="results-grid">
-                    
-                    <!-- Sentiment -->
-                    <div class="result-item">
-                        <div class="result-label">
-                            <span class="label-icon">🎯</span>
-                            <span>Sentiment</span>
-                        </div>
-                        <div class="result-value" id="sentimentValue"></div>
-                        <div class="sentiment-indicator" id="sentimentIndicator"></div>
-                    </div>
-
-                    <!-- Confidence -->
-                    <div class="result-item">
-                        <div class="result-label">
-                            <span class="label-icon">📊</span>
-                            <span>Confidence</span>
-                        </div>
-                        <div class="result-value" id="confidenceValue"></div>
-                        <div class="confidence-bar">
-                            <div class="confidence-fill" id="confidenceFill"></div>
-                        </div>
-                    </div>
-
-                    <!-- Risk Level -->
-                    <div class="result-item">
-                        <div class="result-label">
-                            <span class="label-icon">⚠️</span>
-                            <span>Risk Level</span>
-                        </div>
-                        <div class="result-value" id="riskValue"></div>
-                        <div class="risk-meter" id="riskMeter"></div>
-                    </div>
-
-                </div>
-
-                <!-- Explanation -->
-                <div class="explanation-box">
-                    <div class="explanation-header">
-                        <span class="exp-icon">💡</span>
-                        <span>AI Analysis Engine</span>
-                        <span class="ai-badge">AI</span>
-                    </div>
-                    <p class="explanation-text" id="explanationText"></p>
-                    <div class="key-factors" id="keyFactors"></div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="action-btn secondary" id="resetBtn">
-                        <span class="btn-icon-sm">🔄</span>
-                        <span>New Analysis</span>
-                    </button>
-                    <button class="action-btn primary" id="shareBtn">
-                        <span class="btn-icon-sm">📤</span>
-                        <span>Share Signal</span>
-                    </button>
-                </div>
-
-                <!-- Disclaimer -->
-                <div class="disclaimer">
-                    <span class="disclaimer-icon">⚡</span>
-                    <p>AI-generated signals for educational purposes. Not financial advice. Always do your own research.</p>
-                </div>
-
-            </div>
-
-        </main>
-
-        <!-- Footer Stats -->
-        <footer class="footer-stats">
-            <div class="stat-item">
-                <span class="stat-value">2.4M+</span>
-                <span class="stat-label">News Analyzed</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <span class="stat-value">94.2%</span>
-                <span class="stat-label">Accuracy Rate</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <span class="stat-value">&lt;500ms</span>
-                <span class="stat-label">Response Time</span>
-            </div>
-        </footer>
-
-    </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>

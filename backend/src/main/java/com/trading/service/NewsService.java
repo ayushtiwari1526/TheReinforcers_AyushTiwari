@@ -64,28 +64,49 @@ public class NewsService {
      */
     private List<NewsArticle> fetchFromNewsAPI() {
         try {
-            String url = "https://newsapi.org/v2/everything?" +
-                        "q=finance+stock+market&" +
-                        "sortBy=publishedAt&" +
+            // Use top-headlines endpoint for better results
+            String url = "https://newsapi.org/v2/top-headlines?" +
+                        "category=business&" +
+                        "country=us&" +
                         "pageSize=5&" +
-                        "language=en&" +
                         "apiKey=" + newsApiKey;
+            
+            logger.info("Fetching from NewsAPI: {}", url);
             
             Map response = restTemplate.getForObject(url, Map.class);
             
-            if (response == null || !"ok".equals(response.get("status"))) {
-                logger.warn("NewsAPI returned error response");
+            if (response == null) {
+                logger.error("NewsAPI returned null response");
+                return Collections.emptyList();
+            }
+            
+            String status = (String) response.get("status");
+            if (!"ok".equals(status)) {
+                String error = (String) response.get("message");
+                logger.error("NewsAPI error: {}", error);
                 return Collections.emptyList();
             }
             
             List<Map> articlesMap = (List<Map>) response.get("articles");
-            List<NewsArticle> articles = new ArrayList<>();
             
+            if (articlesMap == null || articlesMap.isEmpty()) {
+                logger.warn("No articles found in NewsAPI response");
+                return Collections.emptyList();
+            }
+            
+            List<NewsArticle> articles = new ArrayList<>();
             DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
             
             for (Map articleMap : articlesMap) {
+                String title = (String) articleMap.get("title");
+                
+                // Skip articles with null or [Removed] titles
+                if (title == null || title.equals("[Removed]")) {
+                    continue;
+                }
+                
                 NewsArticle article = new NewsArticle();
-                article.setTitle((String) articleMap.get("title"));
+                article.setTitle(title);
                 article.setDescription((String) articleMap.get("description"));
                 article.setUrl((String) articleMap.get("url"));
                 
@@ -94,16 +115,26 @@ public class NewsService {
                 
                 String publishedAt = (String) articleMap.get("publishedAt");
                 if (publishedAt != null) {
-                    article.setPublishedAt(LocalDateTime.parse(publishedAt, formatter));
+                    try {
+                        article.setPublishedAt(LocalDateTime.parse(publishedAt, formatter));
+                    } catch (Exception e) {
+                        logger.warn("Error parsing date: {}", publishedAt);
+                    }
                 }
                 
                 articles.add(article);
+                
+                // Limit to 5 articles
+                if (articles.size() >= 5) {
+                    break;
+                }
             }
             
+            logger.info("Successfully parsed {} articles from NewsAPI", articles.size());
             return articles;
             
         } catch (Exception e) {
-            logger.error("Error fetching from NewsAPI: {}", e.getMessage());
+            logger.error("Error fetching from NewsAPI: {}", e.getMessage(), e);
             return Collections.emptyList();
         }
     }
