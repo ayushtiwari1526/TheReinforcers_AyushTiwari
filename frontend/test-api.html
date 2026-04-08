@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0a0e27;
+            color: #fff;
+        }
+        .test-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #0a0e27;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        #result {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+        }
+        .success { color: #00ff88; }
+        .error { color: #ff4757; }
+        .info { color: #00d4ff; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Chatbot API Test</h1>
+    
+    <div class="test-box">
+        <h3>Test OpenAI API</h3>
+        <p>API Key: <code id="apiKeyDisplay"></code></p>
+        <button onclick="testOpenAI()">🧪 Test OpenAI API</button>
+    </div>
+
+    <div class="test-box">
+        <h3>Test Simple Message</h3>
+        <button onclick="testSimpleMessage()">💬 Send Test Message</button>
+    </div>
+
+    <h3>Results:</h3>
+    <div id="result">Click a button to test...</div>
+
+    <script>
+        const API_KEY = 'YOUR_OPENAI_API_KEY_HERE'; // Replace with your actual API key
+        const API_URL = 'https://api.openai.com/v1/chat/completions';
+        
+        // Display masked API key
+        document.getElementById('apiKeyDisplay').textContent = API_KEY.substring(0, 15) + '...' + API_KEY.substring(API_KEY.length - 5);
+
+        async function testOpenAI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<span class="info">⏳ Testing OpenAI API connection...</span>';
+            
+            try {
+                console.log('🔑 Testing API Key:', API_KEY.substring(0, 15) + '...');
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [
+                            { role: 'system', content: 'You are a helpful assistant.' },
+                            { role: 'user', content: 'Say hello and confirm the API is working!' }
+                        ],
+                        max_tokens: 100,
+                        temperature: 0.7
+                    })
+                });
+                
+                console.log('📡 Response Status:', response.status);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('❌ API Error:', errorData);
+                    resultDiv.innerHTML = `<span class="error">❌ API Error (${response.status}):</span>\n\n${JSON.stringify(errorData, null, 2)}`;
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('✅ Success! Response:', data);
+                
+                const botMessage = data.choices[0].message.content;
+                
+                resultDiv.innerHTML = `<span class="success">✅ API Working Perfectly!</span>\n\n<strong>Response from OpenAI:</strong>\n${botMessage}\n\n<strong>Usage:</strong>\n${JSON.stringify(data.usage, null, 2)}`;
+                
+            } catch (error) {
+                console.error('❌ Test Failed:', error);
+                resultDiv.innerHTML = `<span class="error">❌ Connection Error:</span>\n\n${error.message}\n\n<strong>Possible issues:</strong>\n- Invalid API key\n- Network connectivity\n- CORS blocking\n- API quota exceeded`;
+            }
+        }
+
+        async function testSimpleMessage() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<span class="info">⏳ Sending test message...</span>';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [
+                            { role: 'user', content: 'What is 2+2?' }
+                        ],
+                        max_tokens: 50
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    resultDiv.innerHTML = `<span class="error">❌ Error:</span>\n\n${JSON.stringify(errorData, null, 2)}`;
+                    return;
+                }
+                
+                const data = await response.json();
+                const answer = data.choices[0].message.content;
+                
+                resultDiv.innerHTML = `<span class="success">✅ Success!</span>\n\n<strong>Question:</strong> What is 2+2?\n<strong>Answer:</strong> ${answer}\n\n<strong>Model:</strong> ${data.model}`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Failed:</span>\n\n${error.message}`;
+            }
+        }
+
+        // Auto-test on page load
+        window.onload = () => {
+            console.log(' Chatbot API Test Page Loaded');
+            console.log('🔑 API Key loaded:', API_KEY.substring(0, 15) + '...');
+        };
+    </script>
+</body>
+</html>

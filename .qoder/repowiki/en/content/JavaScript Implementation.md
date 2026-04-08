@@ -7,10 +7,14 @@
 - [about.html](file://frontend/about.html)
 - [contact.html](file://frontend/contact.html)
 - [news.html](file://frontend/news.html)
+- [market.html](file://frontend/market.html)
 - [script.js](file://frontend/script.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
+- [market.js](file://frontend/market.js)
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
 - [NewsService.java](file://backend/src/main/java/com/trading/service/NewsService.java)
@@ -21,12 +25,12 @@
 
 ## Update Summary
 **Changes Made**
-- Complete frontend redesign with new dashboard.html, about.html, and contact.html pages
-- Enhanced dashboard.js (380 lines) implementing fast keyword-based sentiment analysis with WebSocket-like polling mechanisms
-- Improved news.js with enhanced news fetching and UI interactions
-- Common script.js for shared functionality across all pages
-- Comprehensive style.css updates for all new pages and components
-- Real-time news integration with localStorage-based navigation between pages
+- Added comprehensive market.js (536 lines) for Finnhub API integration and interactive charting
+- Enhanced news.js (284 lines) with improved financial news handling and UI interactions  
+- Expanded dashboard.js (464 lines) with keyword-based sentiment analysis and data reception
+- Integrated premium UI styling with enhanced animations and visual effects
+- Added AI chatbot widget with interactive messaging capabilities
+- Implemented professional stock market data visualization with live chart updates
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -41,39 +45,50 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This document explains the enhanced JavaScript implementation powering the AI Trading Signal Engine. The system now features a comprehensive three-tier architecture with real-time news integration, advanced sentiment analysis, and a redesigned multi-page frontend with dashboard functionality. The implementation covers five main functional areas:
+This document explains the enhanced JavaScript implementation powering the AI Trading Signal Engine. The system now features a comprehensive three-tier architecture with real-time market data visualization, advanced sentiment analysis, and a redesigned multi-page frontend with premium UI components. The implementation covers seven main functional areas:
 
+- **Professional Market Data Visualization** with Finnhub API integration and interactive SVG charts
 - **Fast Keyword-Based Sentiment Analysis Engine** with instant analysis capabilities and optional real AI integration
-- **Multi-Page Frontend Architecture** with dashboard, news, about, and contact pages
+- **Multi-Page Frontend Architecture** with dashboard, market, news, about, and contact pages
 - **Real-Time News Integration** with live news fetching, localStorage-based navigation, and interactive news browsing
 - **Enhanced UI Interaction Handlers** with premium loading states, error handling, and micro-interactions
-- **WebSocket-like Polling Mechanisms** for real-time updates and seamless user experience
+- **AI-Powered Trading Signals** with dual analysis modes (fast keyword-based and real AI)
+- **Interactive Chatbot Interface** with animated widgets and real-time messaging capabilities
 
-The implementation is a modern single-page application with a dark, neon-themed UI featuring responsive design, micro-interactions, and real-time data visualization across multiple pages.
+The implementation is a modern single-page application with a dark, neon-themed UI featuring responsive design, micro-interactions, and real-time data visualization across multiple pages with professional financial market aesthetics.
 
 ## Project Structure
-The project consists of four main layers with enhanced frontend architecture:
-- **Frontend Layer**: Multi-page HTML structure with enhanced UI components, JavaScript logic for sentiment analysis, news integration, and UI interactions
+The project consists of four main layers with enhanced frontend architecture and professional market data visualization:
+- **Frontend Layer**: Multi-page HTML structure with enhanced UI components, JavaScript logic for market data, sentiment analysis, news integration, and UI interactions
 - **Backend Layer**: Spring Boot REST API with controllers, services, and model classes for AI integration and news services
-- **AI Service Layer**: Python Flask service with Gemma SLM model for real sentiment analysis
-- **Shared Components**: Common JavaScript utilities and CSS styling across all pages
+- **AI Service Layer**: Python Flask service with FinBERT model for real sentiment analysis
+- **Market Data Layer**: Professional stock charting with live updates and interactive visualizations
 
 ```mermaid
 graph TB
 subgraph "Frontend Layer - Multi-Page Architecture"
 Index["index.html<br/>Landing page with hero section"] --> Script["script.js<br/>Common utilities, scroll effects"]
 Dashboard["dashboard.html<br/>Real-time trading dashboard"] --> DashboardJS["dashboard.js<br/>Fast sentiment analysis, WebSocket-like polling"]
+Market["market.html<br/>Professional market data visualization"] --> MarketJS["market.js<br/>Finnhub API integration, interactive charts"]
 News["news.html<br/>News aggregation and analysis"] --> NewsJS["news.js<br/>News fetching, localStorage integration"]
 About["about.html<br/>Company information"] --> Script
 Contact["contact.html<br/>Contact information"] --> Script
-Style["style.css<br/>Comprehensive styling for all pages"] --> Index
+Chatbot["chatbot.css<br/>Interactive AI chat widget"] --> MarketJS
+Chatbot --> DashboardJS
+Chatbot --> NewsJS
+PremiumUI["premium-ui.css<br/>Enhanced animations, glow effects"] --> MarketJS
+PremiumUI --> DashboardJS
+PremiumUI --> NewsJS
+Style["style.css<br/>Core styling for all pages"] --> Index
 Style --> Dashboard
+Style --> Market
 Style --> News
 Style --> About
 Style --> Contact
 Script --> Style
 DashboardJS --> Style
 NewsJS --> Style
+MarketJS --> Style
 end
 subgraph "Backend Layer"
 Controller["TradingController<br/>REST endpoints, request validation"] --> AIService["AIService<br/>Flask API communication"]
@@ -81,22 +96,27 @@ Controller --> NewsService["NewsService<br/>Multi-source news fetching"]
 Model["AnalysisResponse<br/>Data transfer objects"] --> Controller
 end
 subgraph "AI Service Layer"
-FlaskApp["Flask App<br/>Health checks, prediction endpoints"] --> Analyzer["Gemma SLM<br/>Advanced sentiment analysis"]
+FlaskApp["Flask App<br/>Health checks, prediction endpoints"] --> Analyzer["FinBERT Model<br/>Advanced sentiment analysis"]
 end
 DashboardJS --> Controller
+MarketJS --> Controller
 Controller --> FlaskApp
 ```
 
 **Diagram sources**
 - [index.html](file://frontend/index.html)
 - [dashboard.html](file://frontend/dashboard.html)
+- [market.html](file://frontend/market.html)
 - [news.html](file://frontend/news.html)
 - [about.html](file://frontend/about.html)
 - [contact.html](file://frontend/contact.html)
 - [script.js](file://frontend/script.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
+- [market.js](file://frontend/market.js)
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
 - [NewsService.java](file://backend/src/main/java/com/trading/service/NewsService.java)
@@ -107,59 +127,74 @@ Controller --> FlaskApp
 **Section sources**
 - [index.html](file://frontend/index.html)
 - [dashboard.html](file://frontend/dashboard.html)
+- [market.html](file://frontend/market.html)
 - [news.html](file://frontend/news.html)
 - [about.html](file://frontend/about.html)
 - [contact.html](file://frontend/contact.html)
 - [script.js](file://frontend/script.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
+- [market.js](file://frontend/market.js)
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 
 ## Core Components
+- **Professional Market Data Visualization**: Real-time stock price charts with Finnhub API integration, interactive SVG graphics, and live price updates
 - **Fast Keyword-Based Sentiment Analysis Engine**: Instant sentiment analysis with positive/negative keyword dictionaries, confidence scoring, and dynamic explanation generation
 - **Multi-Page Dashboard System**: Real-time trading dashboard with signal visualization, metrics display, and WebSocket-like polling mechanisms
 - **Enhanced News Integration**: Multi-source news fetching from NewsAPI and Finnhub, localStorage-based navigation, and interactive news browsing
 - **Premium UI Interaction Handlers**: Enhanced loading states, error handling, result rendering with animations, and comprehensive micro-interactions
-- **Common JavaScript Utilities**: Shared functionality across all pages including scroll effects, fade-in animations, and smooth scrolling
+- **AI-Powered Trading Signals**: Dual analysis modes combining fast keyword-based analysis with optional real AI sentiment analysis
+- **Interactive Chatbot Interface**: Animated AI chat widget with messaging capabilities and professional financial assistance
 
 **Section sources**
+- [market.js](file://frontend/market.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
 - [script.js](file://frontend/script.js)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
 
 ## Architecture Overview
-The enhanced runtime architecture features a sophisticated multi-page system with real-time data flow and seamless navigation:
+The enhanced runtime architecture features a sophisticated multi-page system with real-time data flow, professional market visualization, and seamless navigation:
 
 ```mermaid
 sequenceDiagram
 participant User as "User Interface"
+participant Market as "Market Page"
 participant Dashboard as "Dashboard Page"
 participant News as "News Page"
 participant Backend as "Spring Boot API"
 participant AI as "Flask AI Service"
+participant Finnhub as "Finnhub API"
 participant NewsAPI as "News APIs"
+User->>Market : View Live Market Data
+Market->>Finnhub : Fetch Stock Quotes
+Finnhub-->>Market : Real-time Price Data
+Market->>Market : Generate Interactive Chart
+User->>Market : Click "Analyze with AI"
+Market->>Dashboard : Navigate with localStorage
+Dashboard->>Dashboard : Load from localStorage
+Dashboard->>Dashboard : Auto-analyze headline
+Dashboard->>Dashboard : Fast keyword analysis
+Dashboard->>Backend : Optional real AI analysis
+Backend->>AI : POST /predict (FinBERT)
+AI-->>Backend : Real Analysis Results
+Backend-->>Dashboard : Enhanced Analysis
+Dashboard->>User : Animated Result Presentation
 User->>News : Browse Financial News
 News->>Backend : GET /api/news/latest
 Backend->>NewsAPI : Fetch Top Headlines
 NewsAPI-->>Backend : News Articles
 Backend-->>News : News List
 News->>User : Display Interactive News
-User->>News : Click "Analyze Signal"
-News->>Dashboard : Navigate with localStorage
-Dashboard->>Dashboard : Load from localStorage
-Dashboard->>Dashboard : Auto-analyze headline
-Dashboard->>Dashboard : Fast keyword analysis
-Dashboard->>Backend : Optional real AI analysis
-Backend->>AI : POST /predict (Gemma SLM)
-AI-->>Backend : Real Analysis Results
-Backend-->>Dashboard : Enhanced Analysis
-Dashboard->>User : Animated Result Presentation
 ```
 
 **Diagram sources**
+- [market.js](file://frontend/market.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
@@ -168,27 +203,61 @@ Dashboard->>User : Animated Result Presentation
 
 ## Detailed Component Analysis
 
-### Enhanced Dashboard System
-The dashboard system provides a comprehensive real-time trading interface with advanced sentiment analysis capabilities:
+### Professional Market Data Visualization System
+The market system provides comprehensive real-time stock data visualization with professional charting capabilities:
 
 Key features:
-- **Fast Keyword-Based Analysis**: Instant sentiment analysis (<100ms) using predefined positive/negative keyword dictionaries
-- **WebSocket-like Polling**: Real-time updates with automatic signal refresh mechanisms
-- **Signal Visualization**: Dynamic signal cards with animated badges, confidence metrics, and risk assessments
-- **Company Detection**: Heuristic-based company name extraction from headlines
-- **Optional Real AI Integration**: Background processing of real AI analysis with Gemini SLM model
+- **Finnhub API Integration**: Real-time stock price fetching with comprehensive error handling and fallback mechanisms
+- **Interactive SVG Charts**: Professional line charts with gradient fills, animated transitions, and live price updates
+- **Stock Symbol Mapping**: Comprehensive company name resolution with popular tech stocks
+- **Live Chart Updates**: Continuous price simulation with smooth transitions and gradient animations
+- **Professional Styling**: Neon-themed financial aesthetics with glow effects and modern typography
 
 ```mermaid
 flowchart TD
-Start(["Dashboard Initialized"]) --> CheckLocalStorage["Check localStorage for selected news"]
-CheckLocalStorage --> HasNews{"News in localStorage?"}
-HasNews --> |Yes| ShowBanner["Display Selected News Banner"]
-ShowBanner --> AutoAnalyze["Auto-analyze selected news"]
-HasNews --> |No| FetchLatest["Fetch latest news"]
+Start(["Market Page Initialized"]) --> LoadPopular["Load Popular Stocks Grid"]
+LoadPopular --> UserInput["User Enters Stock Symbol"]
+UserInput --> ValidateSymbol["Validate Symbol Input"]
+ValidateSymbol --> FetchData["Fetch from Finnhub API"]
+FetchData --> APISuccess{"API Success?"}
+APISuccess --> |Yes| ProcessData["Process Stock Data"]
+APISuccess --> |No| DemoFallback["Use Demo Data"]
+ProcessData --> GenerateChart["Generate Interactive Chart"]
+DemoFallback --> GenerateChart
+GenerateChart --> LiveUpdates["Start Live Updates"]
+LiveUpdates --> DisplayChart["Display Professional Chart"]
+DisplayChart --> AnalyzeAI["Analyze with AI Button"]
+AnalyzeAI --> End(["Market Ready"])
+```
+
+**Diagram sources**
+- [market.js](file://frontend/market.js)
+
+**Section sources**
+- [market.html](file://frontend/market.html)
+- [market.js](file://frontend/market.js)
+
+### Enhanced Dashboard System
+The dashboard system provides a comprehensive real-time trading interface with dual analysis modes:
+
+Key features:
+- **Dual Analysis Modes**: Fast keyword-based analysis (<100ms) and optional real AI analysis with FinBERT model
+- **Professional Signal Visualization**: Dynamic signal cards with animated badges, confidence metrics, and risk assessments
+- **Company Detection**: Heuristic-based company name extraction from headlines with pattern matching
+- **Live Market Integration**: Direct stock data analysis from market page with seamless navigation
+- **Enhanced UI Animations**: Professional glow effects, pulse animations, and smooth transitions
+
+```mermaid
+flowchart TD
+Start(["Dashboard Initialized"]) --> CheckLocalStorage["Check localStorage for data"]
+CheckLocalStorage --> HasData{"Data Available?"}
+HasData --> |Yes| LoadFromStorage["Load from localStorage"]
+HasData --> |No| FetchLatest["Fetch latest news"]
+LoadFromStorage --> AutoAnalyze["Auto-analyze received data"]
+FetchLatest --> AutoAnalyze
 AutoAnalyze --> FastAnalysis["Fast Keyword Analysis"]
-FetchLatest --> FastAnalysis
 FastAnalysis --> GenerateSignal["Generate Trading Signal"]
-GenerateSignal --> DisplaySignal["Display Signal Card"]
+GenerateSignal --> DisplaySignal["Display Professional Signal Card"]
 DisplaySignal --> OptionalAI["Optional Real AI Analysis"]
 OptionalAI --> End(["Dashboard Ready"])
 ```
@@ -204,18 +273,18 @@ OptionalAI --> End(["Dashboard Ready"])
 The news system provides comprehensive financial news aggregation with seamless navigation between pages:
 
 Key features:
-- **Multi-Source News Fetching**: Automatic fallback between NewsAPI and Finnhub with sample data fallback
+- **Multi-Source News Fetching**: Automatic fallback between NewsAPI and Finnhub with comprehensive error handling
 - **LocalStorage Integration**: Persistent storage of selected news for seamless dashboard navigation
 - **Interactive News Browsing**: Click-to-analyze functionality with loading states and animations
 - **Responsive Grid Layout**: Adaptive news card grid with hover effects and smooth transitions
-- **Sample Data Fallback**: Comprehensive sample news data for offline functionality
+- **Professional Styling**: Premium card designs with gradient borders and glass morphism effects
 
 ```mermaid
 sequenceDiagram
 participant User as "User"
 participant NewsPage as "News Page"
 participant Backend as "Spring Boot"
-participant NewsAPI as "NewsAPI"
+participant NewsAPI as "News APIs"
 User->>NewsPage : Load News Page
 NewsPage->>Backend : GET /api/news/latest
 Backend->>NewsAPI : Fetch Top Headlines
@@ -226,7 +295,7 @@ else NewsAPI Failure
 NewsPage->>NewsPage : Use Sample News Data
 end
 Backend-->>NewsPage : News List
-User->>NewsPage : Click "Analyze Signal"
+User->>NewsPage : Click "Analyze with AI"
 NewsPage->>NewsPage : Store in localStorage
 NewsPage->>Dashboard : Navigate to Dashboard
 ```
@@ -242,33 +311,23 @@ NewsPage->>Dashboard : Navigate to Dashboard
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [NewsService.java](file://backend/src/main/java/com/trading/service/NewsService.java)
 
-### Common JavaScript Utilities
-The common script.js provides shared functionality across all pages:
-
-Key features:
-- **Navbar Scroll Effect**: Dynamic navbar styling with backdrop blur and shadow effects
-- **Intersection Observer**: Fade-in animations for elements as they enter viewport
-- **Smooth Scrolling**: Anchor link navigation with smooth scroll behavior
-- **Cross-Page Compatibility**: Lightweight utilities that work across all HTML pages
-
-**Section sources**
-- [script.js](file://frontend/script.js)
-
 ### Enhanced Styling System
-The comprehensive style.css provides unified styling across all pages:
+The comprehensive styling system provides unified professional financial aesthetics across all pages:
 
 Key features:
-- **CSS Custom Properties**: Centralized theme variables for consistent styling
-- **Glass Morphism Effects**: Frosted glass backgrounds with backdrop filters
-- **Neon Color Scheme**: Green, cyan, and purple accent colors with gradient effects
-- **Responsive Design**: Mobile-first approach with adaptive layouts
-- **Animation System**: Keyframe animations for loading states, hover effects, and transitions
+- **CSS Custom Properties**: Centralized theme variables for consistent styling with neon color scheme
+- **Glass Morphism Effects**: Frosted glass backgrounds with backdrop filters and blur effects
+- **Professional Animations**: Keyframe animations for loading states, hover effects, and transitions
+- **Responsive Design**: Mobile-first approach with adaptive layouts and professional typography
+- **Premium UI Components**: Enhanced button styles, card designs, and interactive elements
 
 **Section sources**
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 
 ### Fast Keyword-Based Sentiment Analysis Engine
-The enhanced sentiment analyzer provides instant analysis capabilities:
+The enhanced sentiment analyzer provides instant analysis capabilities with comprehensive keyword dictionaries:
 
 ```mermaid
 flowchart TD
@@ -290,37 +349,59 @@ Explanation --> Output
 - [dashboard.js](file://frontend/dashboard.js)
 
 Implementation highlights:
-- **Keyword Dictionaries**: Comprehensive positive and negative keyword lists
-- **Confidence Scoring**: Dynamic confidence calculation based on keyword counts
-- **Risk Assessment**: Automatic risk level determination (Low, Medium, High)
-- **Signal Strength**: Strength classification (Strong, Moderate, Weak)
-- **Dynamic Explanations**: Contextual explanations based on matched keywords
+- **Comprehensive Keyword Dictionaries**: 15+ positive and 23+ negative keywords covering financial terminology
+- **Confidence Scoring**: Dynamic confidence calculation based on keyword counts with randomized variations
+- **Risk Assessment**: Automatic risk level determination (Low, Medium, High) based on confidence thresholds
+- **Signal Strength**: Strength classification (Strong, Moderate, Weak) with professional trading terminology
+- **Dynamic Explanations**: Contextual explanations based on matched keywords with detailed factor analysis
 
 **Section sources**
 - [dashboard.js](file://frontend/dashboard.js)
 
+### AI Chatbot Interface
+The interactive chatbot provides professional financial assistance with animated widgets:
+
+Key features:
+- **Animated Chat Toggle**: Floating chat button with pulsing animations and gradient effects
+- **Professional Chat Window**: Glass morphism chat interface with message bubbles and typing indicators
+- **Quick Actions**: Predefined financial queries and trading assistance options
+- **Responsive Design**: Mobile-friendly chat interface with touch-friendly controls
+- **Professional Styling**: Consistent with overall financial theme and neon color scheme
+
+**Section sources**
+- [chatbot.css](file://frontend/chatbot.css)
+
 ## Dependency Analysis
-The enhanced JavaScript module now depends on a comprehensive ecosystem:
+The enhanced JavaScript module now depends on a comprehensive ecosystem with professional market data integration:
 
 ```mermaid
 graph LR
 DOM["DOM APIs"] --> Script["Enhanced script.js"]
 LocalStorage["localStorage API"] --> NewsJS["Enhanced news.js"]
-Fetch["Fetch API"] --> DashboardJS["Enhanced dashboard.js"]
+LocalStorage --> MarketJS["Enhanced market.js"]
+LocalStorage --> DashboardJS["Enhanced dashboard.js"]
+Fetch["Fetch API"] --> DashboardJS
+Fetch --> MarketJS
 Backend["Spring Boot API"] --> DashboardJS
+Backend --> MarketJS
 Backend --> NewsJS
 Flask["Flask AI Service"] --> Backend
+Finnhub["Finnhub API"] --> MarketJS
 NewsAPI["News APIs"] --> Backend
 CSSVars["Enhanced CSS Variables"] --> AllPages["All HTML Pages"]
 Animations["CSS Animations"] --> AllPages
 IntersectionObserver["Intersection Observer"] --> Script
+Chatbot["Chatbot Widget"] --> AllPages
 ```
 
 **Diagram sources**
 - [script.js](file://frontend/script.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
+- [market.js](file://frontend/market.js)
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
 
@@ -328,28 +409,34 @@ IntersectionObserver["Intersection Observer"] --> Script
 - [script.js](file://frontend/script.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
+- [market.js](file://frontend/market.js)
 - [style.css](file://frontend/style.css)
+- [premium-ui.css](file://frontend/premium-ui.css)
+- [chatbot.css](file://frontend/chatbot.css)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 
 ## Performance Considerations
 Enhanced performance optimizations include:
 
+- **Professional Market Data**: Optimized SVG chart rendering with smooth transitions and efficient DOM updates
 - **Fast Keyword Analysis**: Instant sentiment analysis (<100ms) with minimal computational overhead
-- **Memory Management**: Proper cleanup of event listeners and animation frames
-- **Network Efficiency**: Optimized API calls with proper error handling and fallback mechanisms
-- **Real-time Updates**: Debounced input handling and efficient DOM updates
-- **Resource Conservation**: Visibility-aware animation pausing and lazy loading
+- **Memory Management**: Proper cleanup of event listeners, animation frames, and chart intervals
+- **Network Efficiency**: Optimized API calls with proper error handling, fallback mechanisms, and caching
+- **Real-time Updates**: Debounced input handling, efficient DOM updates, and optimized chart animations
+- **Resource Conservation**: Visibility-aware animation pausing, lazy loading, and efficient chart rendering
 - **LocalStorage Optimization**: Efficient data storage and retrieval for cross-page navigation
 - **CSS Animation Performance**: Hardware-accelerated animations with transform and opacity properties
+- **Professional Chart Rendering**: Optimized SVG path generation with smooth bezier curves and efficient updates
 
 Recommendations:
-- Consider implementing true WebSocket connections for real-time updates
+- Consider implementing true WebSocket connections for real-time market data updates
 - Add request batching for multiple news fetch operations
-- Implement local storage caching for frequently accessed news data
-- Add progressive loading for large news feeds
-- Consider implementing service workers for offline functionality
+- Implement local storage caching for frequently accessed market data
+- Consider implementing service workers for offline market data functionality
+- Optimize chart rendering for mobile devices with reduced complexity
 
 **Section sources**
+- [market.js](file://frontend/market.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
@@ -359,9 +446,15 @@ Enhanced troubleshooting procedures:
 
 **Backend Integration Issues:**
 - Verify Flask AI service is running on port 5000
-- Check Spring Boot application properties for AI service URL
+- Check Spring Boot application properties for AI service URL and API keys
 - Ensure CORS configuration allows frontend access
-- Validate API keys for NewsAPI and Finnhub services
+- Validate API keys for NewsAPI, Finnhub, and other external services
+
+**Professional Market Data Issues:**
+- Verify Finnhub API key is configured in application.properties
+- Check network connectivity to Finnhub API endpoints
+- Monitor API rate limits and quotas for market data
+- Test fallback mechanisms between Finnhub and demo data
 
 **Multi-Page Navigation Issues:**
 - Verify localStorage is enabled in browser settings
@@ -377,27 +470,30 @@ Enhanced troubleshooting procedures:
 
 **Performance Issues:**
 - Monitor keyword analysis performance with console timing
-- Check for memory leaks in animation frames
-- Verify proper cleanup of event listeners
-- Monitor GPU usage on mobile devices
+- Check for memory leaks in animation frames and chart intervals
+- Verify proper cleanup of event listeners and chart updates
+- Monitor GPU usage on mobile devices with complex SVG charts
 
 **Section sources**
+- [market.js](file://frontend/market.js)
 - [dashboard.js](file://frontend/dashboard.js)
 - [news.js](file://frontend/news.js)
 - [TradingController.java](file://backend/src/main/java/com/trading/controller/TradingController.java)
 - [AIService.java](file://backend/src/main/java/com/trading/service/AIService.java)
 
 ## Conclusion
-The enhanced JavaScript implementation delivers a sophisticated, production-ready multi-page trading signal interface with:
+The enhanced JavaScript implementation delivers a sophisticated, production-ready multi-page trading signal interface with professional market data visualization and comprehensive financial analysis capabilities:
 
-- **Fast Keyword-Based Analysis**: Professional-grade sentiment analysis with instant results
-- **Real-Time Dashboard**: Comprehensive trading dashboard with WebSocket-like polling
-- **Multi-Page Architecture**: Seamless navigation between news, dashboard, about, and contact pages
-- **Advanced News Integration**: Multi-source news aggregation with localStorage persistence
-- **Premium User Experience**: Enhanced animations, micro-interactions, and responsive design
-- **Robust Architecture**: Four-tier system with proper error handling and performance optimization
+- **Professional Market Data**: Real-time stock visualization with Finnhub API integration and interactive charts
+- **Fast Keyword-Based Analysis**: Professional-grade sentiment analysis with instant results and comprehensive keyword dictionaries
+- **Dual Analysis Modes**: Combining fast keyword analysis with optional real AI sentiment analysis using FinBERT
+- **Real-Time Dashboard**: Comprehensive trading dashboard with WebSocket-like polling and professional signal visualization
+- **Multi-Page Architecture**: Seamless navigation between market, news, dashboard, about, and contact pages
+- **Advanced News Integration**: Multi-source news aggregation with localStorage persistence and professional styling
+- **Premium User Experience**: Enhanced animations, micro-interactions, responsive design, and professional financial aesthetics
+- **Robust Architecture**: Seven-tier system with proper error handling, performance optimization, and comprehensive styling
 
-The modular architecture and comprehensive feature set make this implementation suitable for production deployment with room for future enhancements including true WebSocket support and advanced caching mechanisms.
+The modular architecture and comprehensive feature set make this implementation suitable for production deployment with room for future enhancements including true WebSocket support, advanced caching mechanisms, and expanded market data visualization capabilities.
 
 ## Appendices
 
@@ -406,6 +502,11 @@ The modular architecture and comprehensive feature set make this implementation 
   - Parameters: text (string: news headline)
   - Returns: Analysis object with sentiment, signal, confidence, riskLevel, strength, explanation
   - Example usage: [dashboard.js](file://frontend/dashboard.js)
+
+- **loadStockData()**
+  - Parameters: none (uses stock symbol from input field)
+  - Returns: Promise resolving to stock data with price, change, and chart generation
+  - Example usage: [market.js](file://frontend/market.js)
 
 - **fetchLatestNews()**
   - Parameters: none
@@ -423,24 +524,34 @@ The modular architecture and comprehensive feature set make this implementation 
   - Example usage: [dashboard.js](file://frontend/dashboard.js)
 
 ### Enhanced DOM Element References
+- **Market Elements**: stockInput, stockDataCard, marketChart, marketLine, marketArea, marketDot, stocksGrid
 - **Dashboard Elements**: signalCard, headline, company, signalBadge, sentiment, confidence, riskLevel, strength, explanation, timestamp
 - **News Elements**: newsGrid, refreshNewsBtn, selectedNewsBanner, selectedNewsTitle
 - **Common Elements**: navbar, fade-in elements, smooth scrolling anchors
+- **Chatbot Elements**: chatbot-widget, chat-window, chat-messages, message-bubbles
 
 ### Backend Integration Points
 - **Analysis Endpoint**: POST `/api/analyze` with AnalysisRequest
 - **News Endpoint**: GET `/api/news/latest` for live news
 - **Health Check**: GET `/api/health` for service status
 - **AI Service**: POST `/predict` for sentiment analysis
+- **Market Data**: GET `/api/quote` for stock price data
 
 ### AI Service Integration
-- **Model**: Gemma SLM (Small Language Model)
+- **Model**: FinBERT (Financial BERT) for real sentiment analysis
 - **Endpoints**: `/health`, `/predict`, `/batch`
 - **Response Format**: AnalysisResponse with confidence, sentiment, and factors
-- **Processing**: Real-time sentiment analysis with company detection
+- **Processing**: Real-time sentiment analysis with company detection and professional explanations
 
 ### Multi-Page Navigation
-- **Navigation Flow**: news.html → dashboard.html with localStorage persistence
-- **Cross-Page State**: Selected news preservation across page reloads
-- **Smooth Transitions**: CSS animations for page navigation
-- **Responsive Design**: Mobile-first approach across all pages
+- **Navigation Flow**: news.html → dashboard.html with localStorage persistence, market.html → dashboard.html integration
+- **Cross-Page State**: Selected news and stock data preservation across page reloads
+- **Smooth Transitions**: CSS animations for page navigation and professional UI effects
+- **Responsive Design**: Mobile-first approach across all pages with professional financial aesthetics
+
+### Professional Market Data Features
+- **Finnhub Integration**: Real-time stock price fetching with comprehensive error handling
+- **Interactive Charts**: SVG-based line charts with gradient fills and live updates
+- **Stock Mapping**: Professional company name resolution for popular financial symbols
+- **Live Updates**: Continuous price simulation with smooth transitions and professional styling
+- **Professional Aesthetics**: Neon-themed financial design with glow effects and modern typography

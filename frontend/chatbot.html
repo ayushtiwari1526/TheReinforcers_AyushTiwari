@@ -1,0 +1,316 @@
+<!-- AI Chatbot Widget -->
+<div class="chatbot-widget" id="chatbotWidget">
+    <!-- Chat Toggle Button -->
+    <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChatbot()">
+        <span class="chat-icon">💬</span>
+        <span class="chat-icon-active" style="display: none;">✕</span>
+        <span class="chat-pulse"></span>
+    </button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">🤖</div>
+                <div>
+                    <h4 class="chat-title">AI Assistant</h4>
+                    <p class="chat-status">
+                        <span class="status-dot"></span>
+                        Online
+                    </p>
+                </div>
+            </div>
+            <button class="chat-close-btn" onclick="toggleChatbot()">✕</button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome Message -->
+            <div class="message bot-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        Hi! 👋 I'm your AI trading assistant. I can help you with:
+                        <ul class="chat-feature-list">
+                            <li>📊 Understanding trading signals</li>
+                            <li>📰 Analyzing market news</li>
+                            <li>💡 Trading tips & strategies</li>
+                            <li>❓ Any questions about the platform</li>
+                        </ul>
+                        How can I help you today?
+                    </div>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="message bot-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble typing-bubble">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="Type your message..."
+                onkeypress="handleChatKeyPress(event)"
+            />
+            <button class="chat-send-btn" onclick="sendMessage()" id="chatSendBtn">
+                <span>➤</span>
+            </button>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="chat-quick-actions">
+            <button class="quick-action-btn" onclick="sendQuickMessage('Explain trading signals')">
+                📊 Trading Signals
+            </button>
+            <button class="quick-action-btn" onclick="sendQuickMessage('How to analyze news?')">
+                📰 News Analysis
+            </button>
+            <button class="quick-action-btn" onclick="sendQuickMessage('Trading tips')">
+                💡 Tips
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Chatbot Configuration
+    const CHATBOT_CONFIG = {
+        apiKey: 'S4H4ZzL27bXAS4WObXbfw8eusjc7zmv2BUq2ZUmNvJjPUsoIGUTOGSpFMAyYOyn5XaZmA_rHGLT3BlbkFJBbFoPrN2kUZhgGP40XjTay97otHaMnZKvZWN-uA1AH0I3hC6o42vkeWriDdR5729z7hHGpj3QA',
+        apiUrl: 'https://api.openai.com/v1/chat/completions',
+        model: 'gpt-3.5-turbo',
+        systemPrompt: `You are an advanced AI Chatbot integrated into a smart trading application called "Grow My Trade" - an AI News-Based Trading Suggestion Platform.
+
+Your purpose:
+- Understand user queries deeply
+- Give clear, accurate, and helpful responses
+- Assist like a smart human, not a robotic bot
+
+Behavior rules:
+- Be conversational and friendly
+- Keep answers simple and easy to understand
+- Avoid unnecessary long responses
+- If the user is confused, guide step-by-step
+- If you don't know something, say "I'm not fully sure" instead of guessing
+
+Capabilities:
+- Answer general questions about trading and finance
+- Explain technical concepts in simple terms
+- Help with understanding trading signals (BUY/SELL/HOLD)
+- Explain how AI news analysis works
+- Give trading tips and suggestions
+- Summarize complex topics into short points
+- Act like a trading mentor
+
+Trading Platform Context:
+- The platform analyzes financial news using AI
+- Generates trading signals: BUY, SELL, or HOLD
+- Provides confidence scores and risk assessments
+- Real-time market data integration
+- News-based sentiment analysis
+
+Smart features:
+- If user asks something complex → break it into steps
+- If user asks "explain like beginner" → simplify deeply
+- If user gives a problem → suggest solution + improvements
+- If user is learning trading → act like a mentor
+
+Tone:
+- Friendly like a senior guide
+- Slightly informal but respectful
+- Motivating but not overhyped
+
+Output format:
+- Use bullet points when needed
+- Keep structure clean and readable
+- Use emojis occasionally to make it friendly`
+    };
+
+    // Chat state
+    let chatHistory = [];
+    let isChatOpen = false;
+
+    // Toggle chatbot window
+    function toggleChatbot() {
+        const chatWindow = document.getElementById('chatWindow');
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatIcon = chatToggleBtn.querySelector('.chat-icon');
+        const chatIconActive = chatToggleBtn.querySelector('.chat-icon-active');
+        
+        isChatOpen = !isChatOpen;
+        
+        if (isChatOpen) {
+            chatWindow.classList.add('open');
+            chatIcon.style.display = 'none';
+            chatIconActive.style.display = 'inline';
+            document.getElementById('chatInput').focus();
+        } else {
+            chatWindow.classList.remove('open');
+            chatIcon.style.display = 'inline';
+            chatIconActive.style.display = 'none';
+        }
+    }
+
+    // Send message
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        // Add user message
+        addMessage(message, 'user');
+        input.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Send to OpenAI API
+        try {
+            const response = await callOpenAI(message);
+            hideTypingIndicator();
+            addMessage(response, 'bot');
+        } catch (error) {
+            hideTypingIndicator();
+            addMessage("I'm having trouble connecting right now. Please try again in a moment!", 'bot');
+            console.error('Chatbot error:', error);
+        }
+    }
+
+    // Call OpenAI API
+    async function callOpenAI(userMessage) {
+        // Add to chat history
+        chatHistory.push({ role: 'user', content: userMessage });
+        
+        // Keep only last 10 messages for context
+        if (chatHistory.length > 10) {
+            chatHistory = chatHistory.slice(-10);
+        }
+        
+        const messages = [
+            { role: 'system', content: CHATBOT_CONFIG.systemPrompt },
+            ...chatHistory
+        ];
+        
+        const response = await fetch(CHATBOT_CONFIG.apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${CHATBOT_CONFIG.apiKey}`
+            },
+            body: JSON.stringify({
+                model: CHATBOT_CONFIG.model,
+                messages: messages,
+                max_tokens: 500,
+                temperature: 0.7
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const botResponse = data.choices[0].message.content;
+        
+        // Add to chat history
+        chatHistory.push({ role: 'assistant', content: botResponse });
+        
+        return botResponse;
+    }
+
+    // Add message to chat
+    function addMessage(content, sender) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        if (sender === 'user') {
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-bubble user-bubble">${content}</div>
+                    <span class="message-time">${currentTime}</span>
+                </div>
+                <div class="message-avatar">👤</div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">${formatMessage(content)}</div>
+                    <span class="message-time">${currentTime}</span>
+                </div>
+            `;
+        }
+        
+        messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    // Format message (handle markdown-like formatting)
+    function formatMessage(content) {
+        // Convert line breaks to HTML
+        content = content.replace(/\n/g, '<br>');
+        
+        // Convert bullet points
+        content = content.replace(/• /g, '&bull; ');
+        
+        // Convert bold text
+        content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        return content;
+    }
+
+    // Show typing indicator
+    function showTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'block';
+        scrollToBottom();
+    }
+
+    // Hide typing indicator
+    function hideTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'none';
+    }
+
+    // Scroll to bottom of chat
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('chatMessages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Handle Enter key
+    function handleChatKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    // Send quick message
+    function sendQuickMessage(message) {
+        document.getElementById('chatInput').value = message;
+        sendMessage();
+    }
+
+    // Auto-open chat on first visit (optional)
+    // Uncomment below to auto-open after 3 seconds
+    // setTimeout(() => {
+    //     if (!isChatOpen) toggleChatbot();
+    // }, 3000);
+</script>

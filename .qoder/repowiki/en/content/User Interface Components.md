@@ -2,80 +2,159 @@
 
 <cite>
 **Referenced Files in This Document**
-- [frontend/dashboard.html](file://frontend/dashboard.html)
-- [frontend/dashboard.js](file://frontend/dashboard.js)
+- [frontend/index.html](file://frontend/index.html)
+- [frontend/market.html](file://frontend/market.html)
+- [frontend/market.js](file://frontend/market.js)
 - [frontend/news.html](file://frontend/news.html)
 - [frontend/news.js](file://frontend/news.js)
+- [frontend/dashboard.html](file://frontend/dashboard.html)
+- [frontend/dashboard.js](file://frontend/dashboard.js)
+- [frontend/style.css](file://frontend/style.css)
+- [frontend/premium-ui.css](file://frontend/premium-ui.css)
 - [frontend/about.html](file://frontend/about.html)
 - [frontend/contact.html](file://frontend/contact.html)
-- [frontend/style.css](file://frontend/style.css)
-- [frontend/index.html](file://frontend/index.html)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Completely redesigned the user interface to reflect the new SaaS website architecture
-- Replaced the monolithic structure with separate HTML pages for dashboard, news, about, and contact
-- Implemented modern real-time trading interface with animated signal cards
-- Added sophisticated neon glow effects for BUY/SELL/HOLD indicators
-- Enhanced responsive design with glass-morphism and modern styling
-- Integrated local storage for seamless navigation between pages
-- Added comprehensive navigation system with active state management
+- Completely redesigned the user interface to reflect the new TradingView-style market page with live stock data visualization
+- Added professional hero section with animated SVG trading charts
+- Implemented sophisticated market page with real-time stock data display and animated charts
+- Enhanced dashboard with signal cards and AI analysis capabilities
+- Added comprehensive news page with financial news display and analysis integration
+- Implemented premium UI styling with neon glow effects, glass-morphism design, and modern animations
+- Integrated Finnhub API for real-time stock data with fallback mechanisms
+- Added responsive design with mobile-first approach and adaptive layouts
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [SaaS Website Architecture](#saas-website-architecture)
-3. [Dashboard Interface](#dashboard-interface)
-4. [News Integration System](#news-integration-system)
-5. [Navigation and Routing](#navigation-and-routing)
-6. [Modern UI Components](#modern-ui-components)
+2. [TradingView-Style Market Page](#tradingview-style-market-page)
+3. [Professional Hero Section](#professional-hero-section)
+4. [Enhanced Dashboard Interface](#enhanced-dashboard-interface)
+5. [News Integration System](#news-integration-system)
+6. [Premium UI Components](#premium-ui-components)
 7. [Neon Glow Effects](#neon-glow-effects)
-8. [Responsive Design Implementation](#responsive-design-implementation)
-9. [Local Storage Integration](#local-storage-integration)
-10. [Component Interaction Patterns](#component-interaction-patterns)
-11. [Performance Considerations](#performance-considerations)
-12. [Accessibility Features](#accessibility-features)
-13. [Integration Guidelines](#integration-guidelines)
+8. [Live Stock Data Visualization](#live-stock-data-visualization)
+9. [Responsive Design Implementation](#responsive-design-implementation)
+10. [Local Storage Integration](#local-storage-integration)
+11. [Component Interaction Patterns](#component-interaction-patterns)
+12. [Performance Considerations](#performance-considerations)
+13. [Accessibility Features](#accessibility-features)
+14. [Integration Guidelines](#integration-guidelines)
 
 ## Introduction
-This document describes the modern SaaS website architecture for the AI Trading Signal Engine, featuring a sophisticated real-time trading interface with animated signal cards displaying BUY/SELL/HOLD indicators with neon glow effects. The system has evolved from a monolithic structure to a modular SaaS platform with separate HTML pages for different functional areas, providing users with a premium financial trading experience.
+This document describes the modern SaaS website architecture for the AI Trading Signal Engine, featuring a sophisticated TradingView-style market page with live stock data visualization, professional hero section with animated SVG trading charts, and enhanced dashboard interface with AI-powered trading signals. The system has evolved from a monolithic structure to a modular SaaS platform with separate HTML pages for different functional areas, providing users with a premium financial trading experience.
 
-The new architecture emphasizes real-time data processing, modern UI design with glass-morphism effects, and seamless navigation between dashboard, news, about, and contact sections. The interface showcases animated signal cards with dynamic neon glow effects that respond to market sentiment analysis results.
+The new architecture emphasizes real-time data processing, modern UI design with glass-morphism effects, and seamless navigation between market, news, dashboard, about, and contact sections. The interface showcases animated signal cards with dynamic neon glow effects that respond to market sentiment analysis results, along with sophisticated stock chart visualizations powered by Finnhub API integration.
 
-## SaaS Website Architecture
-The new SaaS architecture consists of four main pages with interconnected functionality:
+## TradingView-Style Market Page
+The market page provides a professional TradingView-inspired interface for real-time stock data visualization and analysis:
+
+### Market Data Architecture
+- **Search Interface**: Advanced stock symbol search with popular tickers and real-time validation
+- **Live Data Display**: Comprehensive stock information including price, change, and company details
+- **Animated Charts**: Professional SVG-based charts with live price updates and gradient fills
+- **Popular Stocks Grid**: Quick-access grid for trending stocks with performance indicators
+- **Quick Stats**: Key performance metrics and service highlights
+
+### Live Stock Data Visualization
+The market page implements sophisticated real-time data visualization:
 
 ```mermaid
-graph TB
-Index["index.html<br/>Home Page"] --> Dashboard["dashboard.html<br/>Real-time Trading Dashboard"]
-News["news.html<br/>News Feed"] --> Dashboard
-About["about.html<br/>Company Information"] --> Dashboard
-Contact["contact.html<br/>Contact Page"] --> Dashboard
-Dashboard --> LocalStorage["localStorage<br/>Cross-page Data Sharing"]
-News --> LocalStorage
-Dashboard --> API["Backend API<br/>Real-time Data Processing"]
-Index --> Features["Feature Showcase<br/>Glass-morphism Design"]
-Dashboard --> Analytics["Analytics Cards<br/>Neon Glow Effects"]
-News --> Integration["News Integration<br/>Real-time Updates"]
-About --> TechStack["Technology Stack<br/>Modern Tech Showcase"]
-Contact --> Social["Social Links<br/>Professional Networking"]
+stateDiagram-v2
+state LIVE_UPDATING {
+[*] --> GeneratingData
+GeneratingData --> UpdatingChart : Every 3 seconds
+UpdatingChart --> GeneratingData : Continue Loop
+}
+state ERROR_HANDLING {
+[*] --> API_ERROR
+API_ERROR --> DEMO_FALLBACK : Use Sample Data
+DEMO_FALLBACK --> GeneratingData : Continue Updates
+}
+state SEARCH_PROCESS {
+[*] --> VALIDATION
+VALIDATION --> API_CALL : Valid Symbol
+API_CALL --> DATA_RECEIVED : Success
+DATA_RECEIVED --> GENERATE_CHART : Process Data
+GENERATE_CHART --> LIVE_UPDATING : Start Updates
+}
 ```
 
 **Diagram sources**
-- [frontend/index.html:1-157](file://frontend/index.html#L1-L157)
-- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
-- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
-- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
-- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
+- [frontend/market.js:39-107](file://frontend/market.js#L39-L107)
+- [frontend/market.js:169-271](file://frontend/market.js#L169-L271)
+- [frontend/market.js:325-423](file://frontend/market.js#L325-L423)
+
+### Chart Animation System
+The market page features sophisticated chart animations with multiple layers:
+
+```mermaid
+sequenceDiagram
+participant User
+participant MarketPage
+participant ChartSVG
+participant LiveUpdate
+User->>MarketPage : Enter Stock Symbol
+MarketPage->>MarketPage : Validate Symbol
+MarketPage->>MarketPage : Fetch Data from Finnhub API
+MarketPage->>ChartSVG : Generate Chart Path
+ChartSVG->>ChartSVG : Apply Gradient Fill
+ChartSVG->>ChartSVG : Animate Line Drawing
+ChartSVG->>ChartSVG : Fade In Area Fill
+ChartSVG->>ChartSVG : Show Live Dot
+LiveUpdate->>ChartSVG : Update Every 3s
+ChartSVG->>ChartSVG : Shift Data Points
+ChartSVG->>ChartSVG : Recalculate Scale
+ChartSVG->>ChartSVG : Smooth Transition
+```
+
+**Diagram sources**
+- [frontend/market.js:169-271](file://frontend/market.js#L169-L271)
+- [frontend/market.js:325-423](file://frontend/market.js#L325-L423)
 
 **Section sources**
-- [frontend/index.html:1-157](file://frontend/index.html#L1-L157)
-- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
-- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
-- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
-- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
+- [frontend/market.html:31-179](file://frontend/market.html#L31-L179)
+- [frontend/market.js:1-537](file://frontend/market.js#L1-L537)
+- [frontend/premium-ui.css:1017-1166](file://frontend/premium-ui.css#L1017-L1166)
 
-## Dashboard Interface
+## Professional Hero Section
+The hero section features a sophisticated animated trading chart that demonstrates the platform's capabilities:
+
+### Animated Trading Chart
+- **Dynamic SVG Chart**: Real-time performance visualization with gradient fills and glow effects
+- **Continuous Animation**: Infinite loop of market movements with smooth transitions
+- **Performance Metrics**: Live percentage display with color-coded indicators
+- **Grid Background**: Subtle grid pattern for enhanced visual depth
+- **Live Badge**: Animated "LIVE" indicator with pulsing effect
+
+### Hero Section Architecture
+The hero section implements a complex animation system:
+
+```mermaid
+flowchart TD
+A[Hero Section Load] --> B[Initialize Chart Data]
+B --> C[Generate Random Performance Target]
+C --> D[Create Initial Data Points]
+D --> E[Render SVG Chart]
+E --> F[Start Animation Loop]
+F --> G[Update Data Points]
+G --> H[Recalculate Paths]
+H --> I[Update Visual Elements]
+I --> J[Update Performance Label]
+J --> K[Change Colors Based on Trend]
+K --> F
+```
+
+**Diagram sources**
+- [frontend/index.html:210-410](file://frontend/index.html#L210-L410)
+
+**Section sources**
+- [frontend/index.html:31-97](file://frontend/index.html#L31-L97)
+- [frontend/index.html:210-410](file://frontend/index.html#L210-L410)
+- [frontend/style.css:173-287](file://frontend/style.css#L173-L287)
+
+## Enhanced Dashboard Interface
 The dashboard provides the core real-time trading interface with sophisticated signal card presentation:
 
 ### Signal Card Architecture
@@ -85,37 +164,35 @@ The dashboard provides the core real-time trading interface with sophisticated s
 - **Explanation Box**: AI-generated analysis with key factors and catalyst identification
 - **Action Controls**: Refresh signal, fetch latest news, and timestamp display
 
-### Neon Glow Effects Implementation
-The dashboard implements sophisticated neon glow effects that respond to signal type:
+### AI Analysis System
+The dashboard implements a two-tier analysis system:
 
 ```mermaid
 stateDiagram-v2
-state BUY {
-[*] --> GreenGlow
-GreenGlow --> GreenGlow : Continuous Pulsing
+state ANALYSIS_SYSTEM {
+[*] --> KEYWORD_ANALYSIS
+KEYWORD_ANALYSIS --> SENTIMENT_DETECTION : Scan Keywords
+SENTIMENT_DETECTION --> SIGNAL_GENERATION : Determine Sentiment
+SIGNAL_GENERATION --> CONFIDENCE_CALCULATION : Calculate Confidence
+CONFIDENCE_CALCULATION --> RISK_ASSESSMENT : Evaluate Risk
+RISK_ASSESSMENT --> EXPLANATION_GENERATION : Create Analysis
+EXPLANATION_GENERATION --> DISPLAY_SIGNAL : Show Results
 }
-state SELL {
-[*] --> RedGlow
-RedGlow --> RedGlow : Continuous Pulsing
-}
-state HOLD {
-[*] --> YellowGlow
-YellowGlow --> YellowGlow : Continuous Pulsing
-}
-state ANALYZING {
-[*] --> NeutralGlow
-NeutralGlow --> NeutralGlow : Static Glow
+state REAL_AI_INTEGRATION {
+[*] --> FETCH_REAL_AI : Background Request
+FETCH_REAL_AI --> UPDATE_IF_AVAILABLE : Response Received
+UPDATE_IF_AVAILABLE --> DISPLAY_SIGNAL : Optional Update
 }
 ```
 
 **Diagram sources**
-- [frontend/dashboard.js:334-346](file://frontend/dashboard.js#L334-L346)
-- [frontend/style.css:480-496](file://frontend/style.css#L480-L496)
+- [frontend/dashboard.js:146-229](file://frontend/dashboard.js#L146-L229)
+- [frontend/dashboard.js:368-387](file://frontend/dashboard.js#L368-L387)
 
 **Section sources**
-- [frontend/dashboard.html:45-88](file://frontend/dashboard.html#L45-L88)
-- [frontend/dashboard.js:305-346](file://frontend/dashboard.js#L305-L346)
-- [frontend/style.css:450-496](file://frontend/style.css#L450-L496)
+- [frontend/dashboard.html:31-165](file://frontend/dashboard.html#L31-L165)
+- [frontend/dashboard.js:1-464](file://frontend/dashboard.js#L1-L464)
+- [frontend/premium-ui.css:237-281](file://frontend/premium-ui.css#L237-L281)
 
 ## News Integration System
 The news system provides real-time financial news integration with seamless navigation to the dashboard:
@@ -133,34 +210,12 @@ The news system uses localStorage for cross-page data sharing:
 - Enables seamless navigation between news and dashboard pages
 
 **Section sources**
-- [frontend/news.html:149-232](file://frontend/news.html#L149-L232)
-- [frontend/news.js:69-88](file://frontend/news.js#L69-L88)
-- [frontend/news.html:359-363](file://frontend/news.html#L359-L363)
+- [frontend/news.html:1-412](file://frontend/news.html#L1-L412)
+- [frontend/news.js:1-285](file://frontend/news.js#L1-L285)
+- [frontend/dashboard.js:44-65](file://frontend/dashboard.js#L44-L65)
 
-## Navigation and Routing
-The SaaS website features a modern navigation system with active state management:
-
-### Navigation Components
-- **Fixed Navbar**: Sticky navigation with glass-morphism effect and backdrop blur
-- **Active State Management**: Visual indicators for current page with gradient underlines
-- **Responsive Design**: Mobile-friendly navigation with hidden menu on smaller screens
-- **Cross-page Integration**: Seamless navigation between all SaaS pages
-
-### Page Routing Strategy
-The navigation system implements a simple routing strategy:
-- Direct links between pages using standard anchor tags
-- Active class management for visual feedback
-- Consistent styling across all navigation items
-- Gradient accent colors for visual appeal
-
-**Section sources**
-- [frontend/dashboard.html:10-23](file://frontend/dashboard.html#L10-L23)
-- [frontend/news.html:330-346](file://frontend/news.html#L330-L346)
-- [frontend/about.html:10-22](file://frontend/about.html#L10-L22)
-- [frontend/contact.html:10-22](file://frontend/contact.html#L10-L22)
-
-## Modern UI Components
-The SaaS website implements a comprehensive set of modern UI components:
+## Premium UI Components
+The SaaS website implements a comprehensive set of premium UI components:
 
 ### Glass-morphism Design System
 - **Background Effects**: Frosted glass panels with backdrop blur
@@ -182,8 +237,7 @@ The SaaS website implements a comprehensive set of modern UI components:
 
 **Section sources**
 - [frontend/style.css:6-37](file://frontend/style.css#L6-L37)
-- [frontend/style.css:431-464](file://frontend/style.css#L431-L464)
-- [frontend/style.css:136-171](file://frontend/style.css#L136-L171)
+- [frontend/premium-ui.css:1-800](file://frontend/premium-ui.css#L1-L800)
 
 ## Neon Glow Effects
 The SaaS website implements sophisticated neon glow effects throughout the interface:
@@ -209,10 +263,68 @@ The neon glow system creates a premium, high-tech feel:
 - Professional appearance suitable for financial applications
 
 **Section sources**
-- [frontend/dashboard.html:142-152](file://frontend/dashboard.html#L142-L152)
-- [frontend/dashboard.js:317-318](file://frontend/dashboard.js#L317-L318)
-- [frontend/dashboard.js:334-345](file://frontend/dashboard.js#L334-L345)
+- [frontend/premium-ui.css:237-281](file://frontend/premium-ui.css#L237-L281)
+- [frontend/dashboard.js:418-430](file://frontend/dashboard.js#L418-L430)
 - [frontend/style.css:31-33](file://frontend/style.css#L31-L33)
+
+## Live Stock Data Visualization
+The market page features sophisticated live stock data visualization with real-time updates:
+
+### Chart Rendering System
+- **SVG Path Generation**: Smooth cubic bezier curves for professional chart appearance
+- **Gradient Fills**: Dynamic gradient backgrounds that change with price trends
+- **Live Dot Animation**: Pulsing dot that follows the latest price point
+- **Smooth Transitions**: CSS transitions for seamless data updates
+
+### Data Processing Pipeline
+The market page implements a comprehensive data processing pipeline:
+
+```mermaid
+flowchart LR
+A[User Input] --> B{Valid Symbol?}
+B --> |Yes| C[Finnhub API Call]
+B --> |No| D[Show Error State]
+C --> E{API Success?}
+E --> |Yes| F[Process Quote Data]
+E --> |No| G[Use Demo Data]
+F --> H[Generate Chart Data]
+G --> H
+H --> I[Render SVG Chart]
+I --> J[Start Live Updates]
+J --> K[Update Every 3 Seconds]
+K --> H
+```
+
+**Diagram sources**
+- [frontend/market.js:39-107](file://frontend/market.js#L39-L107)
+- [frontend/market.js:169-271](file://frontend/market.js#L169-L271)
+
+### Chart Animation Sequence
+The chart rendering system follows a precise animation sequence:
+
+```mermaid
+sequenceDiagram
+participant Chart
+participant Generator
+participant Renderer
+Generator->>Chart : Generate Data Points
+Chart->>Chart : Calculate Min/Max Values
+Generator->>Chart : Create Smooth Path Points
+Chart->>Renderer : Generate SVG Path
+Renderer->>Chart : Apply Gradient Fill
+Chart->>Chart : Animate Line Drawing
+Chart->>Chart : Fade In Area Fill
+Chart->>Chart : Show Live Dot
+Chart->>Chart : Start Pulse Animation
+```
+
+**Diagram sources**
+- [frontend/market.js:169-271](file://frontend/market.js#L169-L271)
+- [frontend/premium-ui.css:1060-1104](file://frontend/premium-ui.css#L1060-L1104)
+
+**Section sources**
+- [frontend/market.js:169-423](file://frontend/market.js#L169-L423)
+- [frontend/premium-ui.css:1017-1166](file://frontend/premium-ui.css#L1017-L1166)
 
 ## Responsive Design Implementation
 The SaaS website features comprehensive responsive design:
@@ -227,6 +339,7 @@ The SaaS website features comprehensive responsive design:
 - **Navigation**: Hidden menu on mobile with hamburger-style interaction
 - **News Grid**: Single column on mobile, multi-column on desktop
 - **Dashboard Cards**: Flexible grid that adapts to screen size
+- **Market Charts**: Responsive chart sizing with reduced complexity on smaller screens
 - **Typography**: Fluid font sizing with viewport-relative units
 
 ### Performance Considerations
@@ -236,9 +349,8 @@ The SaaS website features comprehensive responsive design:
 - **Touch Targets**: Adequate sizing for mobile interaction
 
 **Section sources**
-- [frontend/style.css:1002-1024](file://frontend/style.css#L1002-L1024)
-- [frontend/news.html:308-326](file://frontend/news.html#L308-L326)
-- [frontend/dashboard.html:1002-1024](file://frontend/dashboard.html#L1002-L1024)
+- [frontend/style.css:452-499](file://frontend/style.css#L452-L499)
+- [frontend/premium-ui.css:1363-1467](file://frontend/premium-ui.css#L1363-L1467)
 
 ## Local Storage Integration
 The SaaS website implements strategic local storage usage for enhanced user experience:
@@ -263,8 +375,8 @@ The local storage system handles:
 - **Privacy Compliance**: No personal data collection or retention
 
 **Section sources**
-- [frontend/news.js:73-76](file://frontend/news.js#L73-L76)
-- [frontend/dashboard.js:29-46](file://frontend/dashboard.js#L29-L46)
+- [frontend/news.js:113-127](file://frontend/news.js#L113-L127)
+- [frontend/dashboard.js:29-65](file://frontend/dashboard.js#L29-L65)
 
 ## Component Interaction Patterns
 The SaaS website implements sophisticated interaction patterns:
@@ -288,9 +400,9 @@ The SaaS website implements sophisticated interaction patterns:
 - **Memory Management**: Cleanup of event listeners and timers
 
 **Section sources**
-- [frontend/dashboard.js:147-171](file://frontend/dashboard.js#L147-L171)
-- [frontend/dashboard.js:196-257](file://frontend/dashboard.js#L196-L257)
-- [frontend/news.js:14-40](file://frontend/news.js#L14-L40)
+- [frontend/dashboard.js:281-341](file://frontend/dashboard.js#L281-L341)
+- [frontend/market.js:467-479](file://frontend/market.js#L467-L479)
+- [frontend/news.js:31-70](file://frontend/news.js#L31-L70)
 
 ## Performance Considerations
 The SaaS website is optimized for performance across all components:
@@ -315,7 +427,7 @@ The SaaS website is optimized for performance across all components:
 
 **Section sources**
 - [frontend/style.css:1026-1037](file://frontend/style.css#L1026-L1037)
-- [frontend/dashboard.js:283-303](file://frontend/dashboard.js#L283-L303)
+- [frontend/market.js:283-303](file://frontend/market.js#L283-L303)
 
 ## Accessibility Features
 The SaaS website implements comprehensive accessibility features:
@@ -345,10 +457,9 @@ The SaaS website implements comprehensive accessibility features:
 - **Motion Preferences**: Reduced motion options for sensitive users
 
 **Section sources**
-- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
-- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
-- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
-- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
+- [frontend/market.html:1-179](file://frontend/market.html#L1-L179)
+- [frontend/news.html:1-412](file://frontend/news.html#L1-L412)
+- [frontend/dashboard.html:1-165](file://frontend/dashboard.html#L1-L165)
 
 ## Integration Guidelines
 The SaaS website provides guidelines for extending and integrating with the existing architecture:
@@ -359,11 +470,11 @@ The SaaS website provides guidelines for extending and integrating with the exis
 - **Responsive Behavior**: Implement mobile-first responsive design
 - **Performance Standards**: Follow established performance optimization patterns
 
-### Extending Dashboard Functionality
-- **Signal Analysis**: Implement additional analysis algorithms
-- **Data Visualization**: Add new chart types and visualization components
+### Extending Market Functionality
+- **API Integration**: Connect to additional financial data providers
+- **Chart Enhancements**: Add new chart types and visualization components
 - **Real-time Updates**: Implement WebSocket connections for live data
-- **API Integration**: Connect to additional external services
+- **Data Visualization**: Extend chart capabilities with additional metrics
 
 ### Component Development
 - **CSS Architecture**: Follow the established naming convention (BEM methodology)
