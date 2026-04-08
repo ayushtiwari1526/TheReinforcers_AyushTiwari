@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grow My Trade | AI News-Based Trading Suggestion Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="premium-ui.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-main">Grow My Trade</div>
+                <div class="logo-subtitle">AI News-Based Trading Suggestion Platform</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="market.html" class="active">Market</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="dashboard.html" class="btn-nav-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Market Page -->
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>📊 Live Market Data</h1>
+            <p>Real-time stock prices with AI-powered analysis</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="stockInput" 
+                    placeholder="Enter stock symbol (AAPL, TSLA, MSFT)"
+                    class="stock-input"
+                >
+                <button class="btn-search" onclick="loadStockData()">
+                    <span>🔍</span> Load Market Data
+                </button>
+            </div>
+            <p class="search-hint">Popular: AAPL, TSLA, MSFT, GOOGL, AMZN, NVDA</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading market data...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <h3>Unable to fetch market data</h3>
+            <p>Please check the stock symbol and try again</p>
+        </div>
+
+        <!-- Stock Data Display -->
+        <div id="stockDataCard" class="stock-data-card" style="display: none;">
+            <!-- Stock Header -->
+            <div class="stock-header">
+                <div class="stock-info">
+                    <h2 id="stockSymbol" class="stock-symbol">AAPL</h2>
+                    <p id="stockName" class="stock-name">Apple Inc.</p>
+                </div>
+                <div class="stock-price-info">
+                    <div id="stockPrice" class="stock-price">$150.00</div>
+                    <div id="stockChange" class="stock-change">
+                        <span id="changeValue">+5.25</span>
+                        <span id="changePercent" class="change-percent">(+3.62%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="market-chart-container">
+                <!-- Chart Label -->
+                <div class="chart-label-badge">
+                    <span class="live-dot"></span>
+                    <span class="label-text">Live Market Trend</span>
+                </div>
+                
+                <svg id="marketChart" class="market-chart" viewBox="0 0 500 250" preserveAspectRatio="none">
+                    <defs>
+                        <filter id="marketGlow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        
+                        <!-- Grid pattern -->
+                        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    
+                    <!-- Grid background -->
+                    <rect width="500" height="250" fill="url(#grid)" opacity="0.5"/>
+                    
+                    <!-- Area fill under line -->
+                    <path id="marketArea" fill="url(#marketGradientGreen)"/>
+                    
+                    <!-- Main chart line -->
+                    <path id="marketLine" fill="none" stroke="#00ff88" stroke-width="3.5" filter="url(#marketGlow)"/>
+                    
+                    <!-- Live price dot -->
+                    <circle id="marketDot" r="6" fill="#00ff88" filter="url(#marketGlow)"/>
+                    <circle id="marketDotPulse" r="6" fill="none" stroke="#00ff88" stroke-width="2"/>
+                </svg>
+            </div>
+
+            <!-- AI Analysis Button -->
+            <button class="btn-analyze" onclick="analyzeWithAI()">
+                <span>⚡</span> Analyze with AI
+            </button>
+        </div>
+
+        <!-- Popular Stocks Grid -->
+        <div class="popular-stocks-section">
+            <h2 class="section-title">🔥 Popular Stocks</h2>
+            <p class="section-subtitle">Click any stock to view live data and chart</p>
+            
+            <div class="stocks-grid" id="stocksGrid">
+                <!-- Stocks will be loaded here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-icon">💹</div>
+                <h4>Real-time Data</h4>
+                <p>Live market prices</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🤖</div>
+                <h4>AI Analysis</h4>
+                <p>Smart signals</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <h4>Technical Charts</h4>
+                <p>Visual insights</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo-main">Grow My Trade</div>
+                <div class="footer-logo-subtitle">AI News-Based Trading Suggestion Platform</div>
+            </div>
+            <p class="footer-tagline">Transforming market data into AI-powered trading signals</p>
+            <p class="footer-copy">&copy; 2026 Grow My Trade. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="market.js"></script>
+</body>
+</html>

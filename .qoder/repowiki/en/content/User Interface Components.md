@@ -2,555 +2,382 @@
 
 <cite>
 **Referenced Files in This Document**
+- [frontend/dashboard.html](file://frontend/dashboard.html)
+- [frontend/dashboard.js](file://frontend/dashboard.js)
+- [frontend/news.html](file://frontend/news.html)
+- [frontend/news.js](file://frontend/news.js)
+- [frontend/about.html](file://frontend/about.html)
+- [frontend/contact.html](file://frontend/contact.html)
+- [frontend/style.css](file://frontend/style.css)
 - [frontend/index.html](file://frontend/index.html)
-- [frontend/script.js](file://frontend/script.js)
-- [frontend/styles.css](file://frontend/styles.css)
-- [ai-service/app.py](file://ai-service/app.py)
-- [backend/src/main/resources/application.properties](file://backend/src/main/resources/application.properties)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Added comprehensive documentation for real-time news fetching functionality
-- Documented canvas-based mini chart visualization system
-- Enhanced backend integration documentation with health monitoring
-- Added company detection and key factor extraction features
-- Updated loading state with progress bar implementation
-- Expanded component analysis to include new interactive elements
+- Completely redesigned the user interface to reflect the new SaaS website architecture
+- Replaced the monolithic structure with separate HTML pages for dashboard, news, about, and contact
+- Implemented modern real-time trading interface with animated signal cards
+- Added sophisticated neon glow effects for BUY/SELL/HOLD indicators
+- Enhanced responsive design with glass-morphism and modern styling
+- Integrated local storage for seamless navigation between pages
+- Added comprehensive navigation system with active state management
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Core Components](#core-components)
-4. [Architecture Overview](#architecture-overview)
-5. [Detailed Component Analysis](#detailed-component-analysis)
-6. [Enhanced Backend Integration](#enhanced-backend-integration)
-7. [Canvas-Based Mini Chart System](#canvas-based-mini-chart-system)
-8. [Dependency Analysis](#dependency-analysis)
-9. [Performance Considerations](#performance-considerations)
-10. [Troubleshooting Guide](#troubleshooting-guide)
-11. [Conclusion](#conclusion)
-12. [Appendices](#appendices)
+2. [SaaS Website Architecture](#saas-website-architecture)
+3. [Dashboard Interface](#dashboard-interface)
+4. [News Integration System](#news-integration-system)
+5. [Navigation and Routing](#navigation-and-routing)
+6. [Modern UI Components](#modern-ui-components)
+7. [Neon Glow Effects](#neon-glow-effects)
+8. [Responsive Design Implementation](#responsive-design-implementation)
+9. [Local Storage Integration](#local-storage-integration)
+10. [Component Interaction Patterns](#component-interaction-patterns)
+11. [Performance Considerations](#performance-considerations)
+12. [Accessibility Features](#accessibility-features)
+13. [Integration Guidelines](#integration-guidelines)
 
 ## Introduction
-This document describes the user interface components and interaction patterns of the AI Trading Signal Engine. The system has been enhanced with real-time news fetching capabilities, canvas-based signal visualization, and comprehensive backend integration. It covers the input system (news headline textarea with character counting and validation), the Analyze Signal button (including loading states, disabled/enabled behavior, and keyboard shortcuts), the result card presentation (signal badges, confidence visualization bars, risk level indicators, and dynamic explanation display), and the loading state animations, status indicators, and footer statistics. It also documents responsive behavior across screen sizes, accessibility considerations, and usage examples for extending or modifying UI elements.
+This document describes the modern SaaS website architecture for the AI Trading Signal Engine, featuring a sophisticated real-time trading interface with animated signal cards displaying BUY/SELL/HOLD indicators with neon glow effects. The system has evolved from a monolithic structure to a modular SaaS platform with separate HTML pages for different functional areas, providing users with a premium financial trading experience.
 
-## Project Structure
-The application consists of three main components:
-- **Frontend**: HTML, CSS, and JavaScript for the user interface with enhanced real-time capabilities
-- **AI Service**: Flask-based sentiment analysis service with health monitoring
-- **Backend**: Spring Boot application serving as API gateway and news aggregation
+The new architecture emphasizes real-time data processing, modern UI design with glass-morphism effects, and seamless navigation between dashboard, news, about, and contact sections. The interface showcases animated signal cards with dynamic neon glow effects that respond to market sentiment analysis results.
 
-```mermaid
-graph TB
-Frontend["frontend/index.html<br/>Enhanced UI with real-time features"] --> JS["frontend/script.js<br/>Real-time news fetching & canvas charts"]
-Frontend --> CSS["frontend/styles.css<br/>Premium styling & animations"]
-JS --> Backend["backend/src/main/resources/application.properties<br/>API configuration & endpoints"]
-Backend --> AIService["ai-service/app.py<br/>Flask AI analysis service"]
-Backend --> NewsAPI["NewsAPI Integration<br/>Real-time news feeds"]
-AIService --> FinBERT["FinBERT Model<br/>Advanced sentiment analysis"]
-```
-
-**Diagram sources**
-- [frontend/index.html:1-235](file://frontend/index.html#L1-L235)
-- [frontend/script.js:1-1068](file://frontend/script.js#L1-L1068)
-- [frontend/styles.css:1-1415](file://frontend/styles.css#L1-L1415)
-- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
-- [backend/src/main/resources/application.properties:1-27](file://backend/src/main/resources/application.properties#L1-L27)
-
-**Section sources**
-- [frontend/index.html:1-235](file://frontend/index.html#L1-L235)
-- [frontend/script.js:1-1068](file://frontend/script.js#L1-L1068)
-- [frontend/styles.css:1-1415](file://frontend/styles.css#L1-L1415)
-- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
-- [backend/src/main/resources/application.properties:1-27](file://backend/src/main/resources/application.properties#L1-L27)
-
-## Core Components
-- **Enhanced Input System**: A textarea for pasting financial news headlines with real-time character counting, placeholder text, and integrated live news fetching capability.
-- **Real-Time News Integration**: A dedicated "Fetch Live News" button that retrieves current financial news from external APIs and populates the input area.
-- **Canvas-Based Mini Charts**: Sophisticated signal visualization using HTML5 Canvas for BUY/SELL/HOLD trend representations.
-- **Enhanced Analyze Signal Button**: A premium gradient-styled button with ripple effects, micro-interactions, and keyboard shortcuts.
-- **Advanced Loading State**: A comprehensive loading overlay with animated progress bar, multi-ring loader, and dynamic status indicators.
-- **Premium Result Card**: Enhanced presentation with company detection badges, signal visualization, confidence bars, risk meters, and key factor analysis.
-- **Health Monitoring Integration**: Real-time system health checks and performance metrics display.
-- **Status Indicators**: Live status badge in the header and comprehensive footer statistics.
-- **Footer Statistics**: Aggregated metrics including news analyzed, accuracy rate, and response time.
-
-**Section sources**
-- [frontend/index.html:66-93](file://frontend/index.html#L66-L93)
-- [frontend/index.html:127-141](file://frontend/index.html#L127-L141)
-- [frontend/index.html:111-209](file://frontend/index.html#L111-L209)
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/script.js:511-552](file://frontend/script.js#L511-L552)
-- [frontend/script.js:24-37](file://frontend/script.js#L24-L37)
-
-## Architecture Overview
-The enhanced UI follows a sophisticated client-server architecture with real-time capabilities:
-- **Frontend**: Reacts to user input, manages real-time news fetching, handles canvas-based visualizations, and coordinates with backend services.
-- **Backend**: Acts as API gateway, manages news aggregation, and orchestrates communication with the AI service.
-- **AI Service**: Provides advanced sentiment analysis using FinBERT models with health monitoring and batch processing capabilities.
-
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant I as "News Input"
-participant N as "Live News Fetch"
-participant C as "Canvas Mini Chart"
-participant B as "Analyze Button"
-participant L as "Loading Overlay"
-participant R as "Result Card"
-participant A as "AI Service"
-U->>I : Paste headline or click Fetch Live News
-I->>N : Trigger news fetch
-N->>A : Request latest news
-A->>N : Return news articles
-N->>I : Populate news list
-U->>B : Click Analyze Signal
-B->>L : Show loading overlay
-L->>A : Send analysis request
-A->>L : Return analysis result
-L->>C : Render mini chart
-L->>R : Display enhanced results
-```
-
-**Diagram sources**
-- [frontend/index.html:85-92](file://frontend/index.html#L85-L92)
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/script.js:511-552](file://frontend/script.js#L511-L552)
-- [ai-service/app.py:29-36](file://ai-service/app.py#L29-L36)
-
-## Detailed Component Analysis
-
-### Enhanced Input System: Financial News Input with Live Integration
-- **Purpose**: Accept financial news headlines with enhanced real-time capabilities and integrated news fetching.
-- **Features**:
-  - Standard news headline textarea with 500-character limit and real-time character counting.
-  - Integrated "Fetch Live News" button for accessing current financial news.
-  - Animated news list display with clickable articles that populate the input field.
-  - Visual focus effects with neon blue glow and enhanced input styling.
-- **Interaction Pattern**:
-  - Users can either paste news manually or fetch live headlines.
-  - Clicking news items automatically populates the input and triggers analysis.
-  - Real-time validation enables the analyze button when content is present.
-
-```mermaid
-flowchart TD
-Start(["User interacts with input"]) --> Manual["Manual Input"]
-Start --> Live["Fetch Live News"]
-Manual --> Validate["Validate input length"]
-Live --> Fetch["Fetch latest news from API"]
-Fetch --> Display["Display news list"]
-Display --> Click["Click news item"]
-Click --> Populate["Populate input field"]
-Populate --> AutoAnalyze["Auto-trigger analysis"]
-Validate --> Enable["Enable analyze button"]
-Enable --> Ready["Ready for analysis"]
-```
-
-**Diagram sources**
-- [frontend/index.html:85-92](file://frontend/index.html#L85-L92)
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:369-381](file://frontend/script.js#L369-L381)
-
-**Section sources**
-- [frontend/index.html:66-93](file://frontend/index.html#L66-L93)
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:369-381](file://frontend/script.js#L369-L381)
-- [frontend/styles.css:408-502](file://frontend/styles.css#L408-L502)
-
-### Enhanced Analyze Signal Button
-- **Purpose**: Trigger comprehensive sentiment analysis with premium visual effects and micro-interactions.
-- **States**:
-  - Disabled by default until input is present.
-  - Advanced hover effects with gradient glow, scaling animation, and icon rotation.
-  - Active state with ripple effect animation and press-down transformation.
-  - During analysis, the button is disabled with visual dimming and progress indication.
-- **Behavior**:
-  - Click handler validates input, shows enhanced loading overlay with progress bar, processes analysis, and displays comprehensive results.
-  - Keyboard shortcut: Ctrl/Cmd + Enter triggers analysis when the button is enabled and input is present.
-  - Micro-interactions include ripple effects, glow animations, and smooth transitions.
-- **Accessibility**:
-  - Uses semantic button element with clear label text.
-  - Disabled state prevents accidental clicks.
-  - Enhanced visual feedback for all interaction states.
-
-```mermaid
-sequenceDiagram
-participant U as "User"
-participant B as "Analyze Button"
-participant J as "script.js"
-participant L as "Loading Overlay"
-participant A as "AI Service"
-participant C as "Canvas Chart"
-U->>B : Click or Ctrl/Cmd+Enter
-B->>J : click handler
-J->>J : validate input
-J->>L : showLoading() with progress
-L->>A : analyzeWithBackend()
-A->>L : return analysis result
-L->>C : drawMiniChart()
-L->>B : re-enable button
-```
-
-**Diagram sources**
-- [frontend/index.html:95-101](file://frontend/index.html#L95-L101)
-- [frontend/script.js:511-552](file://frontend/script.js#L511-L552)
-- [frontend/script.js:757-798](file://frontend/script.js#L757-L798)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-
-**Section sources**
-- [frontend/index.html:95-101](file://frontend/index.html#L95-L101)
-- [frontend/script.js:511-552](file://frontend/script.js#L511-L552)
-- [frontend/script.js:684-698](file://frontend/script.js#L684-L698)
-- [frontend/script.js:757-798](file://frontend/script.js#L757-L798)
-- [frontend/styles.css:583-685](file://frontend/styles.css#L583-L685)
-
-### Enhanced Loading State with Progress Bar
-- **Purpose**: Provide comprehensive feedback during analysis with real-time progress indication.
-- **Elements**:
-  - Premium loading overlay with backdrop blur and glass-morphism effect.
-  - Multi-ring loader with rotating rings in different neon colors (green, blue, purple).
-  - Central core with pulsing animation and gradient glow.
-  - Dynamic loading text with animated dots for typing effect.
-  - Progress bar with gradient fill and real-time animation.
-  - Subtext indicating processing details and model analysis.
-- **Behavior**:
-  - Enhanced overlay replaces traditional loading state with comprehensive visual feedback.
-  - Progress bar animates from 0% to 90% during analysis, then to 100% completion.
-  - Button is disabled and visually dimmed during this phase.
-  - Smooth transitions between loading states and result display.
-
-```mermaid
-flowchart TD
-Start(["Show Enhanced Loading"]) --> Overlay["Display loading overlay"]
-Overlay --> Rings["Animate spinning rings"]
-Overlay --> Dots["Animate dots in loading text"]
-Overlay --> Progress["Animate progress bar"]
-Progress --> Simulate["Simulate AI processing"]
-Simulate --> Complete(["Hide Loading and Show Results"])
-```
-
-**Diagram sources**
-- [frontend/index.html:23-41](file://frontend/index.html#L23-L41)
-- [frontend/script.js:527-552](file://frontend/script.js#L527-L552)
-- [frontend/script.js:952-982](file://frontend/script.js#L952-L982)
-
-**Section sources**
-- [frontend/index.html:23-41](file://frontend/index.html#L23-L41)
-- [frontend/script.js:527-552](file://frontend/script.js#L527-L552)
-- [frontend/script.js:952-982](file://frontend/script.js#L952-L982)
-- [frontend/styles.css:162-287](file://frontend/styles.css#L162-L287)
-
-### Enhanced Result Card Presentation
-- **Purpose**: Present comprehensive analysis outcomes with premium visualizations and interactive elements.
-- **Components**:
-  - **Company Detection Badge**: Automatically detects and displays company names with neon blue styling.
-  - **Signal Badge**: Enhanced with dynamic color transitions (green for BUY, red for SELL, yellow for HOLD) and gradient borders.
-  - **Canvas Mini Chart**: Sophisticated signal visualization with trend lines, gradient fills, and endpoint markers.
-  - **Results Grid**: Three-column layout with sentiment indicators, confidence bars, and risk meters.
-  - **Dynamic Explanation**: AI-generated analysis with key factors and catalyst identification.
-  - **Action Buttons**: Reset and Share functionality with micro-interactions.
-  - **Disclaimer**: Educational disclaimer with enhanced visual styling.
-- **Animations**:
-  - Smooth slide-up entrance with bounce effect for the result card.
-  - Confidence bar animates to final width with gradient color transitions.
-  - Signal badge features rotating gradient backgrounds and glow effects.
-  - Canvas chart renders with smooth animation and shadow effects.
-
-```mermaid
-classDiagram
-class ResultCard {
-+companyBadge
-+signalBadge
-+miniChart
-+resultsGrid
-+explanationBox
-+actionButtons
-+disclaimer
-}
-class CompanyBadge {
-+icon
-+text
-}
-class SignalBadge {
-+icon
-+text
-+subtitle
-+colorClass
-}
-class MiniChart {
-+canvas
-+label
-+render()
-}
-class ResultsGrid {
-+sentimentItem
-+confidenceItem
-+riskItem
-}
-class ExplanationBox {
-+header
-+text
-+keyFactors
-}
-ResultCard --> CompanyBadge : "contains"
-ResultCard --> SignalBadge : "contains"
-ResultCard --> MiniChart : "contains"
-ResultCard --> ResultsGrid : "contains"
-ResultCard --> ExplanationBox : "contains"
-```
-
-**Diagram sources**
-- [frontend/index.html:111-209](file://frontend/index.html#L111-L209)
-- [frontend/script.js:555-636](file://frontend/script.js#L555-L636)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-
-**Section sources**
-- [frontend/index.html:111-209](file://frontend/index.html#L111-L209)
-- [frontend/script.js:555-636](file://frontend/script.js#L555-L636)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/styles.css:697-881](file://frontend/styles.css#L697-L881)
-
-### Status Indicators and Footer Statistics
-- **Header Status Badge**: Premium live status indicator with pulsing dot, neon green glow, and "LIVE" text.
-- **Footer Statistics**: Enhanced three-metric display with news analyzed (2.4M+), accuracy rate (94.2%), and response time (<500ms).
-- **Health Monitoring**: Real-time system health checks and performance metrics display.
+## SaaS Website Architecture
+The new SaaS architecture consists of four main pages with interconnected functionality:
 
 ```mermaid
 graph TB
-Header["Header Status Badge<br/>Premium live indicator"] --> Stats["Footer Stats<br/>Enhanced metrics display"]
-Stats --> NA["News Analyzed<br/>2.4M+"]
-Stats --> AR["Accuracy Rate<br/>94.2%"]
-Stats --> RT["Response Time<br/><500ms"]
+Index["index.html<br/>Home Page"] --> Dashboard["dashboard.html<br/>Real-time Trading Dashboard"]
+News["news.html<br/>News Feed"] --> Dashboard
+About["about.html<br/>Company Information"] --> Dashboard
+Contact["contact.html<br/>Contact Page"] --> Dashboard
+Dashboard --> LocalStorage["localStorage<br/>Cross-page Data Sharing"]
+News --> LocalStorage
+Dashboard --> API["Backend API<br/>Real-time Data Processing"]
+Index --> Features["Feature Showcase<br/>Glass-morphism Design"]
+Dashboard --> Analytics["Analytics Cards<br/>Neon Glow Effects"]
+News --> Integration["News Integration<br/>Real-time Updates"]
+About --> TechStack["Technology Stack<br/>Modern Tech Showcase"]
+Contact --> Social["Social Links<br/>Professional Networking"]
 ```
 
 **Diagram sources**
-- [frontend/index.html:46-61](file://frontend/index.html#L46-L61)
-- [frontend/index.html:212-228](file://frontend/index.html#L212-L228)
+- [frontend/index.html:1-157](file://frontend/index.html#L1-L157)
+- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
+- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
+- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
+- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
 
 **Section sources**
-- [frontend/index.html:46-61](file://frontend/index.html#L46-L61)
-- [frontend/index.html:212-228](file://frontend/index.html#L212-L228)
-- [frontend/styles.css:358-382](file://frontend/styles.css#L358-L382)
-- [frontend/styles.css:883-950](file://frontend/styles.css#L883-L950)
+- [frontend/index.html:1-157](file://frontend/index.html#L1-L157)
+- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
+- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
+- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
+- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
 
-## Enhanced Backend Integration
-The system now features comprehensive backend integration with health monitoring and real-time capabilities:
+## Dashboard Interface
+The dashboard provides the core real-time trading interface with sophisticated signal card presentation:
 
-### AI Service Architecture
-- **Flask-based Service**: Built with Python Flask for sentiment analysis using FinBERT models.
-- **Health Monitoring**: `/health` endpoint provides system status, model loading status, and service information.
-- **Advanced Analysis**: Real-time sentiment analysis with confidence scoring, signal generation, and key factor extraction.
-- **Batch Processing**: Support for analyzing multiple texts simultaneously with configurable limits.
+### Signal Card Architecture
+- **Header Section**: Displays headline and company information with animated loading states
+- **Signal Badge**: Dynamic badge with neon glow effects (BUY: green, SELL: red, HOLD: yellow)
+- **Metrics Grid**: Four-column layout showing sentiment, confidence, risk level, and signal strength
+- **Explanation Box**: AI-generated analysis with key factors and catalyst identification
+- **Action Controls**: Refresh signal, fetch latest news, and timestamp display
 
-### Backend API Gateway
-- **Spring Boot Application**: Serves as API gateway managing communication between frontend and AI service.
-- **Configuration Management**: External API keys for NewsAPI and Finnhub integration.
-- **CORS Support**: Enables cross-origin requests for seamless frontend integration.
-- **Actuator Endpoints**: Health checks and system monitoring capabilities.
+### Neon Glow Effects Implementation
+The dashboard implements sophisticated neon glow effects that respond to signal type:
 
 ```mermaid
-sequenceDiagram
-participant Frontend as "Frontend Client"
-participant Backend as "Spring Boot API"
-participant AIService as "Flask AI Service"
-participant Health as "Health Monitor"
-Frontend->>Backend : Request analysis
-Backend->>Health : Check service health
-Health-->>Backend : Health status
-Backend->>AIService : Forward analysis request
-AIService->>AIService : Process with FinBERT
-AIService-->>Backend : Return analysis result
-Backend-->>Frontend : Enhanced result with metadata
+stateDiagram-v2
+state BUY {
+[*] --> GreenGlow
+GreenGlow --> GreenGlow : Continuous Pulsing
+}
+state SELL {
+[*] --> RedGlow
+RedGlow --> RedGlow : Continuous Pulsing
+}
+state HOLD {
+[*] --> YellowGlow
+YellowGlow --> YellowGlow : Continuous Pulsing
+}
+state ANALYZING {
+[*] --> NeutralGlow
+NeutralGlow --> NeutralGlow : Static Glow
+}
 ```
 
 **Diagram sources**
-- [ai-service/app.py:29-36](file://ai-service/app.py#L29-L36)
-- [ai-service/app.py:39-96](file://ai-service/app.py#L39-L96)
-- [backend/src/main/resources/application.properties:13-14](file://backend/src/main/resources/application.properties#L13-L14)
+- [frontend/dashboard.js:334-346](file://frontend/dashboard.js#L334-L346)
+- [frontend/style.css:480-496](file://frontend/style.css#L480-L496)
 
 **Section sources**
-- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
-- [backend/src/main/resources/application.properties:1-27](file://backend/src/main/resources/application.properties#L1-L27)
+- [frontend/dashboard.html:45-88](file://frontend/dashboard.html#L45-L88)
+- [frontend/dashboard.js:305-346](file://frontend/dashboard.js#L305-L346)
+- [frontend/style.css:450-496](file://frontend/style.css#L450-L496)
 
-## Canvas-Based Mini Chart System
-The system features sophisticated canvas-based visualization for signal trend representation:
+## News Integration System
+The news system provides real-time financial news integration with seamless navigation to the dashboard:
 
-### Chart Architecture
-- **Canvas Rendering**: HTML5 Canvas API for high-performance chart rendering.
-- **Signal-Based Generation**: Dynamic data generation based on BUY/SELL/HOLD signals.
-- **Smooth Curves**: Quadratic bezier curves for organic-looking trend lines.
-- **Gradient Effects**: Multi-stop gradients for visual depth and professional appearance.
-- **Responsive Design**: Automatic sizing and scaling based on container dimensions.
+### News Card Architecture
+- **Glass-morphism Design**: Modern card design with backdrop blur and border effects
+- **Interactive Elements**: Hover animations with transform effects and glow enhancements
+- **Analysis Integration**: Direct analysis button that stores news in localStorage and navigates to dashboard
+- **Fallback Mechanism**: Sample news data when backend API is unavailable
 
-### Chart Features
-- **Dynamic Data Points**: 30-point datasets with realistic market-like fluctuations.
-- **Signal-Specific Styling**: Green gradients for BUY, red for SELL, orange for HOLD.
-- **Endpoint Markers**: White circles with inner highlights for trend termination points.
-- **Grid System**: Subtle grid lines for enhanced readability.
-- **Shadow Effects**: Glowing shadows matching signal colors for depth perception.
-
-```mermaid
-flowchart TD
-Canvas["Canvas Context"] --> Generate["Generate Data Points"]
-Generate --> Normalize["Normalize Data Range"]
-Normalize --> DrawGrid["Draw Grid Lines"]
-DrawGrid --> Gradient["Create Gradient Fill"]
-Gradient --> Line["Draw Trend Line"]
-Line --> Endpoint["Mark Endpoint"]
-Endpoint --> Label["Update Chart Label"]
-```
-
-**Diagram sources**
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
+### Local Storage Integration
+The news system uses localStorage for cross-page data sharing:
+- Stores selected news headline for dashboard analysis
+- Maintains analysis timestamps for audit trails
+- Enables seamless navigation between news and dashboard pages
 
 **Section sources**
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/styles.css:136-157](file://frontend/styles.css#L136-L157)
+- [frontend/news.html:149-232](file://frontend/news.html#L149-L232)
+- [frontend/news.js:69-88](file://frontend/news.js#L69-L88)
+- [frontend/news.html:359-363](file://frontend/news.html#L359-L363)
 
-## Dependency Analysis
-The enhanced system maintains modular architecture with clear separation of concerns:
-- **Frontend** depends on script.js for enhanced interactivity, canvas rendering, and backend communication.
-- **script.js** depends on DOM elements defined in index.html, canvas API for chart rendering, and fetch API for backend integration.
-- **styles.css** defines premium visual language with enhanced animations, responsive behavior, and canvas styling.
-- **Backend** serves as API gateway coordinating between frontend and AI service.
-- **AI Service** provides specialized sentiment analysis capabilities with health monitoring.
+## Navigation and Routing
+The SaaS website features a modern navigation system with active state management:
 
-```mermaid
-graph LR
-HTML["frontend/index.html"] --> JS["frontend/script.js"]
-HTML --> CSS["frontend/styles.css"]
-JS --> HTML
-CSS --> HTML
-JS --> Backend["backend/src/main/resources/application.properties"]
-Backend --> AIService["ai-service/app.py"]
-Backend --> NewsAPI["External News Services"]
-AIService --> FinBERT["FinBERT Models"]
-```
+### Navigation Components
+- **Fixed Navbar**: Sticky navigation with glass-morphism effect and backdrop blur
+- **Active State Management**: Visual indicators for current page with gradient underlines
+- **Responsive Design**: Mobile-friendly navigation with hidden menu on smaller screens
+- **Cross-page Integration**: Seamless navigation between all SaaS pages
 
-**Diagram sources**
-- [frontend/index.html:1-235](file://frontend/index.html#L1-L235)
-- [frontend/script.js:1-1068](file://frontend/script.js#L1-L1068)
-- [frontend/styles.css:1-1415](file://frontend/styles.css#L1-L1415)
-- [backend/src/main/resources/application.properties:1-27](file://backend/src/main/resources/application.properties#L1-L27)
-- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
+### Page Routing Strategy
+The navigation system implements a simple routing strategy:
+- Direct links between pages using standard anchor tags
+- Active class management for visual feedback
+- Consistent styling across all navigation items
+- Gradient accent colors for visual appeal
 
 **Section sources**
-- [frontend/index.html:1-235](file://frontend/index.html#L1-L235)
-- [frontend/script.js:1-1068](file://frontend/script.js#L1-L1068)
-- [frontend/styles.css:1-1415](file://frontend/styles.css#L1-L1415)
-- [backend/src/main/resources/application.properties:1-27](file://backend/src/main/resources/application.properties#L1-L27)
-- [ai-service/app.py:1-155](file://ai-service/app.py#L1-L155)
+- [frontend/dashboard.html:10-23](file://frontend/dashboard.html#L10-L23)
+- [frontend/news.html:330-346](file://frontend/news.html#L330-L346)
+- [frontend/about.html:10-22](file://frontend/about.html#L10-L22)
+- [frontend/contact.html:10-22](file://frontend/contact.html#L10-L22)
+
+## Modern UI Components
+The SaaS website implements a comprehensive set of modern UI components:
+
+### Glass-morphism Design System
+- **Background Effects**: Frosted glass panels with backdrop blur
+- **Border Effects**: Subtle borders with transparency for depth perception
+- **Shadow System**: Multiple layered shadows for dimensional effects
+- **Color Palette**: Dark theme with neon accent colors (green, cyan, purple)
+
+### Interactive Elements
+- **Hover Animations**: Smooth transitions with transform effects
+- **Loading States**: Custom spinner animations and progress indicators
+- **Button Variants**: Primary gradient buttons and secondary outline buttons
+- **Card Interactions**: Hover effects with glow and elevation changes
+
+### Typography System
+- **Font Family**: Inter font for clean, modern typography
+- **Hierarchy**: Clear visual hierarchy with gradient text effects
+- **Responsive Sizing**: Adaptive font sizes for different screen dimensions
+- **Accent Effects**: Gradient text for headings and important elements
+
+**Section sources**
+- [frontend/style.css:6-37](file://frontend/style.css#L6-L37)
+- [frontend/style.css:431-464](file://frontend/style.css#L431-L464)
+- [frontend/style.css:136-171](file://frontend/style.css#L136-L171)
+
+## Neon Glow Effects
+The SaaS website implements sophisticated neon glow effects throughout the interface:
+
+### Signal-based Glow System
+- **BUY Signals**: Green neon glow with pulse animation
+- **SELL Signals**: Red neon glow with continuous pulsing
+- **HOLD Signals**: Yellow neon glow with steady illumination
+- **ANALYZING State**: Neutral glow with static lighting
+
+### Implementation Details
+The glow effects are implemented using CSS animations and box-shadow properties:
+- Keyframe animations for continuous pulsing effects
+- Variable-based color systems for consistent theming
+- Performance-optimized animations using transform properties
+- Responsive glow effects that adapt to screen size
+
+### Visual Impact
+The neon glow system creates a premium, high-tech feel:
+- Enhanced visual appeal for trading interface
+- Clear signal differentiation through color coding
+- Dynamic feedback for user interactions
+- Professional appearance suitable for financial applications
+
+**Section sources**
+- [frontend/dashboard.html:142-152](file://frontend/dashboard.html#L142-L152)
+- [frontend/dashboard.js:317-318](file://frontend/dashboard.js#L317-L318)
+- [frontend/dashboard.js:334-345](file://frontend/dashboard.js#L334-L345)
+- [frontend/style.css:31-33](file://frontend/style.css#L31-L33)
+
+## Responsive Design Implementation
+The SaaS website features comprehensive responsive design:
+
+### Breakpoint Strategy
+- **Mobile First**: Base styles optimized for mobile devices
+- **Tablet Adaptation**: Adjustments at 768px breakpoint for tablet devices
+- **Desktop Optimization**: Full feature display on larger screens
+- **Flexible Grid System**: CSS Grid and Flexbox for adaptive layouts
+
+### Component Responsiveness
+- **Navigation**: Hidden menu on mobile with hamburger-style interaction
+- **News Grid**: Single column on mobile, multi-column on desktop
+- **Dashboard Cards**: Flexible grid that adapts to screen size
+- **Typography**: Fluid font sizing with viewport-relative units
+
+### Performance Considerations
+- **CSS Animations**: Hardware-accelerated transforms for smooth performance
+- **Lazy Loading**: Images and content load progressively
+- **Optimized Transitions**: Minimal CSS for maximum visual impact
+- **Touch Targets**: Adequate sizing for mobile interaction
+
+**Section sources**
+- [frontend/style.css:1002-1024](file://frontend/style.css#L1002-L1024)
+- [frontend/news.html:308-326](file://frontend/news.html#L308-L326)
+- [frontend/dashboard.html:1002-1024](file://frontend/dashboard.html#L1002-L1024)
+
+## Local Storage Integration
+The SaaS website implements strategic local storage usage for enhanced user experience:
+
+### Data Persistence Strategy
+- **Cross-page Communication**: Selected news stored for dashboard analysis
+- **Session Management**: Temporary data for user session continuity
+- **Audit Trail**: Timestamps for analysis history tracking
+- **Fallback Mechanisms**: Graceful degradation when storage is unavailable
+
+### Implementation Details
+The local storage system handles:
+- News headline preservation during navigation
+- Analysis timestamps for historical tracking
+- User preferences and session data
+- Error handling for storage limitations
+
+### Security Considerations
+- **Client-side Only**: No sensitive data stored in persistent storage
+- **Temporary Data**: Most data is cleared after analysis completion
+- **Data Limits**: Respect browser storage quotas and limitations
+- **Privacy Compliance**: No personal data collection or retention
+
+**Section sources**
+- [frontend/news.js:73-76](file://frontend/news.js#L73-L76)
+- [frontend/dashboard.js:29-46](file://frontend/dashboard.js#L29-L46)
+
+## Component Interaction Patterns
+The SaaS website implements sophisticated interaction patterns:
+
+### Real-time Data Flow
+- **News Fetching**: Asynchronous API calls with loading states
+- **Signal Generation**: Instant keyword-based analysis with real-time updates
+- **UI Updates**: Smooth transitions between loading and result states
+- **Error Handling**: Graceful degradation with fallback content
+
+### User Experience Patterns
+- **Progressive Disclosure**: Information revealed as needed
+- **Immediate Feedback**: Visual responses to user actions
+- **Consistent Patterns**: Familiar interaction paradigms across pages
+- **Accessibility**: Keyboard navigation and screen reader support
+
+### Performance Optimization
+- **Debounced Actions**: Prevent rapid repeated submissions
+- **Efficient Updates**: Minimal DOM manipulation for smooth animations
+- **Resource Management**: Optimized loading of assets and scripts
+- **Memory Management**: Cleanup of event listeners and timers
+
+**Section sources**
+- [frontend/dashboard.js:147-171](file://frontend/dashboard.js#L147-L171)
+- [frontend/dashboard.js:196-257](file://frontend/dashboard.js#L196-L257)
+- [frontend/news.js:14-40](file://frontend/news.js#L14-L40)
 
 ## Performance Considerations
-- **Canvas Optimization**: Efficient canvas rendering with automatic sizing and memory management.
-- **Particle Animation**: Pauses when tab is not visible to conserve resources.
-- **Progressive Loading**: Enhanced loading states with smooth transitions and minimal DOM manipulation.
-- **Backend Caching**: AI service model loading optimization and health monitoring.
-- **Responsive Design**: Adaptive layouts that optimize performance across device categories.
+The SaaS website is optimized for performance across all components:
+
+### Loading Optimization
+- **Critical Path**: Essential CSS and JavaScript loaded in priority order
+- **Lazy Loading**: Non-critical resources loaded on demand
+- **Asset Optimization**: Minified CSS and efficient image formats
+- **Caching Strategy**: Strategic caching for improved repeat visits
+
+### Runtime Performance
+- **Animation Efficiency**: Hardware-accelerated CSS animations
+- **Event Handling**: Optimized event listeners with proper cleanup
+- **Memory Management**: Prevention of memory leaks through proper cleanup
+- **Network Optimization**: Efficient API calls with error handling
+
+### Scalability Considerations
+- **Component Architecture**: Modular design for easy maintenance
+- **Code Splitting**: Separate bundles for different page sections
+- **Bundle Optimization**: Tree shaking and dead code elimination
+- **CDN Integration**: External resources served from optimized CDNs
 
 **Section sources**
-- [frontend/script.js:1051-1058](file://frontend/script.js#L1051-L1058)
-- [frontend/script.js:535-541](file://frontend/script.js#L535-L541)
-- [ai-service/app.py:21-26](file://ai-service/app.py#L21-L26)
+- [frontend/style.css:1026-1037](file://frontend/style.css#L1026-L1037)
+- [frontend/dashboard.js:283-303](file://frontend/dashboard.js#L283-L303)
 
-## Troubleshooting Guide
-- **Button remains disabled**:
-  - Ensure the input field contains at least one character.
-  - Verify the input event listener is attached and functioning.
-  - Check for JavaScript errors in the browser console.
-- **Loading state issues**:
-  - Confirm the click handler invokes the enhanced loading overlay with progress bar.
-  - Check that the result card is hidden during loading.
-  - Verify backend connectivity for real-time analysis.
-- **Results not displaying**:
-  - Ensure the displayResults function updates all target elements.
-  - Verify the button is re-enabled after processing completes.
-  - Check canvas rendering permissions and browser compatibility.
-- **Canvas chart not rendering**:
-  - Verify canvas element exists and has proper dimensions.
-  - Check for JavaScript errors in the console.
-  - Ensure browser supports HTML5 Canvas API.
-- **Live news fetching fails**:
-  - Confirm API keys are properly configured in backend properties.
-  - Check network connectivity and external service availability.
-  - Verify CORS configuration allows frontend access.
-- **Keyboard shortcut not working**:
-  - Confirm Ctrl/Cmd + Enter is pressed while the button is enabled and input is present.
-  - Check browser security settings that might block keyboard shortcuts.
+## Accessibility Features
+The SaaS website implements comprehensive accessibility features:
 
-**Section sources**
-- [frontend/script.js:369-381](file://frontend/script.js#L369-L381)
-- [frontend/script.js:511-552](file://frontend/script.js#L511-L552)
-- [frontend/script.js:555-636](file://frontend/script.js#L555-L636)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:1038-1045](file://frontend/script.js#L1038-L1045)
+### Semantic HTML Structure
+- **Proper Headings**: Logical heading hierarchy for screen readers
+- **Descriptive Links**: Meaningful link text with context
+- **Form Labels**: Associated labels for input elements
+- **Alternative Text**: Descriptive alt attributes for images
 
-## Conclusion
-The AI Trading Signal Engine now presents a sophisticated, real-time, and highly interactive interface. The enhanced system seamlessly integrates real-time news fetching, canvas-based signal visualization, and comprehensive backend analysis. The modular architecture allows for straightforward extension and modification of UI elements while maintaining premium visual quality and optimal performance. The addition of health monitoring, company detection, and key factor extraction significantly enhances the analytical capabilities and user experience.
+### Keyboard Navigation
+- **Tab Order**: Logical tab order through interactive elements
+- **Focus Management**: Visible focus indicators for keyboard users
+- **Shortcuts**: Keyboard shortcuts for common actions
+- **Skip Links**: Ability to skip to main content
 
-## Appendices
+### Screen Reader Support
+- **ARIA Labels**: Descriptive ARIA labels for complex components
+- **Role Attributes**: Proper ARIA roles for interactive elements
+- **Live Regions**: Dynamic content updates announced to assistive technologies
+- **Structure Announcements**: Clear announcements of page sections and changes
 
-### Responsive Behavior
-- **Enhanced Breakpoints**:
-  - Mobile-first design with adjustments at 768px and 480px.
-  - Live news section adapts to smaller screens with stacked layout.
-  - Canvas charts automatically resize based on container dimensions.
-  - Footer metrics rearrange for optimal mobile viewing.
-- **Canvas Responsiveness**:
-  - Automatic resizing based on container width and height.
-  - Optimized rendering performance across different screen densities.
-  - Touch-friendly interactive elements for mobile devices.
+### Visual Accessibility
+- **Color Contrast**: Sufficient contrast ratios for text and interactive elements
+- **Color Independence**: Information conveyed through multiple means
+- **Resize Text**: Support for increased text size without loss of functionality
+- **Motion Preferences**: Reduced motion options for sensitive users
 
 **Section sources**
-- [frontend/styles.css:739-795](file://frontend/styles.css#L739-L795)
-- [frontend/script.js:142-146](file://frontend/script.js#L142-L146)
+- [frontend/dashboard.html:1-155](file://frontend/dashboard.html#L1-L155)
+- [frontend/news.html:1-379](file://frontend/news.html#L1-L379)
+- [frontend/about.html:1-125](file://frontend/about.html#L1-L125)
+- [frontend/contact.html:1-113](file://frontend/contact.html#L1-L113)
 
-### Accessibility Notes
-- **Enhanced Semantic HTML**: Buttons, forms, and interactive elements use proper semantic markup.
-- **Focus Management**: Comprehensive focus states for keyboard navigation and screen readers.
-- **Visual Accessibility**: High contrast color schemes, sufficient color differentiation, and alternative text for icons.
-- **Keyboard Navigation**: Full support for keyboard shortcuts including Ctrl/Cmd + Enter.
-- **Screen Reader Support**: Proper ARIA labels and semantic structure for assistive technologies.
-- **Motion Preferences**: Reduced motion options available through CSS custom properties.
+## Integration Guidelines
+The SaaS website provides guidelines for extending and integrating with the existing architecture:
 
-**Section sources**
-- [frontend/index.html:66-101](file://frontend/index.html#L66-L101)
-- [frontend/script.js:1038-1045](file://frontend/script.js#L1038-L1045)
-- [frontend/styles.css:266-269](file://frontend/styles.css#L266-L269)
+### Adding New Pages
+- **Navigation Integration**: Add menu items to all navbar components
+- **Styling Consistency**: Use the established CSS variable system
+- **Responsive Behavior**: Implement mobile-first responsive design
+- **Performance Standards**: Follow established performance optimization patterns
 
-### Usage Examples and Integration Guidelines
-- **Extending the Input System**:
-  - Add validation rules by adjusting the input event handler and updating the character counter color.
-  - Integrate with external news APIs by extending the fetchLatestNews function.
-  - Implement custom news filtering by adding additional parameters to the news fetching endpoint.
-- **Modifying the Analyze Signal Button**:
-  - Customize hover/active effects by editing the button styles and animation properties.
-  - Add tooltips or ARIA attributes for improved accessibility.
-  - Implement custom ripple effects by modifying the ripple animation CSS.
-- **Enhancing the Result Card**:
-  - Add new metrics by introducing new DOM elements and updating the displayResults function.
-  - Implement advanced charting libraries by replacing canvas-based mini charts with SVG or WebGL solutions.
-  - Add export functionality by extending the share button to support multiple formats.
-- **Canvas Chart Customization**:
-  - Modify chart styling by adjusting color gradients and shadow effects.
-  - Implement custom data visualization by extending the drawMiniChart function.
-  - Add interactive features like zoom, pan, or tooltip displays.
-- **Backend Integration Enhancement**:
-  - Add new AI models by extending the Flask service with additional analysis endpoints.
-  - Implement caching mechanisms by adding Redis or database integration.
-  - Extend health monitoring by adding custom metrics and alerting systems.
-- **Live News Integration**:
-  - Add news source filtering by implementing source selection dropdown.
-  - Implement news categorization by adding topic-based filtering.
-  - Add news timeline functionality by implementing pagination and sorting.
+### Extending Dashboard Functionality
+- **Signal Analysis**: Implement additional analysis algorithms
+- **Data Visualization**: Add new chart types and visualization components
+- **Real-time Updates**: Implement WebSocket connections for live data
+- **API Integration**: Connect to additional external services
+
+### Component Development
+- **CSS Architecture**: Follow the established naming convention (BEM methodology)
+- **JavaScript Patterns**: Use modular patterns with proper encapsulation
+- **Animation Standards**: Implement consistent animation timing and easing
+- **Testing Strategy**: Implement unit tests for critical functionality
+
+### Backend Integration
+- **API Endpoints**: Follow RESTful conventions for new endpoints
+- **Error Handling**: Implement comprehensive error handling and user feedback
+- **Authentication**: Integrate with existing authentication systems
+- **Data Validation**: Implement server-side validation for all inputs
 
 **Section sources**
-- [frontend/script.js:883-950](file://frontend/script.js#L883-L950)
-- [frontend/script.js:142-263](file://frontend/script.js#L142-L263)
-- [frontend/script.js:555-636](file://frontend/script.js#L555-L636)
-- [ai-service/app.py:39-96](file://ai-service/app.py#L39-L96)
-- [backend/src/main/resources/application.properties:7-14](file://backend/src/main/resources/application.properties#L7-L14)
+- [frontend/style.css:6-37](file://frontend/style.css#L6-L37)
+- [frontend/dashboard.js:62-145](file://frontend/dashboard.js#L62-L145)
+- [frontend/news.js:90-148](file://frontend/news.js#L90-L148)

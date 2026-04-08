@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Trading Signal Engine - Home</title>
+    <title>Grow My Trade | AI News-Based Trading Suggestion Platform</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="premium-ui.css">
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <div class="logo">AI Trading Signal Engine</div>
+            <div class="logo">
+                <div class="logo-main">Grow My Trade</div>
+                <div class="logo-subtitle">AI News-Based Trading Suggestion Platform</div>
+            </div>
             <ul class="nav-links">
                 <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="market.html">Market</a></li>
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
@@ -26,7 +32,8 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>AI-Powered Trading Signals</h1>
+                    <h1><span class="highlight-ai">AI</span>-Powered Trading Signals from Financial News</h1>
+                    <p class="hero-subtitle">AI News-Based Trading Suggestion Platform</p>
                     <p>Transform financial news into actionable trading insights using advanced AI sentiment analysis. Real-time data, smarter decisions.</p>
                     <div class="hero-buttons">
                         <a href="dashboard.html" class="btn-primary">View Dashboard</a>
@@ -34,8 +41,54 @@
                     </div>
                 </div>
                 <div class="hero-graph">
-                    <div class="chart-placeholder">
-                        <div class="chart-line"></div>
+                    <div class="chart-container">
+                        <svg class="trading-chart" viewBox="0 0 500 300" preserveAspectRatio="none">
+                            <defs>
+                                <!-- Gradient for area fill -->
+                                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ff88;stop-opacity:0.4" />
+                                    <stop offset="100%" style="stop-color:#00ff88;stop-opacity:0" />
+                                </linearGradient>
+                                
+                                <!-- Glow filter -->
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Grid lines -->
+                            <g class="grid-lines" opacity="0.1">
+                                <line x1="0" y1="75" x2="500" y2="75" stroke="#00ff88" stroke-width="1"/>
+                                <line x1="0" y1="150" x2="500" y2="150" stroke="#00ff88" stroke-width="1"/>
+                                <line x1="0" y1="225" x2="500" y2="225" stroke="#00ff88" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- Area fill under line -->
+                            <path class="chart-area" fill="url(#chartGradient)"/>
+                            
+                            <!-- Main chart line -->
+                            <path class="chart-line-path" fill="none" stroke="#00ff88" stroke-width="3" filter="url(#glow)"/>
+                            
+                            <!-- Moving dot (latest price) -->
+                            <circle class="chart-dot" r="6" fill="#00ff88" filter="url(#glow)"/>
+                            <circle class="chart-dot-pulse" r="6" fill="none" stroke="#00ff88" stroke-width="2"/>
+                        </svg>
+                        
+                        <!-- Price label -->
+                        <div class="chart-label">
+                            <span class="label-text">+24.5%</span>
+                            <span class="label-subtitle">AI Signal Performance</span>
+                        </div>
+                        
+                        <!-- Live price badge -->
+                        <div class="live-price-badge">
+                            <span class="badge-dot"></span>
+                            <span class="badge-text">LIVE</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,7 +162,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <h3>AI Trading Signal Engine</h3>
+                    <h3>Grow My Trade</h3>
+                    <p class="footer-tagline">AI News-Based Trading Suggestion Platform</p>
                     <p>Transforming financial news into actionable AI-powered trading signals for smarter investment decisions.</p>
                     <div class="social-icons">
                         <a href="#" class="social-icon">📘</a>
@@ -146,11 +200,212 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 AI Trading Signal Engine. All rights reserved.</p>
+                <p>&copy; 2026 Grow My Trade. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // Live Trading Chart - Infinite Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartLine = document.querySelector('.chart-line-path');
+            const chartArea = document.querySelector('.chart-area');
+            const chartDot = document.querySelector('.chart-dot');
+            const chartDotPulse = document.querySelector('.chart-dot-pulse');
+            
+            if (!chartLine) return;
+            
+            const width = 500;
+            const height = 300;
+            const padding = 20;
+            const chartWidth = width - (padding * 2);
+            const chartHeight = height - (padding * 2);
+            
+            // Generate random target performance (-40% to +40%)
+            let targetPerformance = (Math.random() - 0.5) * 80; // -40% to +40%
+            let currentCycle = 0;
+            const cycleDuration = 30; // Number of updates per cycle
+            
+            // Initial data points (will be continuously updated)
+            let dataPoints = [];
+            
+            // Initialize with a trend based on target performance
+            function initializeData() {
+                dataPoints = [];
+                const startValue = 150;
+                const endValue = startValue * (1 + targetPerformance / 100);
+                
+                for (let i = 0; i < 30; i++) {
+                    const progress = i / 29;
+                    const baseValue = startValue + (endValue - startValue) * progress;
+                    // Add some natural volatility
+                    const noise = (Math.random() - 0.5) * 10;
+                    dataPoints.push(baseValue + noise);
+                }
+            }
+            
+            initializeData();
+            
+            let minValue = Math.min(...dataPoints);
+            let maxValue = Math.max(...dataPoints);
+            
+            // Generate smooth path from data points
+            function generatePath(points) {
+                const range = maxValue - minValue || 1;
+                const pathPoints = points.map((value, index) => {
+                    const x = padding + (index / (points.length - 1)) * chartWidth;
+                    const y = height - padding - ((value - minValue) / range) * chartHeight;
+                    return { x, y };
+                });
+                
+                // Create smooth bezier curve
+                let pathD = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+                
+                for (let i = 1; i < pathPoints.length; i++) {
+                    const prev = pathPoints[i - 1];
+                    const curr = pathPoints[i];
+                    const cpx1 = prev.x + (curr.x - prev.x) / 3;
+                    const cpx2 = curr.x - (curr.x - prev.x) / 3;
+                    pathD += ` C ${cpx1} ${prev.y}, ${cpx2} ${curr.y}, ${curr.x} ${curr.y}`;
+                }
+                
+                return { pathD, points: pathPoints };
+            }
+            
+            // Generate area path
+            function generateAreaPath(pathPoints) {
+                let areaD = `M ${pathPoints[0].x} ${height - padding}`;
+                areaD += ` L ${pathPoints[0].x} ${pathPoints[0].y}`;
+                
+                for (let i = 1; i < pathPoints.length; i++) {
+                    const prev = pathPoints[i - 1];
+                    const curr = pathPoints[i];
+                    const cpx1 = prev.x + (curr.x - prev.x) / 3;
+                    const cpx2 = curr.x - (curr.x - prev.x) / 3;
+                    areaD += ` C ${cpx1} ${prev.y}, ${cpx2} ${curr.y}, ${curr.x} ${curr.y}`;
+                }
+                
+                areaD += ` L ${pathPoints[pathPoints.length - 1].x} ${height - padding} Z`;
+                return areaD;
+            }
+            
+            // Add new data point and remove oldest
+            function updateChartData() {
+                currentCycle++;
+                
+                // Remove first point
+                dataPoints.shift();
+                
+                // Generate new point based on last point with trend toward target
+                const lastPoint = dataPoints[dataPoints.length - 1];
+                const currentPerformance = ((lastPoint - dataPoints[0]) / dataPoints[0] * 100);
+                
+                // Calculate direction to reach target performance
+                const targetValue = dataPoints[0] * (1 + targetPerformance / 100);
+                const difference = targetValue - lastPoint;
+                
+                // Move toward target with some randomness
+                const trend = difference * 0.15; // 15% of the way to target
+                const noise = (Math.random() - 0.5) * 8;
+                const change = trend + noise;
+                
+                let newPoint = lastPoint + change;
+                
+                // Keep within reasonable bounds
+                newPoint = Math.max(80, Math.min(220, newPoint));
+                
+                dataPoints.push(newPoint);
+                
+                // Update min/max
+                minValue = Math.min(...dataPoints);
+                maxValue = Math.max(...dataPoints);
+                
+                // If cycle is complete, generate new target
+                if (currentCycle >= cycleDuration) {
+                    currentCycle = 0;
+                    targetPerformance = (Math.random() - 0.5) * 80; // New random target
+                    
+                    // Smoothly transition by keeping current data but changing direction
+                    // No reset needed, just new target will guide next updates
+                }
+                
+                // Regenerate paths
+                const { pathD, points } = generatePath(dataPoints);
+                const areaD = generateAreaPath(points);
+                
+                // Update SVG
+                chartLine.setAttribute('d', pathD);
+                chartArea.setAttribute('d', areaD);
+                
+                // Update dot position
+                const lastPointCoords = points[points.length - 1];
+                chartDot.setAttribute('cx', lastPointCoords.x);
+                chartDot.setAttribute('cy', lastPointCoords.y);
+                chartDotPulse.setAttribute('cx', lastPointCoords.x);
+                chartDotPulse.setAttribute('cy', lastPointCoords.y);
+                
+                // Update label with performance
+                const performance = ((dataPoints[dataPoints.length - 1] - dataPoints[0]) / dataPoints[0] * 100).toFixed(1);
+                const sign = performance >= 0 ? '+' : '';
+                const labelElement = document.querySelector('.label-text');
+                labelElement.textContent = `${sign}${performance}%`;
+                
+                // Determine color based on positive/negative
+                const isPositive = performance >= 0;
+                const lineColor = isPositive ? '#00ff88' : '#ff4757';
+                const glowColor = isPositive ? 'rgba(0, 255, 136, 0.5)' : 'rgba(255, 71, 87, 0.5)';
+                const borderColor = isPositive ? 'rgba(0, 255, 136, 0.4)' : 'rgba(255, 71, 87, 0.4)';
+                
+                // Update chart line color with smooth transition
+                chartLine.style.transition = 'stroke 0.5s ease, filter 0.5s ease';
+                chartLine.style.stroke = lineColor;
+                chartLine.style.filter = `drop-shadow(0 0 8px ${glowColor})`;
+                
+                // Update dot color
+                chartDot.style.transition = 'fill 0.5s ease';
+                chartDot.style.fill = lineColor;
+                chartDotPulse.style.transition = 'stroke 0.5s ease';
+                chartDotPulse.style.stroke = lineColor;
+                
+                // Update label color and border
+                labelElement.style.color = lineColor;
+                labelElement.style.textShadow = `0 0 20px ${glowColor}`;
+                
+                const chartLabel = document.querySelector('.chart-label');
+                if (chartLabel) {
+                    chartLabel.style.borderColor = borderColor;
+                    chartLabel.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.4), 0 0 40px ${isPositive ? 'rgba(0, 255, 136, 0.15)' : 'rgba(255, 71, 87, 0.15)'}`;
+                }
+                
+                // Update gradient colors
+                const gradient = document.getElementById('chartGradient');
+                if (gradient) {
+                    const stops = gradient.querySelectorAll('stop');
+                    if (stops.length >= 2) {
+                        if (isPositive) {
+                            stops[0].style.stopColor = '#00ff88';
+                            stops[0].style.stopOpacity = '0.4';
+                            stops[1].style.stopColor = '#00ff88';
+                            stops[1].style.stopOpacity = '0';
+                        } else {
+                            stops[0].style.stopColor = '#ff4757';
+                            stops[0].style.stopOpacity = '0.4';
+                            stops[1].style.stopColor = '#ff4757';
+                            stops[1].style.stopOpacity = '0';
+                        }
+                    }
+                }
+            }
+            
+            // Initial render
+            updateChartData();
+            
+            // Update chart every 2 seconds for smooth live feel
+            setInterval(updateChartData, 2000);
+            
+            console.log('✅ Live trading chart initialized - Infinite animation');
+        });
+    </script>
 </body>
 </html>

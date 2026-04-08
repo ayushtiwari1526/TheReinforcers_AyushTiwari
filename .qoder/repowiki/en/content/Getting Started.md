@@ -8,20 +8,25 @@
 - [start.bat](file://start.bat)
 - [restart-backend.bat](file://restart-backend.bat)
 - [frontend/index.html](file://frontend/index.html)
+- [frontend/dashboard.html](file://frontend/dashboard.html)
+- [frontend/dashboard.js](file://frontend/dashboard.js)
 - [frontend/script.js](file://frontend/script.js)
 - [frontend/styles.css](file://frontend/styles.css)
 - [backend/src/main/java/com/trading/TradingSignalApplication.java](file://backend/src/main/java/com/trading/TradingSignalApplication.java)
 - [ai-service/app.py](file://ai-service/app.py)
+- [ai-service/models/sentiment_analyzer_gemma.py](file://ai-service/models/sentiment_analyzer_gemma.py)
+- [ai-service/requirements.txt](file://ai-service/requirements.txt)
 - [backend/src/main/resources/application.properties](file://backend/src/main/resources/application.properties)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated installation procedure to reflect multi-service architecture with Java 17+, Maven, and Python 3.8+
-- Added comprehensive setup and startup procedures using batch scripts
-- Documented API endpoints and service coordination
-- Updated prerequisites and system requirements
-- Added troubleshooting for multi-service environment
+- Updated installation procedure to reflect Gemma SLM implementation replacing FinBERT
+- Added restart-backend.bat for Windows development environments
+- Updated requirements.txt with accelerate for efficient model loading and numpy for numerical operations
+- Enhanced application.properties with pre-configured NewsAPI key
+- Updated AI service architecture to use Gemma 3 1B model with HuggingFace authentication
+- Modified frontend to support both keyword-based and real AI analysis modes
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -36,7 +41,9 @@
 10. [Conclusion](#conclusion)
 
 ## Introduction
-This guide helps you install and run the AI Trading Signal Engine locally in a multi-service architecture. The application consists of three coordinated services: a premium frontend UI, a Java Spring Boot backend API, and a Python Flask AI service powered by FinBERT. It covers prerequisites, setup procedures, service coordination, and comprehensive troubleshooting for the multi-service environment.
+This guide helps you install and run the AI Trading Signal Engine locally in a multi-service architecture. The application consists of three coordinated services: a premium frontend UI, a Java Spring Boot backend API, and a Python Flask AI service powered by the Gemma Small Language Model (SLM). It covers prerequisites, setup procedures, service coordination, and comprehensive troubleshooting for the multi-service environment.
+
+**Updated** The AI service now uses Gemma 3 1B model with HuggingFace authentication instead of FinBERT, providing more efficient and hackathon-compliant sentiment analysis.
 
 ## Prerequisites
 
@@ -51,14 +58,14 @@ This guide helps you install and run the AI Trading Signal Engine locally in a m
 The application requires the following technologies:
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Backend**: Java 17, Spring Boot 3.2.0, Maven
-- **AI Service**: Python 3.8+, Flask 3.0.0, Transformers 4.35.0, PyTorch 2.1.0
-- **External APIs**: NewsAPI.org (primary), Finnhub.io (fallback)
+- **AI Service**: Python 3.8+, Flask 3.0.0, Transformers 4.36.0, Torch 2.1.0, Accelerate 0.25.0
+- **External APIs**: NewsAPI.org (pre-configured), Finnhub.io (fallback)
 
 **Section sources**
 - [README.md:110-116](file://README.md#L110-L116)
 - [setup.bat:8-41](file://setup.bat#L8-L41)
 - [backend/pom.xml:21-23](file://backend/pom.xml#L21-L23)
-- [ai-service/requirements.txt:1-6](file://ai-service/requirements.txt#L1-L6)
+- [ai-service/requirements.txt:1-16](file://ai-service/requirements.txt#L1-L16)
 
 ## Installation and Setup
 
@@ -78,16 +85,15 @@ The setup script performs the following automated checks:
 1. **Java 17+ Check**: Verifies Java installation and version
 2. **Maven Check**: Confirms Maven availability
 3. **Python 3.8+ Check**: Validates Python installation
-4. **Python Dependencies**: Installs required packages (Flask, Transformers, PyTorch)
+4. **Python Dependencies**: Installs required packages (Flask, Transformers, Torch, Accelerate)
 5. **Backend Build**: Compiles Spring Boot application
 
 ### Step 3: Obtain API Keys
 The application requires free API keys from external services:
 
-#### NewsAPI.org (Primary)
-1. Visit: https://newsapi.org/register
-2. Sign up for a free account
-3. Copy your API key from the dashboard
+#### NewsAPI.org (Pre-configured)
+**Updated** A demo NewsAPI key is already configured in application.properties:
+- **Demo Key**: `f9525722f8744ba0a793aef0acfa84c2`
 
 #### Finnhub.io (Fallback)
 1. Visit: https://finnhub.io/register
@@ -122,7 +128,7 @@ start.bat
 
 The start script performs the following sequence:
 1. **Start AI Service**: Launches Python Flask service on port 5000
-2. **Wait for Model**: Waits 10 seconds for FinBERT model to load
+2. **Wait for Model**: Waits 10 seconds for Gemma model to load
 3. **Start Backend**: Launches Spring Boot on port 8080
 4. **Wait for Backend**: Waits 15 seconds for backend to initialize
 5. **Open Frontend**: Launches both backend UI and frontend in browser
@@ -147,9 +153,11 @@ Open `frontend/index.html` directly in your browser.
 
 ### Service Coordination
 The application uses coordinated service startup to ensure proper initialization order:
-- AI Service starts first and loads the heavy FinBERT model
+- AI Service starts first and loads the Gemma model with HuggingFace authentication
 - Backend waits for AI Service to be ready
 - Frontend opens automatically after both services are available
+
+**Updated** The AI service now uses Gemma 3 1B model with optimized CPU inference settings for faster performance.
 
 **Section sources**
 - [start.bat:1-50](file://start.bat#L1-L50)
@@ -168,8 +176,8 @@ subgraph "API Gateway"
 BE[Spring Boot Backend<br/>REST API]
 end
 subgraph "AI Services"
-AI[Flask AI Service<br/>FinBERT Analysis]
-ML[FinBERT Model<br/>HuggingFace]
+AI[Flask AI Service<br/>Gemma SLM Analysis]
+GEMMA[Gemma 3 1B Model<br/>HuggingFace + Accelerate]
 end
 subgraph "External APIs"
 NA[NewsAPI.org<br/>Primary News]
@@ -177,7 +185,7 @@ FH[Finnhub.io<br/>Fallback News]
 end
 FE --> BE
 BE --> AI
-AI --> ML
+AI --> GEMMA
 BE --> NA
 BE --> FH
 ```
@@ -185,15 +193,19 @@ BE --> FH
 **Diagram sources**
 - [README.md:29-61](file://README.md#L29-L61)
 - [backend/src/main/java/com/trading/TradingSignalApplication.java:8-28](file://backend/src/main/java/com/trading/TradingSignalApplication.java#L8-L28)
+- [ai-service/models/sentiment_analyzer_gemma.py:32-34](file://ai-service/models/sentiment_analyzer_gemma.py#L32-L34)
 
 ### Service Responsibilities
-- **Frontend**: Premium UI with real-time analysis capabilities
+- **Frontend**: Premium UI with real-time analysis capabilities and dual-mode analysis (keyword-based + AI)
 - **Backend**: Orchestrates services, manages API requests, and handles business logic
-- **AI Service**: Performs sentiment analysis using FinBERT model
+- **AI Service**: Performs sentiment analysis using Gemma SLM with HuggingFace authentication
 - **External APIs**: Provide real financial news data
+
+**Updated** The AI service now uses Gemma 3 1B model with Accelerate for efficient CPU inference and HuggingFace authentication for model access.
 
 **Section sources**
 - [README.md:27-61](file://README.md#L27-L61)
+- [ai-service/models/sentiment_analyzer_gemma.py:1-291](file://ai-service/models/sentiment_analyzer_gemma.py#L1-L291)
 
 ## Accessing the Application
 
@@ -210,7 +222,7 @@ After successful startup, access the application through multiple entry points:
 
 #### AI Service
 - **AI Endpoint**: `http://localhost:8080/api/analyze`
-- **Health Check**: `http://localhost:5080/health`
+- **Health Check**: `http://localhost:5000/health`
 
 ### Verification Steps
 Test that all services are running correctly:
@@ -241,7 +253,7 @@ curl -X POST http://localhost:8080/api/analyze \
 4. **View Results**: See comprehensive analysis with signal, confidence, and explanation
 
 ### Advanced Workflow with Live News
-1. **Fetch Live News**: Click "Fetch Live News" to retrieve current financial headlines
+1. **Fetch Live News**: Click "Fetch Latest News" to retrieve current financial headlines
 2. **Select Article**: Choose an article from the live news feed
 3. **Analyze**: Click "Analyze Signal" to process the selected headline
 4. **Review Details**: Examine signal strength, risk assessment, and key factors
@@ -255,9 +267,12 @@ The analysis provides:
 - **Key Factors**: Identified positive/negative market drivers
 - **Mini Chart**: Visual representation of signal trend
 
+**Updated** The frontend now supports dual analysis modes: instant keyword-based sentiment analysis (for immediate feedback) and optional real AI analysis using the Gemma model (for enhanced accuracy).
+
 **Section sources**
 - [frontend/index.html:67-208](file://frontend/index.html#L67-L208)
-- [frontend/script.js:511-636](file://frontend/script.js#L511-L636)
+- [frontend/dashboard.js:511-636](file://frontend/dashboard.js#L511-L636)
+- [frontend/dashboard.js:196-257](file://frontend/dashboard.js#L196-L257)
 
 ## API Endpoints
 
@@ -286,7 +301,7 @@ The Spring Boot backend exposes the following endpoints:
   "confidence": 89.5,
   "strength": "STRONG",
   "riskLevel": "Low",
-  "explanation": "FinBERT AI model detected strong positive sentiment...",
+  "explanation": "Gemma SLM AI model detected strong positive sentiment...",
   "keyFactors": ["Earnings Impact", "Growth Indicators"],
   "timestamp": "2026-04-08T13:30:00",
   "processingTime": 1.2
@@ -331,9 +346,9 @@ The Flask AI service provides specialized endpoints:
 
 #### AI Prediction
 **Endpoint**: `POST /predict`
-**Purpose**: Direct sentiment analysis using FinBERT
+**Purpose**: Direct sentiment analysis using Gemma SLM
 
-**Response**: Similar to backend analysis but with AI-specific details
+**Response**: Similar to backend analysis but with AI-specific details and model information
 
 #### Batch Analysis
 **Endpoint**: `POST /batch`
@@ -381,7 +396,7 @@ The Flask AI service provides specialized endpoints:
 **Issue**: "AI Service is not available"
 **Solution**:
 1. Check if Flask service is running on port 5000
-2. Verify FinBERT model loaded successfully
+2. Verify Gemma model loaded successfully with HuggingFace authentication
 3. Restart AI service: `cd ai-service && python app.py`
 
 #### Backend Won't Start
@@ -394,7 +409,7 @@ The Flask AI service provides specialized endpoints:
 #### Slow First Run
 **Issue**: Initial startup takes several minutes
 **Solution**:
-1. This is normal - FinBERT model (~400MB) downloads on first use
+1. This is normal - Gemma model (~1B parameters) downloads on first use
 2. Subsequent runs are much faster (model cached)
 3. Ensure adequate disk space and memory
 
@@ -426,24 +441,40 @@ The Flask AI service provides specialized endpoints:
 #### Response Time Issues
 **Issue**: Slow analysis responses
 **Solution**:
-1. Allow time for FinBERT model to load
+1. Allow time for Gemma model to load
 2. Check network connectivity to external APIs
 3. Verify hardware specifications meet requirements
+
+### Development Environment Issues
+
+#### Restarting Backend Only
+**Updated** Use the restart-backend.bat script for quick backend-only restarts:
+
+```batch
+# Restart backend service only
+restart-backend.bat
+```
+
+This script kills existing backend processes and restarts them cleanly.
 
 **Section sources**
 - [README.md:286-320](file://README.md#L286-L320)
 - [QUICKSTART.md:88-106](file://QUICKSTART.md#L88-L106)
 - [setup.bat:8-66](file://setup.bat#L8-L66)
+- [restart-backend.bat:1-24](file://restart-backend.bat#L1-L24)
 
 ## Conclusion
 
-The AI Trading Signal Engine provides a sophisticated multi-service architecture that demonstrates production-ready deployment patterns. The system combines a premium frontend experience with robust backend orchestration and advanced AI capabilities powered by FinBERT.
+The AI Trading Signal Engine provides a sophisticated multi-service architecture that demonstrates production-ready deployment patterns. The system combines a premium frontend experience with robust backend orchestration and advanced AI capabilities powered by the Gemma Small Language Model.
 
 Key benefits of this architecture:
 - **Scalable Design**: Each service can be scaled independently
-- **Real AI Models**: Uses actual FinBERT for accurate sentiment analysis
+- **Real AI Models**: Uses actual Gemma SLM for accurate sentiment analysis
 - **Production-Grade**: Includes proper error handling, logging, and monitoring
 - **Multi-API Support**: Redundant news sources for reliability
 - **Premium UI**: Professional interface with real-time capabilities
+- **Dual Analysis Modes**: Instant keyword-based analysis plus optional AI enhancement
 
 The comprehensive setup and troubleshooting documentation ensures smooth deployment across different environments while maintaining the high standards expected for hackathon and production scenarios.
+
+**Updated** The new Gemma SLM implementation provides enhanced performance with optimized CPU inference, HuggingFace authentication, and Accelerate integration for efficient model loading.
