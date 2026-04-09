@@ -2,13 +2,12 @@ services:
   # Backend Service (Spring Boot)
   - type: web
     name: trading-signal-backend
-    env: java
     region: oregon
     plan: free
     branch: main
     rootDir: backend
     buildCommand: mvn clean package -DskipTests
-    startCommand: java $JAVA_OPTS -jar target/trading-signal-engine-1.0.0.jar
+    startCommand: java -jar target/*.jar
     autoDeploy: true
     envVars:
       - key: NEWSAPI_KEY
@@ -19,11 +18,6 @@ services:
         sync: false
       - key: JAVA_OPTS
         value: -Xmx512m
-      - key: PORT
-        fromService:
-          name: trading-signal-backend
-          type: web
-          envVarKey: PORT
     healthCheckPath: /api/health
 
   # AI Service (Flask + Gemma)
