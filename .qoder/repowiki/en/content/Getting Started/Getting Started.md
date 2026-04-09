@@ -12,21 +12,25 @@
 - [frontend/dashboard.js](file://frontend/dashboard.js)
 - [frontend/script.js](file://frontend/script.js)
 - [frontend/styles.css](file://frontend/styles.css)
+- [frontend/chatbot.html](file://frontend/chatbot.html)
+- [frontend/chatbot.js](file://frontend/chatbot.js)
+- [frontend/chatbot.css](file://frontend/chatbot.css)
+- [frontend/test-api.html](file://frontend/test-api.html)
 - [backend/src/main/java/com/trading/TradingSignalApplication.java](file://backend/src/main/java/com/trading/TradingSignalApplication.java)
+- [backend/src/main/resources/application.properties](file://backend/src/main/resources/application.properties)
 - [ai-service/app.py](file://ai-service/app.py)
 - [ai-service/models/sentiment_analyzer_gemma.py](file://ai-service/models/sentiment_analyzer_gemma.py)
 - [ai-service/requirements.txt](file://ai-service/requirements.txt)
-- [backend/src/main/resources/application.properties](file://backend/src/main/resources/application.properties)
 </cite>
 
 ## Update Summary
 **Changes Made**
-- Updated installation procedure to reflect Gemma SLM implementation replacing FinBERT
-- Added restart-backend.bat for Windows development environments
-- Updated requirements.txt with accelerate for efficient model loading and numpy for numerical operations
-- Enhanced application.properties with pre-configured NewsAPI key
-- Updated AI service architecture to use Gemma 3 1B model with HuggingFace authentication
-- Modified frontend to support both keyword-based and real AI analysis modes
+- Added comprehensive chatbot setup instructions with OpenAI API configuration
+- Updated API key configuration section to include OpenAI API key setup
+- Enhanced installation steps with new test API debugging workflow
+- Updated troubleshooting guide with chatbot-specific issues
+- Added new test-api.html for debugging OpenAI API connectivity
+- Updated frontend integration with dynamic chatbot configuration
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -37,13 +41,15 @@
 6. [Accessing the Application](#accessing-the-application)
 7. [First Analysis Workflow](#first-analysis-workflow)
 8. [API Endpoints](#api-endpoints)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Conclusion](#conclusion)
+9. [Chatbot Setup and Configuration](#chatbot-setup-and-configuration)
+10. [Test API Debugging Workflow](#test-api-debugging-workflow)
+11. [Troubleshooting Guide](#troubleshooting-guide)
+12. [Conclusion](#conclusion)
 
 ## Introduction
-This guide helps you install and run the AI Trading Signal Engine locally in a multi-service architecture. The application consists of three coordinated services: a premium frontend UI, a Java Spring Boot backend API, and a Python Flask AI service powered by the Gemma Small Language Model (SLM). It covers prerequisites, setup procedures, service coordination, and comprehensive troubleshooting for the multi-service environment.
+This guide helps you install and run the AI Trading Signal Engine locally in a multi-service architecture. The application consists of three coordinated services: a premium frontend UI, a Java Spring Boot backend API, and a Python Flask AI service powered by the Gemma Small Language Model (SLM). The system now includes an integrated AI chatbot assistant with OpenAI API integration for enhanced user interaction and support.
 
-**Updated** The AI service now uses Gemma 3 1B model with HuggingFace authentication instead of FinBERT, providing more efficient and hackathon-compliant sentiment analysis.
+**Updated** The application now features a comprehensive chatbot system with OpenAI API integration, providing intelligent assistance for users seeking help with trading signals, news analysis, and platform navigation.
 
 ## Prerequisites
 
@@ -59,10 +65,10 @@ The application requires the following technologies:
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
 - **Backend**: Java 17, Spring Boot 3.2.0, Maven
 - **AI Service**: Python 3.8+, Flask 3.0.0, Transformers 4.36.0, Torch 2.1.0, Accelerate 0.25.0
-- **External APIs**: NewsAPI.org (pre-configured), Finnhub.io (fallback)
+- **External APIs**: NewsAPI.org (pre-configured), Finnhub.io (fallback), OpenAI API (required for chatbot)
 
 **Section sources**
-- [README.md:110-116](file://README.md#L110-L116)
+- [README.md:84-93](file://README.md#L84-L93)
 - [setup.bat:8-41](file://setup.bat#L8-L41)
 - [backend/pom.xml:21-23](file://backend/pom.xml#L21-L23)
 - [ai-service/requirements.txt:1-16](file://ai-service/requirements.txt#L1-L16)
@@ -99,6 +105,13 @@ The application requires free API keys from external services:
 1. Visit: https://finnhub.io/register
 2. Sign up for a free account
 3. Copy your API key from the dashboard
+
+#### OpenAI API (Required for Chatbot)
+1. Visit: https://platform.openai.com/signup
+2. Create an OpenAI account
+3. Navigate to: https://platform.openai.com/api-keys
+4. Create a new secret key
+5. Copy your API key for later use
 
 ### Step 4: Configure API Keys
 Edit the configuration file to add your API keys:
@@ -165,12 +178,13 @@ The application uses coordinated service startup to ensure proper initialization
 
 ## Understanding the Architecture
 
-The AI Trading Signal Engine follows a microservices architecture with three distinct components:
+The AI Trading Signal Engine follows a microservices architecture with four distinct components:
 
 ```mermaid
 graph TB
 subgraph "Client Layer"
 FE[Frontend UI<br/>HTML/CSS/JavaScript]
+CB[AI Chatbot<br/>OpenAI Integration]
 end
 subgraph "API Gateway"
 BE[Spring Boot Backend<br/>REST API]
@@ -182,8 +196,10 @@ end
 subgraph "External APIs"
 NA[NewsAPI.org<br/>Primary News]
 FH[Finnhub.io<br/>Fallback News]
+OA[OpenAI API<br/>Chatbot Support]
 end
 FE --> BE
+CB --> OA
 BE --> AI
 AI --> GEMMA
 BE --> NA
@@ -196,10 +212,11 @@ BE --> FH
 - [ai-service/models/sentiment_analyzer_gemma.py:32-34](file://ai-service/models/sentiment_analyzer_gemma.py#L32-L34)
 
 ### Service Responsibilities
-- **Frontend**: Premium UI with real-time analysis capabilities and dual-mode analysis (keyword-based + AI)
+- **Frontend**: Premium UI with real-time analysis capabilities and integrated chatbot assistant
 - **Backend**: Orchestrates services, manages API requests, and handles business logic
 - **AI Service**: Performs sentiment analysis using Gemma SLM with HuggingFace authentication
-- **External APIs**: Provide real financial news data
+- **External APIs**: Provide real financial news data and chatbot support
+- **Chatbot**: AI assistant powered by OpenAI API for user guidance and support
 
 **Updated** The AI service now uses Gemma 3 1B model with Accelerate for efficient CPU inference and HuggingFace authentication for model access.
 
@@ -223,6 +240,10 @@ After successful startup, access the application through multiple entry points:
 #### AI Service
 - **AI Endpoint**: `http://localhost:8080/api/analyze`
 - **Health Check**: `http://localhost:5000/health`
+
+#### Chatbot API
+- **Chatbot Test**: `http://localhost:3000/test-api.html`
+- **Chatbot Endpoint**: Integrated via frontend JavaScript
 
 ### Verification Steps
 Test that all services are running correctly:
@@ -365,6 +386,69 @@ The Flask AI service provides specialized endpoints:
 - [README.md:178-241](file://README.md#L178-L241)
 - [ai-service/app.py:39-149](file://ai-service/app.py#L39-L149)
 
+## Chatbot Setup and Configuration
+
+### OpenAI API Integration
+The chatbot system integrates with OpenAI's GPT-3.5-turbo model for intelligent user assistance. The chatbot provides:
+
+- **Intelligent Responses**: Context-aware answers about trading, signals, and platform usage
+- **Smart Fallback**: Demo mode when API quota is exceeded
+- **Real-time Assistance**: Instant help with trading questions and platform navigation
+
+### Configuration Options
+The chatbot can operate in two modes:
+
+#### Real API Mode (Requires Credits)
+- **Enable**: Set `useRealAPI: true` in chatbot configuration
+- **Requirements**: Valid OpenAI API key with sufficient credits
+- **Features**: Full AI capabilities with context awareness
+
+#### Demo Mode (No API Required)
+- **Enable**: Set `useRealAPI: false` in chatbot configuration
+- **Features**: Pre-programmed responses for common questions
+- **Limitations**: No real-time API calls, uses fallback responses
+
+### Chatbot Features
+- **Context Preservation**: Maintains conversation history (last 10 messages)
+- **Quick Actions**: Pre-defined questions for common scenarios
+- **Auto-Response**: Intelligent replies based on user queries
+- **Fallback Handling**: Graceful degradation when API is unavailable
+
+**Section sources**
+- [frontend/chatbot.js:79-143](file://frontend/chatbot.js#L79-L143)
+- [frontend/chatbot.html:93-142](file://frontend/chatbot.html#L93-L142)
+
+## Test API Debugging Workflow
+
+### OpenAI API Testing
+The application includes a dedicated test page for debugging OpenAI API connectivity:
+
+#### Access the Test Page
+1. Open: `http://localhost:3000/test-api.html`
+2. The page displays current API configuration
+3. Use buttons to test API connectivity and functionality
+
+#### Test Functions
+- **Test OpenAI API**: Validates API key and connection
+- **Test Simple Message**: Sends a basic test message
+- **Real-time Feedback**: Shows detailed error messages and success responses
+
+#### Common Issues and Solutions
+- **Invalid API Key**: Check key format and expiration
+- **Network Connectivity**: Verify firewall and proxy settings
+- **Quota Exceeded**: Add billing information to OpenAI account
+- **CORS Errors**: Browser security restrictions on local testing
+
+### Debug Information
+The test page provides:
+- **API Key Masking**: Shows first 15 characters of API key
+- **Connection Status**: Real-time connection verification
+- **Error Details**: Comprehensive error messages with troubleshooting hints
+- **Success Metrics**: Response times and usage statistics
+
+**Section sources**
+- [frontend/test-api.html:1-163](file://frontend/test-api.html#L1-L163)
+
 ## Troubleshooting Guide
 
 ### Common Setup Issues
@@ -422,6 +506,14 @@ The Flask AI service provides specialized endpoints:
 2. Check key validity and account status
 3. Ensure internet connectivity
 
+#### OpenAI API Issues
+**Issue**: Chatbot shows demo responses or API errors
+**Solution**:
+1. Test API connectivity using `test-api.html`
+2. Verify OpenAI API key format and expiration
+3. Check billing status and quota limits
+4. Review browser console for CORS-related errors
+
 #### CORS Issues
 **Issue**: "CORS policy blocked" errors
 **Solution**:
@@ -465,7 +557,7 @@ This script kills existing backend processes and restarts them cleanly.
 
 ## Conclusion
 
-The AI Trading Signal Engine provides a sophisticated multi-service architecture that demonstrates production-ready deployment patterns. The system combines a premium frontend experience with robust backend orchestration and advanced AI capabilities powered by the Gemma Small Language Model.
+The AI Trading Signal Engine provides a sophisticated multi-service architecture that demonstrates production-ready deployment patterns. The system combines a premium frontend experience with robust backend orchestration, advanced AI capabilities powered by the Gemma Small Language Model, and an integrated chatbot assistant with OpenAI API support.
 
 Key benefits of this architecture:
 - **Scalable Design**: Each service can be scaled independently
@@ -474,7 +566,9 @@ Key benefits of this architecture:
 - **Multi-API Support**: Redundant news sources for reliability
 - **Premium UI**: Professional interface with real-time capabilities
 - **Dual Analysis Modes**: Instant keyword-based analysis plus optional AI enhancement
+- **Intelligent Chatbot**: OpenAI-powered assistant for user guidance and support
+- **Comprehensive Testing**: Dedicated tools for API debugging and connectivity verification
 
 The comprehensive setup and troubleshooting documentation ensures smooth deployment across different environments while maintaining the high standards expected for hackathon and production scenarios.
 
-**Updated** The new Gemma SLM implementation provides enhanced performance with optimized CPU inference, HuggingFace authentication, and Accelerate integration for efficient model loading.
+**Updated** The new chatbot system with OpenAI API integration provides intelligent user assistance, while the enhanced test API debugging workflow ensures reliable connectivity verification for all external services.
