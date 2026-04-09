@@ -2,9 +2,17 @@ services:
   # Backend Service (Spring Boot)
   - type: web
     name: trading-signal-backend
+    runtime: java
     rootDir: backend
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    plan: free
 
-  # AI Service (Flask + Gemma)
+  # AI Service
   - type: web
     name: trading-ai-service
+    runtime: python
     rootDir: ai-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    plan: free
