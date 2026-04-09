@@ -4,8 +4,6 @@ services:
     name: trading-signal-backend
     env: docker
     rootDir: backend
-    buildCommand: mvn clean package -DskipTests
-    startCommand: java -jar target/*.jar
 
   # AI Service (Flask + Gemma)
   - type: web
