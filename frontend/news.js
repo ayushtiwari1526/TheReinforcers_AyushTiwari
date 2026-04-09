@@ -3,7 +3,8 @@
 // Fetch and display financial news
 // ============================================
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Use centralized API config (auto-detects local vs cloud)
+const API_BASE_URL = typeof API_CONFIG !== 'undefined' ? API_CONFIG.BACKEND_URL : 'http://localhost:8080/api';
 let currentPage = 1;
 let allLoadedNews = [];
 const NEWS_PER_PAGE = 9;

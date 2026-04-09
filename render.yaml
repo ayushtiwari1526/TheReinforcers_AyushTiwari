@@ -1,0 +1,40 @@
+services:
+  # Backend Service (Spring Boot)
+  - type: web
+    name: trading-signal-backend
+    env: java
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: mvn clean install -DskipTests
+    startCommand: java -jar target/trading-signal-engine-1.0.0.jar
+    envVars:
+      - key: NEWSAPI_KEY
+        sync: false
+      - key: FINNHUB_KEY
+        sync: false
+      - key: AI_SERVICE_URL
+        sync: false
+      - key: JAVA_OPTS
+        value: -Xmx512m
+    healthCheckPath: /api/health
+
+  # AI Service (Flask + Gemma)
+  - type: web
+    name: trading-ai-service
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: ai-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: HF_TOKEN
+        sync: false
+      - key: PORT
+        value: 5000
+      - key: PYTHON_VERSION
+        value: 3.10.0
+    healthCheckPath: /health

@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "grow-my-trade",
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "PLATFORM": "vercel"
+  }
+}
