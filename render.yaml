@@ -2,23 +2,10 @@ services:
   # Backend Service (Spring Boot)
   - type: web
     name: trading-signal-backend
-    region: oregon
-    plan: free
-    branch: main
+    env: docker
     rootDir: backend
     buildCommand: mvn clean package -DskipTests
     startCommand: java -jar target/*.jar
-    autoDeploy: true
-    envVars:
-      - key: NEWSAPI_KEY
-        sync: false
-      - key: FINNHUB_KEY
-        sync: false
-      - key: AI_SERVICE_URL
-        sync: false
-      - key: JAVA_OPTS
-        value: -Xmx512m
-    healthCheckPath: /api/health
 
   # AI Service (Flask + Gemma)
   - type: web
